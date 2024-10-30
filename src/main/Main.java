@@ -3465,7 +3465,7 @@ public class Main {
 //		고객 이름, 전화번호, 직업,나이, 성별, 주민등록번호, 주소, 계좌 번호, 고객 번호
 
 		System.out.println("고객 정보 리스트");
-		for (Customer e : customerList.getAll()) {
+		for (Customer e : customerInformationManagementModel.getAll(customerList)) {
 			// 여기
 			System.out.print("고객 번호: " + e.getId() + " ");
 			System.out.print("고객 이름: " + e.getName() + " ");

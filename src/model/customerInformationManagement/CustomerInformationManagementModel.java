@@ -112,4 +112,7 @@ public class CustomerInformationManagementModel {
 		}
 	}
 	// 메소드는 아래에 적어주셔유! (MVC 적용)
+	public ArrayList<Customer> getAll(CustomerList customerList) {
+		return customerList.getAll();
+	}
 }
