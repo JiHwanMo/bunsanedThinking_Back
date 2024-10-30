@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import entity.department.Department;
+import entity.department.DepartmentList;
 import entity.employee.Employee;
 import entity.employee.EmployeeList;
 import entity.employee.EmployeePosition;
@@ -162,4 +164,16 @@ public class HumanResourceModel {
 		}
 	}
 	// 메소드는 아래에 적어주셔유! (MVC 적용)
+
+	public ArrayList<Employee> getAll(EmployeeList employeeList) {
+		return employeeList.getAll();
+	}
+
+	public ArrayList<Department> getAll(DepartmentList departmentList) {
+		return departmentList.getAll();
+	}
+
+	public Department get(DepartmentList departmentList, int departmentID) throws NotExistException {
+		return departmentList.get(departmentID);
+	}
 }
