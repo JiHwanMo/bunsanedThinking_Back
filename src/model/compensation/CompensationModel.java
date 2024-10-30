@@ -1,7 +1,14 @@
 package model.compensation;
 
+import java.util.ArrayList;
+
 import entity.accident.AccidentList;
+import entity.complaint.Complaint;
+import entity.complaint.ComplaintList;
+import entity.contract.Contract;
+import entity.contract.ContractList;
 import entity.customer.Customer;
+import entity.customer.CustomerList;
 import entity.insuranceMoney.InsuranceMoney;
 import entity.insuranceMoney.InsuranceMoneyList;
 import entity.insuranceMoney.InsuranceMoneyStatus;
@@ -12,6 +19,7 @@ import entity.report.Report;
 import entity.report.ReportList;
 import entity.report.ReportProcessStatus;
 import exception.AlreadyProcessedException;
+import exception.NotExistContractException;
 import exception.NotExistException;
 
 /**
@@ -48,4 +56,48 @@ public class CompensationModel {
 		insuranceMoneyList.update(insuranceMoney);
 	}
 	// 메소드는 아래에 적어주셔유! (MVC 적용)
+
+	public ArrayList<InsuranceMoney> getAll(InsuranceMoneyList insuranceMoneyList) {
+		return insuranceMoneyList.getAll();
+	}
+
+	public ArrayList<InsuranceMoney> getAllUnprocessed(InsuranceMoneyList insuranceMoneyList) {
+		return insuranceMoneyList.getAllUnprocessed();
+	}
+
+	public ArrayList<InsuranceMoney> getAllProcessed(InsuranceMoneyList insuranceMoneyList) {
+		return insuranceMoneyList.getAllProcessed();
+	}
+
+	public InsuranceMoney get(InsuranceMoneyList insuranceMoneyList, int id) throws NotExistException {
+		return insuranceMoneyList.get(id);
+	}
+
+	public Contract get(ContractList contractList, int contractId) throws NotExistContractException {
+		return contractList.get(contractId);
+	}
+
+	public Customer get(CustomerList customerList, int customerID) throws NotExistException {
+		return customerList.get(customerID);
+	}
+
+	public ArrayList<Report> getAll(ReportList reportList) {
+		return reportList.getAll();
+	}
+
+	public Report get(ReportList reportList, int id) throws NotExistException {
+		return reportList.get(id);
+	}
+
+	public ArrayList<Report> getAllUnprocessedReport(ReportList reportList) {
+		return reportList.getAllUnprocessedReport();
+	}
+
+	public ArrayList<Report> getAllCompletedReport(ReportList reportList) {
+		return reportList.getAllCompletedReport();
+	}
+
+	public Contract getAutomobileByMember(ContractList contractList, int customerID) throws NotExistContractException {
+		return contractList.getAutomobileByMember(customerID);
+	}
 }
