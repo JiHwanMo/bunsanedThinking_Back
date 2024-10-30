@@ -12,6 +12,8 @@ import entity.customer.Customer;
 import entity.customer.CustomerList;
 import entity.customer.Gender;
 import entity.diseaseHistory.DiseaseHistory;
+import entity.diseaseHistory.DiseaseHistoryList;
+import entity.employee.Employee;
 import entity.employee.EmployeeList;
 import entity.employee.Sales;
 import entity.insurance.Insurance;
@@ -115,4 +117,55 @@ public class SalesModel {
 		return (Loan) productList.get(id);
 	}
 	// 메소드는 아래에 적어주셔유! (MVC 적용)
+	public ArrayList<Employee> getAll(EmployeeList employeeList){
+		return employeeList.getAll();
+	}
+	public Employee get(EmployeeList employeeList, int id) throws NotExistException {
+		return employeeList.get(id);
+	}
+	public Sales getSales(EmployeeList employeeList, int id) throws NotExistException {
+		return employeeList.getSales(id);
+	}
+	
+	public ArrayList<Counsel> getAll(CounselList counselList){
+		return counselList.getAll();
+	}
+	public Counsel get(CounselList counselList, int id) throws NotExistException {
+		return counselList.get(id);
+	}
+	
+	public ArrayList<Product> getAll(ProductList productList){
+		return productList.getAll();
+	}
+	
+	public void add(DiseaseHistoryList diseaseHistoryList, DiseaseHistory diseaseHistory){
+		diseaseHistoryList.add(diseaseHistory);
+	}
+	
+	public void update(EmployeeList employeeList, Sales sales) throws NotExistException {
+		employeeList.update(sales);
+	}
+	
+	public ArrayList<Insurance> getAllDiseaseInsurance(ProductList productList){
+		return productList.getAllDiseaseInsurance();
+	}
+	public ArrayList<Insurance> getAllInjuryInsurance(ProductList productList){
+		return productList.getAllInjuryInsurance();
+	}
+	public ArrayList<Insurance> getAllAutomobileInsurance(ProductList productList){
+		return productList.getAllAutomobileInsurance();
+	}
+	
+	public ArrayList<Loan> getAllCollateralLoan(ProductList productList){
+		return productList.getAllCollateralLoan();
+	}
+	public ArrayList<Loan> getAllFixedDepositLoan(ProductList productList){
+		return productList.getAllFixedDepositLoan();
+	}
+	public ArrayList<Loan> getAllInsuranceContractLoan(ProductList productList){
+		return productList.getAllInsuranceContractLoan();
+	}
+	public Sales getSalesContractCount(EmployeeList employeeList, int id) throws NotExistException {
+		return (Sales) employeeList.get(id);
+	}
 }

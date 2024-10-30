@@ -3862,158 +3862,229 @@ public class Main {
 		} while (!(1 <= index && index <= 2));
 	}
 	// TODO Sales
-	private void showSalesTask(Sales sales) {
-		boolean finish = false;
-		while (!finish) {
-			System.out.println(sales.getName() + "님! 처리하려는 일을 클릭해주세요.");
-			System.out.println("1. 영업 성과 평가 2. 보험 상담 처리 3. 보험 상품 영업 4. 대출 상품 영업");
+		private void showSalesTask(Sales sales) {
+			boolean finish = false;
+			while (!finish) {
+				System.out.println(sales.getName() + "님! 처리하려는 일을 클릭해주세요.");
+				System.out.println("1. 영업 성과 평가 2. 보험 상담 처리 3. 보험 상품 영업 4. 대출 상품 영업");
+				try {
+					input = scanner.next();
+					index = Integer.parseInt(input);
+
+					switch (index) {
+					case 1:
+						evaluateSalesPerformance(sales); // 영업 성과 평가
+						break;
+					case 2:
+						handleInsuranceConsultation(sales);// 보험 상담 처리
+						break;
+					case 3:
+						induceInsuranceProduct(sales);
+						break;
+					case 4:
+						induceLoanProduct(sales);
+						break;
+					default:
+						finish = true;
+						break;
+					}
+				} catch (Exception e) {
+					System.out.println("잘못된 정보를 입력하였습니다. 다시 입력해주세요.");
+				}
+			}
+			index = -1;
+		}
+
+		private void evaluateSalesPerformance(Employee employee) {
+//			영업 직원 정보 리스트(직원 정보(직원 번호, 직원 이름, 직급), 계약건수)
+			for (Employee rEmployee : salesModel.getAll(employeeList)) {
+				// 여기
+				if (rEmployee instanceof Sales) {
+					System.out.print("직원 번호: " + ((Sales) rEmployee).getId() + " ");
+					System.out.print("직원 이름: " + ((Sales) rEmployee).getName() + " ");
+					System.out.print("직급: " + ((Sales) rEmployee).getPosition() + " ");
+					System.out.println("계약건수: " + ((Sales) rEmployee).getContractCount());
+					// 계약 건수는 Sales 타입이라서 Sales는 남겨야 함
+				}
+			}
+
+			System.out.println("1. 검색 2. 더블클릭");
 			try {
 				input = scanner.next();
 				index = Integer.parseInt(input);
-
 				switch (index) {
 				case 1:
-					evaluateSalesPerformance(sales); // 영업 성과 평가
+					getSales(employee);
 					break;
 				case 2:
-					handleInsuranceConsultation(sales);// 보험 상담 처리
-					break;
-				case 3:
-					induceInsuranceProduct(sales);
-					break;
-				case 4:
-					induceLoanProduct(sales);
-					break;
-				default:
-					finish = true;
+					doubleClickSalesPerformance(employee);
 					break;
 				}
 			} catch (Exception e) {
 				System.out.println("잘못된 정보를 입력하였습니다. 다시 입력해주세요.");
 			}
 		}
-		index = -1;
-	}
 
-	private void evaluateSalesPerformance(Employee employee) {
-//		영업 직원 정보 리스트(직원 정보(직원 번호, 직원 이름, 직급), 계약건수)
-		for (Employee rEmployee : employeeList.getAll()) {
-			// 여기
-			if (rEmployee instanceof Sales) {
-				System.out.print("직원 번호: " + ((Sales) rEmployee).getId() + " ");
-				System.out.print("직원 이름: " + ((Sales) rEmployee).getName() + " ");
-				System.out.print("직급: " + ((Sales) rEmployee).getPosition() + " ");
-				System.out.println("계약건수: " + ((Sales) rEmployee).getContractCount());
-				// 계약 건수는 Sales 타입이라서 Sales는 남겨야 함
-			}
-		}
-
-		System.out.println("1. 검색 2. 더블클릭");
-		try {
+		private void getSales(Employee employee) {
+			System.out.print("검색창: ");
 			input = scanner.next();
-			index = Integer.parseInt(input);
-			switch (index) {
-			case 1:
-				getSales(employee);
-				break;
-			case 2:
-				doubleClickSalesPerformance(employee);
-				break;
+			id = Integer.parseInt(input);
+
+			try {
+				Employee rEmployee = salesModel.get(employeeList, id);
+				// 여기
+				if (rEmployee instanceof Sales) {
+					System.out.print("직원 번호: " + salesModel.get(employeeList, id).getId() + " ");
+					System.out.print("직원 이름: " + salesModel.get(employeeList, id).getName() + " ");
+					System.out.print("직급: " + salesModel.get(employeeList, id).getPosition() + " ");
+					System.out.println("계약건수: " + salesModel.getSalesContractCount(employeeList, id).getContractCount());
+				} else {
+					System.out.println("해당하는 직원 정보가 존재하지 않습니다.");
+				}
+			} catch (NotExistException e) {
+				System.out.println("해당하는 직원 " + e.getMessage());
 			}
-		} catch (Exception e) {
-			System.out.println("잘못된 정보를 입력하였습니다. 다시 입력해주세요.");
 		}
-	}
 
-	private void getSales(Employee employee) {
-		System.out.print("검색창: ");
-		input = scanner.next();
-		id = Integer.parseInt(input);
-
-		try {
-			Employee rEmployee = employeeList.get(id);
-			// 여기
-			if (rEmployee instanceof Sales) {
-				System.out.print("직원 번호: " + ((Sales) employeeList.get(id)) + " ");
-				System.out.print("직원 이름: " + ((Sales) employeeList.get(id)) + " ");
-				System.out.print("직급: " + ((Sales) employeeList.get(id)) + " ");
-				System.out.println("계약건수: " + ((Sales) employeeList.get(id)).getContractCount());
-			} else {
-				System.out.println("해당하는 직원 정보가 존재하지 않습니다.");
-			}
-		} catch (NotExistException e) {
-			System.out.println("해당하는 직원 " + e.getMessage());
-		}
-	}
-
-	private void doubleClickSalesPerformance(Employee employee) {
-		System.out.println("영업 사원의 번호(더블클릭): ");
-		input = scanner.next();
-		id = Integer.parseInt(input);
-//		영업 직원 상세 정보(직원 상세 정보 (직원 번호, 직원 이름, 직급, 급여), )
-		Sales sales;
-		try {
-			sales = employeeList.getSales(id);
-			// 여기
-		} catch (NotExistException e) {
-			System.out.println(e.getMessage());
-			return;
-		}
-		System.out.print(sales.getId() + " ");
-		System.out.print(sales.getName() + " ");
-		System.out.print(sales.getPosition() + " ");
-		System.out.print(sales.getSalary() + " ");
-		System.out.println(sales.getContractCount());
-
-		do {
-			System.out.println("1. 평가 2. 취소");
+		private void doubleClickSalesPerformance(Employee employee) {
+			System.out.println("영업 사원의 번호(더블클릭): ");
 			input = scanner.next();
-			index = Integer.parseInt(input);
-			switch (index) {
-			case 1:
-				int evaluate;
-				System.out.println("1. ★ 2. ★★ 3. ★★★ 4. ★★★★ 5. ★★★★★");
+			id = Integer.parseInt(input);
+//			영업 직원 상세 정보(직원 상세 정보 (직원 번호, 직원 이름, 직급, 급여), )
+			Sales sales;
+			try {
+				sales = salesModel.getSales(employeeList, id);
+//						employeeList.getSales(id);
+				
+				// 여기
+			} catch (NotExistException e) {
+				System.out.println(e.getMessage());
+				return;
+			}
+			System.out.print(sales.getId() + " ");
+			System.out.print(sales.getName() + " ");
+			System.out.print(sales.getPosition() + " ");
+			System.out.print(sales.getSalary() + " ");
+			System.out.println(sales.getContractCount());
+
+			do {
+				System.out.println("1. 평가 2. 취소");
 				input = scanner.next();
-				evaluate = Integer.parseInt(input);
-				switch (evaluate) {
+				index = Integer.parseInt(input);
+				switch (index) {
 				case 1:
-					evaluate = 1;
+					int evaluate;
+					System.out.println("1. ★ 2. ★★ 3. ★★★ 4. ★★★★ 5. ★★★★★");
+					input = scanner.next();
+					evaluate = Integer.parseInt(input);
+					switch (evaluate) {
+					case 1:
+						evaluate = 1;
+						break;
+					case 2:
+						evaluate = 2;
+						break;
+					case 3:
+						evaluate = 3;
+						break;
+					case 4:
+						evaluate = 4;
+						break;
+					case 5:
+						evaluate = 5;
+						break;
+					default:
+						return;
+					}
+					try {
+						salesModel.evaluateSalesPerformance(evaluate, sales, employeeList);
+						System.out.println("평가되었습니다.");
+					} catch (NotExistException e) {
+						System.out.println(e.getMessage());
+						return;
+					}
+				case 2:
+					return;
+				default:
+					System.out.println("명시된 번호중에 클릭해주세요.");
+				}
+			} while (!(1 <= index && index <= 2));
+		}
+
+		private void handleInsuranceConsultation(Employee employee) {
+//			보험 상담 처리 정보 리스트(상담 고객 정보(고객 이름, 전화번호, 날짜, 성별), 상담 번호, 처리 상태)
+
+			for (Counsel counsel : salesModel.getAll(counselList)) {
+				// 여기
+				System.out.print("상담 번호: " + counsel.getId() + " ");
+				System.out.print("고객 이름: " + counsel.getName() + " ");
+				System.out.print("전화번호: " + counsel.getPhoneNumber() + " ");
+				System.out.print("날짜: " + counsel.getCounselDate() + " ");
+				System.out.print("성별: " + counsel.getGender().getName() + " ");
+				System.out.println("처리 상태: " + counsel.getProcessStatus().getName());
+			}
+
+			try {
+				System.out.println("1.처리상태 콤보박스 2.검색 3. 더블 클릭");
+				input = scanner.next();
+				index = Integer.parseInt(input);
+				switch (index) {
+				case 1:
+					viewCombobox(employee);
 					break;
 				case 2:
-					evaluate = 2;
+					getCounsel(employee);
 					break;
 				case 3:
-					evaluate = 3;
-					break;
-				case 4:
-					evaluate = 4;
-					break;
-				case 5:
-					evaluate = 5;
+					doubleClickCounsel(employee);
 					break;
 				default:
 					return;
 				}
-				try {
-					salesModel.evaluateSalesPerformance(evaluate, sales, employeeList);
-					System.out.println("평가되었습니다.");
-				} catch (NotExistException e) {
-					System.out.println(e.getMessage());
+			} catch (Exception e) {
+				System.out.println("잘못된 정보를 입력하였습니다. 다시 입력해주세요.");
+				return;
+			}
+		}
+
+		private void viewCombobox(Employee employee) {
+			System.out.println("1.미처리 2.처리완료");
+			input = scanner.next();
+			index = Integer.parseInt(input);
+			for (Counsel counsel : salesModel.getAll(counselList)) {
+				// 여기
+				if (index == 1 && counsel.getProcessStatus() == CounselProcessStatus.Unprocessed) {
+					System.out.print("상담 번호: " + counsel.getId() + " ");
+					System.out.print("고객 이름: " + counsel.getName() + " ");
+					System.out.print("전화번호: " + counsel.getPhoneNumber() + " ");
+					System.out.print("날짜: " + counsel.getCounselDate() + " ");
+					System.out.print("성별: " + counsel.getGender().getName() + " ");
+					System.out.println("처리 상태: " + counsel.getProcessStatus().getName());
+				} else if (index == 2 && counsel.getProcessStatus() == CounselProcessStatus.Unprocessed) {
+					System.out.print("상담 번호: " + counsel.getId() + " ");
+					System.out.print("고객 이름: " + counsel.getName() + " ");
+					System.out.print("전화번호: " + counsel.getPhoneNumber() + " ");
+					System.out.print("날짜: " + counsel.getCounselDate() + " ");
+					System.out.print("성별: " + counsel.getGender().getName() + " ");
+					System.out.println("처리 상태: " + counsel.getProcessStatus().getName());
+				} else {
 					return;
 				}
-			case 2:
-				return;
-			default:
-				System.out.println("명시된 번호중에 클릭해주세요.");
 			}
-		} while (!(1 <= index && index <= 2));
-	}
+		}
 
-	private void handleInsuranceConsultation(Employee employee) {
-//		보험 상담 처리 정보 리스트(상담 고객 정보(고객 이름, 전화번호, 날짜, 성별), 상담 번호, 처리 상태)
-
-		for (Counsel counsel : counselList.getAll()) {
-			// 여기
+		private void getCounsel(Employee employee) {
+			System.out.print("검색창: ");
+			input = scanner.next();
+			id = Integer.parseInt(input);
+			Counsel counsel;
+			try {
+				counsel = salesModel.get(counselList, id);
+				// 여기
+			} catch (NotExistException e) {
+				System.out.println("상담 " + e.getMessage());
+				return;
+			}
 			System.out.print("상담 번호: " + counsel.getId() + " ");
 			System.out.print("고객 이름: " + counsel.getName() + " ");
 			System.out.print("전화번호: " + counsel.getPhoneNumber() + " ");
@@ -4022,1459 +4093,1062 @@ public class Main {
 			System.out.println("처리 상태: " + counsel.getProcessStatus().getName());
 		}
 
-		try {
-			System.out.println("1.처리상태 콤보박스 2.검색 3. 더블 클릭");
+//		보험 상담 처리 상세 정보(상담 고객 정보(고객 이름, 전화번호, 날짜, 직업,나이, 성별), 상담 번호, 처리 상태)
+		private void doubleClickCounsel(Employee employee) {
+			System.out.println("상담의 번호(더블클릭): ");
+			input = scanner.next();
+			id = Integer.parseInt(input);
+			Counsel counsel;
+			try {
+				counsel = salesModel.get(counselList, id);
+				// 여기
+			} catch (NotExistException e) {
+				System.out.println("상담 " + e.getMessage());
+				return;
+			}
+			System.out.print("상담 번호: " + counsel.getId() + " ");
+			System.out.print("고객 이름: " + counsel.getName() + " ");
+			System.out.print("전화번호: " + counsel.getPhoneNumber() + " ");
+			System.out.print("날짜: " + counsel.getCounselDate() + " ");
+			System.out.print("직업: " + counsel.getJob() + " ");
+			System.out.print("나이: " + counsel.getAge() + " ");
+			System.out.print("성별: " + counsel.getGender().getName() + " ");
+			System.out.println("처리 상태: " + counsel.getProcessStatus().getName());
+
+			System.out.println("1. 예약 2. 취소");
 			input = scanner.next();
 			index = Integer.parseInt(input);
-			switch (index) {
-			case 1:
-				viewCombobox(employee);
-				break;
-			case 2:
-				getCounsel(employee);
-				break;
-			case 3:
-				doubleClickCounsel(employee);
-				break;
-			default:
-				return;
-			}
-		} catch (Exception e) {
-			System.out.println("잘못된 정보를 입력하였습니다. 다시 입력해주세요.");
-			return;
-		}
-	}
-
-	private void viewCombobox(Employee employee) {
-		System.out.println("1.미처리 2.처리완료");
-		input = scanner.next();
-		index = Integer.parseInt(input);
-		for (Counsel counsel : counselList.getAll()) {
-			// 여기
-			if (index == 1 && counsel.getProcessStatus() == CounselProcessStatus.Unprocessed) {
-				System.out.print("상담 번호: " + counsel.getId() + " ");
-				System.out.print("고객 이름: " + counsel.getName() + " ");
-				System.out.print("전화번호: " + counsel.getPhoneNumber() + " ");
-				System.out.print("날짜: " + counsel.getCounselDate() + " ");
-				System.out.print("성별: " + counsel.getGender().getName() + " ");
-				System.out.println("처리 상태: " + counsel.getProcessStatus().getName());
-			} else if (index == 2 && counsel.getProcessStatus() == CounselProcessStatus.Unprocessed) {
-				System.out.print("상담 번호: " + counsel.getId() + " ");
-				System.out.print("고객 이름: " + counsel.getName() + " ");
-				System.out.print("전화번호: " + counsel.getPhoneNumber() + " ");
-				System.out.print("날짜: " + counsel.getCounselDate() + " ");
-				System.out.print("성별: " + counsel.getGender().getName() + " ");
-				System.out.println("처리 상태: " + counsel.getProcessStatus().getName());
-			} else {
-				return;
-			}
-		}
-	}
-
-	private void getCounsel(Employee employee) {
-		System.out.print("검색창: ");
-		input = scanner.next();
-		id = Integer.parseInt(input);
-		Counsel counsel;
-		try {
-			counsel = counselList.get(id);
-			// 여기
-		} catch (NotExistException e) {
-			System.out.println("상담 " + e.getMessage());
-			return;
-		}
-		System.out.print("상담 번호: " + counsel.getId() + " ");
-		System.out.print("고객 이름: " + counsel.getName() + " ");
-		System.out.print("전화번호: " + counsel.getPhoneNumber() + " ");
-		System.out.print("날짜: " + counsel.getCounselDate() + " ");
-		System.out.print("성별: " + counsel.getGender().getName() + " ");
-		System.out.println("처리 상태: " + counsel.getProcessStatus().getName());
-	}
-
-//	보험 상담 처리 상세 정보(상담 고객 정보(고객 이름, 전화번호, 날짜, 직업,나이, 성별), 상담 번호, 처리 상태)
-	private void doubleClickCounsel(Employee employee) {
-		System.out.println("상담의 번호(더블클릭): ");
-		input = scanner.next();
-		id = Integer.parseInt(input);
-		Counsel counsel;
-		try {
-			counsel = counselList.get(id);
-			// 여기
-		} catch (NotExistException e) {
-			System.out.println("상담 " + e.getMessage());
-			return;
-		}
-		System.out.print("상담 번호: " + counsel.getId() + " ");
-		System.out.print("고객 이름: " + counsel.getName() + " ");
-		System.out.print("전화번호: " + counsel.getPhoneNumber() + " ");
-		System.out.print("날짜: " + counsel.getCounselDate() + " ");
-		System.out.print("직업: " + counsel.getJob() + " ");
-		System.out.print("나이: " + counsel.getAge() + " ");
-		System.out.print("성별: " + counsel.getGender().getName() + " ");
-		System.out.println("처리 상태: " + counsel.getProcessStatus().getName());
-
-		System.out.println("1. 예약 2. 취소");
-		input = scanner.next();
-		index = Integer.parseInt(input);
-		boolean finish = false;
-		while (!finish) {
-			switch (index) {
-			case 1:
-				try {
-					salesModel.handleInsuranceConsultation(counsel, counselList);
-					System.out.println("예약되었습니다");
-				} catch (NotExistException e) {
-					System.out.println(e.getMessage());
-				} catch (AlreadyProcessedException e) {
-					System.out.println("이미 상담 처리가 완료되었습니다.");
-				}
-				break;
-			case 2:
-				finish = true;
-				break;
-			default:
-				System.out.print("명시된 번호 중에 클릭해주세요.");
-				break;
-			}
-		}
-
-	}
-
-	private void induceInsuranceProduct(Sales sales) {
-		System.out.println("보험 상품 정보 리스트");
-		System.out.println("\n=================");
-		for (Product e : productList.getAll()) {
-			// 여기
-			if (e instanceof Insurance) {
-				System.out.print("보험 상품 번호: " + ((Insurance) e).getId() + "\n");
-				System.out.print("보험 상품 이름: " + ((Insurance) e).getName() + " | ");
-				System.out.print("보험 종류: " + ((Insurance) e).getInsuranceType().getName() + " | ");
-				System.out.print("연령대: " + ((Insurance) e).getAgeRange() + " | ");
-				System.out.println("월 보험료: " + ((Insurance) e).getMonthlyPremium());
-				System.out.println("-----------------");
-			}
-		}
-		System.out.println("=================\n");
-
-		System.out.println("1. 보험 종류 콤보박스 2. 검색 3. 더블 클릭");
-		try {
-			input = scanner.next();
-			index = Integer.parseInt(input);
-			switch (index) {
-			case 1:
-				System.out.println("1. 보험 종류 콤보박스");
-				System.out.println("1. 질병 2. 상해 3. 자동차");
-				try {
-					input = scanner.next();
-					index = Integer.parseInt(input);
-					switch (index) {
-					case 1:
-						induceDiseaseInsurance(sales);
-						break;
-					case 2:
-						induceInjuryInsurance(sales);
-						break;
-					case 3:
-						induceAutomobileInsurance(sales);
-						break;
-					default:
-						return;
-					}
-				} catch (Exception e) {
-					System.out.println("잘못된 정보를 입력하였습니다. 다시 입력해주세요.");
-				}
-				break;
-			case 2:
-				getInsuranceSales(sales);
-				break;
-			case 3:
-				doubleClickInsuranceSales(sales);
-				break;
-			default:
-				return;
-			}
-		} catch (Exception e) {
-			System.out.println("잘못된 정보를 입력하였습니다. 다시 입력해주세요.");
-			return;
-		}
-	}
-
-	private void getInsuranceSales(Employee employee) {
-		System.out.print("검색창: ");
-		input = scanner.next();
-		id = Integer.parseInt(input);
-		Insurance insurance;
-		try {
-			insurance = salesModel.getInsuranceProduct(productList, id);
-		} catch (NotExistException e) {
-			System.out.println("보험 상품 " + e.getMessage());
-			return;
-		}
-		System.out.print("보험 상품 번호: " + insurance.getId() + "\n");
-		System.out.print("보험 상품 이름: " + insurance.getName() + " | ");
-		System.out.print("보험 종류: " + insurance.getInsuranceType().getName() + " | ");
-		System.out.print("연령대: " + insurance.getAgeRange() + " | ");
-		System.out.println(" 월 보험료: " + insurance.getMonthlyPremium());
-	}
-
-	private void doubleClickInsuranceSales(Sales sales) throws ParseException {
-		// Sales employee
-		System.out.println("보험 상품의 번호(더블클릭): ");
-		input = scanner.next();
-		id = Integer.parseInt(input);
-		Insurance insurance;
-		try {
-			insurance = salesModel.getInsuranceProduct(productList, id);
-		} catch (NotExistException e) {
-			System.out.println(e.getMessage());
-			return;
-		}
-		System.out.println("1. 보험 상품 이름: " + insurance.getName());
-		System.out.println("2. 보험 종류: " + insurance.getInsuranceType().getName());
-		System.out.println("3. 연령대: " + insurance.getAgeRange());
-		System.out.println("4. 보장 내용: " + insurance.getCoverage());
-		System.out.println("5. 월 보험료: " + insurance.getMonthlyPremium());
-		System.out.println("6. 계약기간: " + insurance.getContractPeriod());
-		if (insurance instanceof Disease) {
-			Disease diseaseInsurance = (Disease) insurance;
-			System.out.println("7. 질병 최대 개수: " + diseaseInsurance.getDiseaseLimit());
-			System.out.println("8. 질병 이름: " + diseaseInsurance.getDiseaseName());
-			System.out.println("9. 수술 최대 횟수: " + diseaseInsurance.getSurgeriesLimit());
-		} else if (insurance instanceof Injury) {
-			Injury injuryInsurance = (Injury) insurance;
-			System.out.println("7. 상해 보험 종류: " + injuryInsurance.getInjuryType().getName());
-			System.out.println("8. 수술 최대 횟수: " + injuryInsurance.getSurgeriesLimit());
-		} else if (insurance instanceof Automobile) {
-			Automobile automobileInsurance = (Automobile) insurance;
-			System.out.println("7. 사고 최대 횟수: " + automobileInsurance.getAccidentLimit());
-			System.out.println("8. 차량 종류: " + automobileInsurance.getVehicleType().getName());
-			System.out.print("9. 서비스 종류:");
-			for (ServiceType serviceType : automobileInsurance.getServiceList()) {
-				System.out.print(" " + serviceType.getName() + " |");
-			}
-			System.out.println();
-		}
-		System.out.println("1. 안내장 발송 2. 보험 가입 요청");
-		input = scanner.next();
-		index = Integer.parseInt(input);
-		switch (index) {
-		case 1:
-			System.out.println("안내장 발송이 완료되었습니다.");
-			break;
-		case 2:
-			Customer customer = new Customer();
 			boolean finish = false;
 			while (!finish) {
-				try {
-					System.out.print("1. 고객 이름: ");
-					input = scanner.next();
-					String name = input;
-					System.out.print("2. 전화번호: ");
-					input = scanner.next();
-					String phoneNumber = input;
-					System.out.print("3. 직업: ");
-					input = scanner.next();
-					String job = input;
-					System.out.print("4. 나이: ");
-					input = scanner.next();
-					int age = Integer.parseInt(input);
-
-					Gender gender = null;
-					System.out.println("5. 성별: ");
-					System.out.println("1. 남자 2. 여자");
-					input = scanner.next();
-					switch (Integer.parseInt(input)) {
-					case 1:
-						gender = Gender.Male;
-						break;
-					case 2:
-						gender = Gender.Female;
-						break;
-					default:
-						return;
-					}
-
-					System.out.print("6. 주민등록번호: ");
-					input = scanner.next();
-					String residentRegistrationNumber = input;
-					System.out.print("7. 주소: ");
-					input = scanner.next();
-					String address = input;
-					System.out.print("8. 재산: ");
-					input = scanner.next();
-					long property = Integer.parseInt(input);
-
-					ArrayList<AccidentHistory> tempAccidentHistoryList = new ArrayList<AccidentHistory>();
-					boolean finishInputAccidentHistory = false;
-					while (!finishInputAccidentHistory) {
-						System.out.println("9. 사고 이력: ");
-						System.out.println("1. 입력 2. 취소");
-						input = scanner.next();
-						switch (Integer.parseInt(input)) {
-						case 1:
-							System.out.print("사고 내용:");
-							String detailsOfAccident = scanner.next();
-							System.out.print("사고날짜(yyyy-MM-dd) :");
-							String dateOfAccident = scanner.next();
-							SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
-							Date date = formatter.parse(dateOfAccident);
-							AccidentHistory accidentHistory = new AccidentHistory(detailsOfAccident, date);
-							tempAccidentHistoryList.add(accidentHistory);
-							break;
-						case 2:
-							finishInputAccidentHistory = true;
-							break;
-						default:
-							System.out.println("명시된 번호 중에 클릭해주세요.");
-							break;
-						}
-					}
-
-					ArrayList<SurgeryHistory> tempSurgeryHistoryList = new ArrayList<SurgeryHistory>();
-					boolean finishSurgeryHistory = false;
-					while (!finishSurgeryHistory) {
-						System.out.println("10. 수술 이력");
-						System.out.println("1. 입력 2. 취소");
-						input = scanner.next();
-						switch (Integer.parseInt(input)) {
-						case 1:
-							System.out.print("수술명:");
-							String surgeryName = scanner.next();
-							System.out.print("병원이름:");
-							String hospitalName = scanner.next();
-							System.out.print("수술날짜(yyyy-MM-dd) :");
-							String dateOfSurgery = scanner.next();
-							SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
-							Date date = formatter.parse(dateOfSurgery);
-							SurgeryHistory surgeryHistory = new SurgeryHistory(surgeryName, hospitalName, date);
-							tempSurgeryHistoryList.add(surgeryHistory);
-							break;
-						case 2:
-							finishSurgeryHistory = true;
-							break;
-						default:
-							System.out.println("명시된 번호 중에 클릭해주세요.");
-							break;
-						}
-					}
-
-					ArrayList<DiseaseHistory> tempDiseaseHistoryList = new ArrayList<DiseaseHistory>();
-					boolean finishInputDiseaseHistory = false;
-					while (!finishInputDiseaseHistory) {
-						System.out.println("11. 병력");
-						System.out.println("1. 입력 2. 취소");
-						input = scanner.next();
-						switch (Integer.parseInt(input)) {
-						case 1:
-							System.out.print("병명:");
-							String diseaseName = scanner.next();
-							System.out.print("진단일(yyyy-MM-dd) :");
-							String dateOfDiagnosis = scanner.next();
-							SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
-							Date date = formatter.parse(dateOfDiagnosis);
-							DiseaseHistory diseaseHistory = new DiseaseHistory(diseaseName, date);
-							diseaseHistoryList.add(diseaseHistory);
-							break;
-						case 2:
-							finishInputDiseaseHistory = true;
-							break;
-						default:
-							System.out.println("명시된 번호 중에 클릭해주세요.");
-							break;
-						}
-					}
-
-					System.out.print("12. 은행명: ");
-					input = scanner.next();
-					String bankName = input;
-					System.out.print("13. 계좌 번호: ");
-					input = scanner.next();
-					String bankAccount = input;
-
-					do {
-						System.out.println("1. 확인 2. 취소");
-						input = scanner.next();
-						index = Integer.parseInt(input);
-						switch (index) {
-						case 1:
-							customer.signUp(name, phoneNumber, job, age, gender, residentRegistrationNumber, address,
-									property, tempAccidentHistoryList, tempSurgeryHistoryList, tempDiseaseHistoryList,
-									bankName, bankAccount, customerList, accidentHistoryList, surgeryHistoryList,
-									diseaseHistoryList);
-							System.out.println("회원가입이 완료되었습니다.회원 아이디는 " + customer.getId() + "입니다.");
-							finish = true;
-							break;
-						case 2:
-							return;
-						default:
-							System.out.println("명시된 번호중에 클릭해주세요.");
-						}
-					} while (!(1 <= index && index <= 2));
-				} catch (DuplicateResidentRegistrationNumberException duplicateresidentRegistrationNumber) {
-					System.out.println(duplicateresidentRegistrationNumber.getMessage());
-					return;
-				} catch (NumberFormatException numberFormatException) {
-					System.out.println("잘못된 정보를 입력하였습니다. 다시 입력해주세요.");
-					return;
-				}
-				while (true) {
-					System.out.println("1. 보험 가입 요청 2. 취소");
-					int nextStep = scanner.nextInt();
-					if (nextStep == 1) {
-						customer.buyInsurance(insurance, contractList);
-						int contractCount = sales.getContractCount();
-						sales.setContractCount(++contractCount);
-						try {
-							employeeList.update(sales);
-							System.out.println("요청되었습니다.");
-						} catch (NotExistException e) {
-							System.out.println(e.getMessage());
-							return;
-						}
-						break;
-					} else if (nextStep == 2) {
-						break;
-					} else {
-						System.out.println("명시된 번호중에 클릭해주세요.");
-					}
-				}
-			}
-			break;
-		default:
-			System.out.println("잘못된 정보를 입력하였습니다. 다시 입력해주세요.");
-		}
-	}
-
-	private void induceDiseaseInsurance(Employee employee) {
-		ArrayList<Insurance> insuranceList = productList.getAllDiseaseInsurance();
-		// 여기
-		System.out.println("질병 보험 상품 정보 리스트");
-		System.out.println("\n=================");
-		for (Insurance insurance : insuranceList) {
-			System.out.print("보험 상품 번호: " + insurance.getId() + "\n");
-			System.out.print("보험 상품 이름: " + insurance.getName() + " | ");
-			System.out.print("보험 종류: " + insurance.getInsuranceType().getName() + " | ");
-			System.out.print("연령대: " + insurance.getAgeRange() + " | ");
-			System.out.println("월 보험료: " + insurance.getMonthlyPremium());
-			System.out.println("-----------------");
-		}
-		System.out.println("=================\n");
-	}
-
-	private void induceInjuryInsurance(Employee employee) {
-		ArrayList<Insurance> insuranceList = productList.getAllInjuryInsurance();
-		// 여기
-		System.out.println("상해 보험 상품 정보 리스트");
-		System.out.println("\n=================");
-		for (Insurance insurance : insuranceList) {
-			System.out.print("보험 상품 번호: " + insurance.getId() + "\n");
-			System.out.print("보험 상품 이름: " + insurance.getName() + " | ");
-			System.out.print("보험 종류: " + insurance.getInsuranceType().getName() + " | ");
-			System.out.print("연령대: " + insurance.getAgeRange() + " | ");
-			System.out.println("월 보험료: " + insurance.getMonthlyPremium());
-			System.out.println("-----------------");
-		}
-		System.out.println("=================\n");
-	}
-
-	private void induceAutomobileInsurance(Employee employee) {
-		ArrayList<Insurance> insuranceList = productList.getAllAutomobileInsurance();
-		// 여기
-		System.out.println("자동차 보험 상품 정보 리스트");
-		System.out.println("\n=================");
-		for (Insurance insurance : insuranceList) {
-			System.out.print("보험 상품 번호: " + insurance.getId() + "\n");
-			System.out.print("보험 상품 이름: " + insurance.getName() + " | ");
-			System.out.print("보험 종류: " + insurance.getInsuranceType().getName() + " | ");
-			System.out.print("연령대: " + insurance.getAgeRange() + " | ");
-			System.out.println("월 보험료: " + insurance.getMonthlyPremium());
-			System.out.println("-----------------");
-		}
-		System.out.println("=================\n");
-	}
-
-	/////////// 2024-06-04 모지환
-	private void induceLoanProduct(Employee employee) {
-		System.out.println("대출 상품 정보 리스트");
-		System.out.println("\n=================");
-		for (Product e : productList.getAll()) {
-			// 여기
-			if (e instanceof Loan) {
-				System.out.print("대출 상품 번호: " + ((Loan) e).getId() + "\n");
-				System.out.print("대출 상품 이름: " + ((Loan) e).getName() + " | ");
-				System.out.print("대출 종류: " + ((Loan) e).getLoanType().getName() + " | ");
-				System.out.print("이자율: " + ((Loan) e).getInterestRate() + " | ");
-				System.out.println("대출 가능 최대 금액: " + ((Loan) e).getLimit() + " | ");
-				System.out.println("-----------------");
-			}
-		}
-		System.out.println("=================\n");
-
-		System.out.println("1. 대출 종류 콤보박스 2. 검색 3. 더블 클릭");
-		try {
-			input = scanner.next();
-			index = Integer.parseInt(input);
-			switch (index) {
-			case 1:
-				System.out.println("1. 대출 종류 콤보박스");
-				System.out.println("1. 담보 2. 정기 예금 3. 보험 계약");
-				try {
-					input = scanner.next();
-					index = Integer.parseInt(input);
-					switch (index) {
-					case 1:
-						induceCollateralLoan(employee);
-						break;
-					case 2:
-						induceFixedDepositLoan(employee);
-						break;
-					case 3:
-						induceInsuranceContractLoan(employee);
-						break;
-					default:
-						return;
-					}
-				} catch (Exception e) {
-					System.out.println("잘못된 정보를 입력하였습니다. 다시 입력해주세요.");
-				}
-				break;
-			case 2:
-				getLoanSales(employee);
-				break;
-			case 3:
-				doubleClickLoanSales(employee);
-				break;
-			default:
-				return;
-			}
-		} catch (Exception e) {
-			System.out.println("잘못된 정보를 입력하였습니다. 다시 입력해주세요.");
-		}
-	}
-
-	private void getLoanSales(Employee employee) {
-		System.out.print("검색창: ");
-		input = scanner.next();
-		id = Integer.parseInt(input);
-		Loan loan;
-		try {
-			loan = salesModel.getLoanProduct(productList, id);
-		} catch (NotExistException e) {
-			System.out.println("대출 상품 " + e.getMessage());
-			return;
-		}
-		
-		System.out.print("대출 상품 이름: " + loan.getName() + " ");
-		System.out.print("대출 종류: " + loan.getLoanType().getName() + " ");
-		System.out.print("대출 상품 번호: " + loan.getId() + " ");
-		System.out.print("이자율: " + loan.getInterestRate() + " ");
-		System.out.println("대출 가능 최대 금액: " + loan.getLimit() + " ");	
-	}
-
-	private void doubleClickLoanSales(Employee employee) throws ParseException {
-		System.out.println("대출 상품의 번호(더블클릭): ");
-		input = scanner.next();
-		id = Integer.parseInt(input);
-
-		try {
-			if (salesModel.getLoanProduct(productList, id) != null) {
-				System.out.println("1. 대출 상품 이름: " + salesModel.getLoanProduct(productList, id).getName() + " ");
-				System.out.println("2. 대출 종류: " + salesModel.getLoanProduct(productList, id).getLoanType().getName() + " ");
-				System.out.println("3. 대출 상품 번호: " + salesModel.getLoanProduct(productList, id).getId() + " ");
-				System.out.println("4. 이자율: " + salesModel.getLoanProduct(productList, id).getInterestRate() + " ");
-				System.out.println("5. 대출 가능 최대 금액: " + salesModel.getLoanProduct(productList, id).getLimit() + " ");
-				System.out.println("6. 최소 자산: " + salesModel.getLoanProduct(productList, id).getMinimumAsset());
-				if (salesModel.getLoanProduct(productList, id) instanceof Collateral) {
-					Collateral collateralLoan = (Collateral) salesModel.getLoanProduct(productList, id);
-					System.out.println("7. 담보 종류: " + collateralLoan.getCollateralType().getName());
-					System.out.println("8. 담보 최소 가치: " + collateralLoan.getMinimumValue());
-				} else if (salesModel.getLoanProduct(productList, id) instanceof FixedDeposit) {
-					FixedDeposit fixedDepositLoan = (FixedDeposit) salesModel.getLoanProduct(productList, id);
-					System.out.println("7. 최대 예치 금액: " + fixedDepositLoan.getMinimumAmount());
-				} else if (salesModel.getLoanProduct(productList, id) instanceof InsuranceContract) {
-					InsuranceContract insuranceContractLoan = (InsuranceContract) salesModel.getLoanProduct(productList, id);
-					System.out.println("7. 보험 상품 번호: " + insuranceContractLoan.getProductID());
-				}
-			} else {
-				throw new Exception();
-			}
-		} catch (Exception e) {
-			System.out.println("대출 상품 정보가 존재하지 않습니다.");
-			return;
-		}
-		System.out.println("1. 안내장 발송 2. 대출 요청");
-		input = scanner.next();
-		index = Integer.parseInt(input);
-		switch (index) {
-		case 1:
-			System.out.println("안내장 발송이 완료되었습니다.");
-			break;
-		case 2:
-			Customer customer = new Customer();
-			boolean finish = false;
-			while (!finish) {
-				try {
-					System.out.print("1. 고객 이름: ");
-					input = scanner.next();
-					String name = input;
-					System.out.print("2. 전화번호: ");
-					input = scanner.next();
-					String phoneNumber = input;
-					System.out.print("3. 직업: ");
-					input = scanner.next();
-					String job = input;
-					System.out.print("4. 나이: ");
-					input = scanner.next();
-					int age = Integer.parseInt(input);
-
-					Gender gender = null;
-					System.out.println("5. 성별: ");
-					System.out.println("1. 남자 2. 여자");
-					input = scanner.next();
-					switch (Integer.parseInt(input)) {
-					case 1:
-						gender = Gender.Male;
-						break;
-					case 2:
-						gender = Gender.Female;
-						break;
-					default:
-						return;
-					}
-
-					System.out.print("6. 주민등록번호: ");
-					input = scanner.next();
-					String residentRegistrationNumber = input;
-					System.out.print("7. 주소: ");
-					input = scanner.next();
-					String address = input;
-					System.out.print("8. 재산: ");
-					input = scanner.next();
-					long property = Integer.parseInt(input);
-
-					ArrayList<AccidentHistory> tempAccidentHistoryList = new ArrayList<AccidentHistory>();
-					System.out.println("9. 사고 이력: ");
-					System.out.println("1. 입력 2. 취소");
-					boolean finishInputAccidentHistory = false;
-					while (!finishInputAccidentHistory) {
-						input = scanner.next();
-						switch (Integer.parseInt(input)) {
-						case 1:
-							System.out.print("사고 내용:");
-							String detailsOfAccident = scanner.next();
-							System.out.print("사고날짜(yyyy-MM-dd) :");
-							String dateOfAccident = scanner.next();
-							SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
-							Date date = formatter.parse(dateOfAccident);
-							AccidentHistory accidentHistory = new AccidentHistory(detailsOfAccident, date);
-							tempAccidentHistoryList.add(accidentHistory);
-							break;
-						case 2:
-							finishInputAccidentHistory = true;
-							break;
-						default:
-							System.out.println("명시된 번호 중에 클릭해주세요.");
-							break;
-						}
-					}
-
-					ArrayList<SurgeryHistory> tempSurgeryHistoryList = new ArrayList<SurgeryHistory>();
-					System.out.println("10. 수술 이력");
-					System.out.println("1. 입력 2. 취소");
-					boolean finishSurgeryHistory = false;
-					while (!finishSurgeryHistory) {
-						input = scanner.next();
-						switch (Integer.parseInt(input)) {
-						case 1:
-							System.out.print("수술명:");
-							String surgeryName = scanner.next();
-							System.out.print("병원이름:");
-							String hospitalName = scanner.next();
-							System.out.print("수술날짜(yyyy-MM-dd) :");
-							String dateOfSurgery = scanner.next();
-							SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
-							Date date = formatter.parse(dateOfSurgery);
-							SurgeryHistory surgeryHistory = new SurgeryHistory(surgeryName, hospitalName, date);
-							tempSurgeryHistoryList.add(surgeryHistory);
-							break;
-						case 2:
-							finishSurgeryHistory = true;
-							break;
-						default:
-							System.out.println("명시된 번호 중에 클릭해주세요.");
-							break;
-						}
-					}
-
-					ArrayList<DiseaseHistory> tempDiseaseHistoryList = new ArrayList<DiseaseHistory>();
-					System.out.println("11. 병력");
-					System.out.println("1. 입력 2. 취소");
-					boolean finishInputDiseaseHistory = false;
-					while (!finishInputDiseaseHistory) {
-
-						input = scanner.next();
-						switch (Integer.parseInt(input)) {
-						case 1:
-							System.out.print("병명:");
-							String diseaseName = scanner.next();
-							System.out.print("진단일(yyyy-MM-dd) :");
-							String dateOfDiagnosis = scanner.next();
-							SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
-							Date date = formatter.parse(dateOfDiagnosis);
-							DiseaseHistory diseaseHistory = new DiseaseHistory(diseaseName, date);
-							diseaseHistoryList.add(diseaseHistory);
-							break;
-						case 2:
-							finishInputDiseaseHistory = true;
-							break;
-						default:
-							System.out.println("명시된 번호 중에 클릭해주세요.");
-							break;
-						}
-					}
-
-					System.out.print("12. 은행명: ");
-					input = scanner.next();
-					String bankName = input;
-					System.out.print("13. 계좌 번호: ");
-					input = scanner.next();
-					String bankAccount = input;
-
-					do {
-						System.out.println("1. 확인 2. 취소");
-						input = scanner.next();
-						index = Integer.parseInt(input);
-						switch (index) {
-						case 1:
-							customer.signUp(name, phoneNumber, job, age, gender, residentRegistrationNumber, address,
-									property, tempAccidentHistoryList, tempSurgeryHistoryList, tempDiseaseHistoryList,
-									bankName, bankAccount, customerList, accidentHistoryList, surgeryHistoryList,
-									diseaseHistoryList);
-							System.out.println("회원가입이 완료되었습니다. 회원 아이디는 " + customer.getId() + "입니다.");
-							finish = true;
-							break;
-						case 2:
-							return;
-						default:
-							System.out.println("명시된 번호중에 클릭해주세요.");
-						}
-					} while (!(1 <= index && index <= 2));
-				} catch (DuplicateResidentRegistrationNumberException duplicateresidentRegistrationNumber) {
-					System.out.println(duplicateresidentRegistrationNumber.getMessage());
-					return;
-				} catch (NumberFormatException numberFormatException) {
-					System.out.println("잘못된 정보를 입력하였습니다. 다시 입력해주세요.");
-					return;
-				}
-				while (true) {
-					System.out.println("1. 대출 요청 2. 취소");
-					int nextStep = scanner.nextInt();
-					if (nextStep == 1) {
-						System.out.println("요청되었습니다.");
-						break;
-					} else if (nextStep == 2) {
-						break;
-					} else {
-						System.out.println("명시된 번호중에 클릭해주세요.");
-					}
-				}
-				break;
-			}
-		default:
-			System.out.println("잘못된 정보를 입력하였습니다. 다시 입력해주세요.");
-		}
-	}
-
-	private void induceCollateralLoan(Employee employee) {
-		ArrayList<Loan> loanList = productList.getAllCollateralLoan();
-		// 여기
-		System.out.println("담보 대출 상품 정보 리스트");
-		for (Loan loan : loanList) {
-			System.out.print("대출 상품 이름: " + loan.getName() + " ");
-			System.out.print("대출 종류: " + loan.getLoanType().getName() + " ");
-			System.out.print("대출 상품 번호: " + loan.getId() + " ");
-			System.out.print("이자율: " + loan.getInterestRate() + " ");
-			System.out.println("대출 가능 최대 금액: " + loan.getLimit());
-			// System.out.println("대출 상태: " + ((Loan) e).get() + " ");
-		}
-	}
-
-	private void induceFixedDepositLoan(Employee employee) {
-		ArrayList<Loan> loanList = productList.getAllFixedDepositLoan();
-		System.out.println("정기 예금 대출 상품 정보 리스트");
-		for (Loan loan : loanList) {
-			System.out.print("대출 상품 이름: " + loan.getName() + " ");
-			System.out.print("대출 종류: " + loan.getLoanType().getName() + " ");
-			System.out.print("대출 상품 번호: " + loan.getId() + " ");
-			System.out.print("이자율: " + loan.getInterestRate() + " ");
-			System.out.println("대출 가능 최대 금액: " + loan.getLimit());
-			// System.out.println("대출 상태: " + ((Loan) e).get() + " ");
-		}
-	}
-
-	private void induceInsuranceContractLoan(Employee employee) {
-		ArrayList<Loan> loanList = productList.getAllInsuranceContractLoan();
-		System.out.println("보험 계약 대출 상품 정보 리스트");
-		for (Loan loan : loanList) {
-			System.out.print("대출 상품 이름: " + loan.getName() + " ");
-			System.out.print("대출 종류: " + loan.getLoanType().getName() + " ");
-			System.out.print("대출 상품 번호: " + loan.getId() + " ");
-			System.out.print("이자율: " + loan.getInterestRate() + " ");
-			System.out.println("대출 가능 최대 금액: " + loan.getLimit());
-			// System.out.println("대출 상태: " + ((Loan) e).get() + " ");
-		}
-	}
-
-///////////////////////////////////////////////////////////////////
-
-	// 2024-05-29 김대현
-	// 2024-05-31 김대현
-	// TODO ProductManagement
-	private void showProductManagementTask(Employee employee) {
-		// 600090
-		index = -1;
-		boolean finish = false;
-		while (!finish) {
-			System.out.println(employee.getName() + "님! 처리하려는 일을 클릭해주세요.");
-			System.out.println("1. 보험 상품 관리");
-			input = scanner.next();
-			index = Integer.parseInt(input);
-			switch (index) {
-			case 1:
-				manageInsuranceProduct(employee);
-				break;
-			default:
-				finish = true;
-				break;
-			}
-		}
-		index = -1;
-	}
-
-	// 2024-05-31 김대현
-	private void manageInsuranceProduct(Employee employee) {
-
-		System.out.println("보험 상품 정보 리스트");
-		System.out.println("\n=================");
-		for (Product e : productList.getAll()) {
-			if (e instanceof Insurance) {
-				System.out.print("보험 상품 번호: " + ((Insurance) e).getId() + "\n");
-				System.out.print("보험 상품 이름: " + ((Insurance) e).getName() + " | ");
-				System.out.print("보험 종류: " + ((Insurance) e).getInsuranceType().getName() + " | ");
-				System.out.print("연령대: " + ((Insurance) e).getAgeRange() + " | ");
-				System.out.println("월 보험료: " + ((Insurance) e).getMonthlyPremium());
-				System.out.println("-----------------");
-			}
-		}
-		System.out.println("=================\n");
-
-		System.out.println("1. 등록 2. 검색 3. 더블클릭");
-		try {
-			input = scanner.next();
-			index = Integer.parseInt(input);
-			switch (index) {
-			case 1:
-				System.out.println("보험 종류 콤보박스");
-				System.out.println("1. 질병 2. 상해 3. 자동차");
-				try {
-					input = scanner.next();
-					index = Integer.parseInt(input);
-					switch (index) {
-					case 1:
-						createDiseaseInsurance(employee);
-						break;
-					case 2:
-						createInjuryInsurance(employee);
-						break;
-					case 3:
-						createAutomobileInsurance(employee);
-						break;
-					default:
-						return;
-					}
-				} catch (Exception e) {
-					System.out.println("잘못된 정보를 입력하였습니다. 다시 입력해주세요.");
-				}
-				break;
-			case 2:
-				getInsurance(employee);
-				break;
-			case 3:
-				doubleClickInsurance(employee);
-				break;
-			default:
-				return;
-			}
-		} catch (Exception e) {
-			System.out.println("잘못된 정보를 입력하였습니다. 다시 입력해주세요.");
-		}
-	}
-
-	// 2024-05-31 김대현
-//  2024-06-04 김대현
-	private void createDiseaseInsurance(Employee employee) {
-		// ProductManagementModel employee
-		boolean finish = false;
-		while (!finish) {
-			try {
-				System.out.println("1. 보험 종류 : 질병");
-				InsuranceType insuranceType = InsuranceType.Disease;
-
-				System.out.print("2. 보험 상품 이름: ");
-				input = scanner.next();
-				String name = input;
-
-				System.out.print("3. 한도: ");
-				input = scanner.next();
-				int limit = Integer.parseInt(input);
-				System.out.print("4. 연령대: ");
-				input = scanner.next();
-				int ageRange = Integer.parseInt(input);
-				System.out.print("5. 보장 내용: ");
-				input = scanner.next();
-				String coverage = input;
-				System.out.print("6. 월 보험료: ");
-				input = scanner.next();
-				int monthlyPremium = Integer.parseInt(input);
-				System.out.print("7. 계약기간: ");
-				input = scanner.next();
-				int contractPeriod = Integer.parseInt(input);
-
-				System.out.print("8. 질병 이름: ");
-				input = scanner.next();
-				String diseaseName = input;
-				System.out.print("9. 최대 질병 수: ");
-				input = scanner.next();
-				int diseaseLimit = Integer.parseInt(input);
-				System.out.print("10. 최대 수술 횟수: ");
-				input = scanner.next();
-				int surgeriesLimit = Integer.parseInt(input);
-
-				do {
-					System.out.println("1. 확인 2. 취소");
-					input = scanner.next();
-					index = Integer.parseInt(input);
-					switch (index) {
-					case 1:
-						productManagementModel.addInsuranceProduct(insuranceType, name, limit, ageRange, coverage,
-								monthlyPremium, contractPeriod, diseaseName, diseaseLimit, surgeriesLimit, productList);
-						System.out.println("등록되었습니다.");
-						finish = true;
-						break;
-					case 2:
-						return;
-					default:
-						System.out.println("등록된 번호중에 클릭해주세요.");
-					}
-				} while (!(1 <= index && index <= 2));
-			} catch (DuplicateInsuranceException duplicateProductExeption) {
-				System.out.println(duplicateProductExeption.getMessage());
-				return;
-			} catch (NumberFormatException numberFormatException) {
-				System.out.println("잘못된 정보를 입력하였습니다. 다시 입력해주세요.");
-				return;
-			}
-		}
-	}
-
-	// 2024-05-31 김대현
-//  2024-06-04 김대현
-	private void createInjuryInsurance(Employee employee) {
-		// ProductManagementModel employee
-		boolean finish = false;
-		while (!finish) {
-			try {
-				System.out.println("1. 보험 종류 : 상해");
-				InsuranceType insuranceType = InsuranceType.Injury;
-
-				System.out.print("2. 보험 상품 이름: ");
-				input = scanner.next();
-
-				String name = input;
-				System.out.print("3. 한도: ");
-				input = scanner.next();
-				int limit = Integer.parseInt(input);
-				System.out.print("4. 연령대: ");
-				input = scanner.next();
-				int ageRange = Integer.parseInt(input);
-				System.out.print("5. 보장 내용: ");
-				input = scanner.next();
-				String coverage = input;
-				System.out.print("6. 월 보험료: ");
-				input = scanner.next();
-				int monthlyPremium = Integer.parseInt(input);
-				System.out.print("7. 계약기간: ");
-				input = scanner.next();
-				int contractPeriod = Integer.parseInt(input);
-//				int years = Integer.parseInt(input);
-//				LocalDate currentDate = LocalDate.now();
-//				LocalDate contractDate = currentDate.plusYears(years);
-//				Date contractPeriod = Date.from(contractDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-
-				InjuryType injuryType = null;
-				System.out.println("8. 상해 종류");
-				System.out.println("1.경상 2. 중상");
-				input = scanner.next();
-				switch (Integer.parseInt(input)) {
+				switch (index) {
 				case 1:
-					injuryType = InjuryType.Minor;
+					try {
+						salesModel.handleInsuranceConsultation(counsel, counselList);
+						System.out.println("예약되었습니다");
+					} catch (NotExistException e) {
+						System.out.println(e.getMessage());
+					} catch (AlreadyProcessedException e) {
+						System.out.println("이미 상담 처리가 완료되었습니다.");
+					}
 					break;
 				case 2:
-					injuryType = InjuryType.Serious;
+					finish = true;
 					break;
 				default:
-					return;
+					System.out.print("명시된 번호 중에 클릭해주세요.");
+					break;
 				}
-
-				System.out.print("9. 최대 수술횟수: ");
-				input = scanner.next();
-				int surgeriesLimit = Integer.parseInt(input);
-
-				do {
-					System.out.println("1. 확인 2. 취소");
-					input = scanner.next();
-					index = Integer.parseInt(input);
-					switch (index) {
-					case 1:
-						productManagementModel.addInsuranceProduct(insuranceType, name, limit, ageRange, coverage,
-								monthlyPremium, contractPeriod, injuryType, surgeriesLimit, productList);
-						System.out.println("등록되었습니다.");
-						finish = true;
-						break;
-					case 2:
-						return;
-					default:
-						System.out.println("명시된 번호중에 클릭해주세요.");
-					}
-				} while (!(1 <= index && index <= 2));
-			} catch (DuplicateInsuranceException duplicateProductExeption) {
-				System.out.println(duplicateProductExeption.getMessage());
-				return;
-			} catch (NumberFormatException numberFormatException) {
-				System.out.println("잘못된 정보를 입력하였습니다. 다시 입력해주세요.");
-				return;
 			}
+
 		}
-	}
 
-	// 2024-05-31 김대현
-//  2024-06-04 김대현
-	private void createAutomobileInsurance(Employee employee) {
-		// ProductManagementModel employee
-		boolean finish = false;
-		while (!finish) {
+		private void induceInsuranceProduct(Sales sales) {
+			System.out.println("보험 상품 정보 리스트");
+			System.out.println("\n=================");
+			for (Product e : salesModel.getAll(productList)) {
+				// 여기
+				if (e instanceof Insurance) {
+					System.out.print("보험 상품 번호: " + ((Insurance) e).getId() + "\n");
+					System.out.print("보험 상품 이름: " + ((Insurance) e).getName() + " | ");
+					System.out.print("보험 종류: " + ((Insurance) e).getInsuranceType().getName() + " | ");
+					System.out.print("연령대: " + ((Insurance) e).getAgeRange() + " | ");
+					System.out.println("월 보험료: " + ((Insurance) e).getMonthlyPremium());
+					System.out.println("-----------------");
+				}
+			}
+			System.out.println("=================\n");
+
+			System.out.println("1. 보험 종류 콤보박스 2. 검색 3. 더블 클릭");
 			try {
-				System.out.println("1. 보험 종류 : 자동차");
-				InsuranceType insuranceType = InsuranceType.Automobile;
-
-				System.out.print("2. 보험 상품 이름: ");
 				input = scanner.next();
-				String name = input;
-				System.out.print("3. 한도: ");
-				input = scanner.next();
-				int limit = Integer.parseInt(input);
-				System.out.print("4. 연령대: ");
-				input = scanner.next();
-				int ageRange = Integer.parseInt(input);
-				System.out.print("5. 보장 내용: ");
-				input = scanner.next();
-				String coverage = input;
-				System.out.print("6. 월 보험료: ");
-				input = scanner.next();
-				int monthlyPremium = Integer.parseInt(input);
-				System.out.print("7. 계약기간: ");
-				input = scanner.next();
-				int contractPeriod = Integer.parseInt(input);
-//				int years = Integer.parseInt(input);
-//				LocalDate currentDate = LocalDate.now();
-//				LocalDate contractDate = currentDate.plusYears(years);
-//				Date contractPeriod = Date.from(contractDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-
-				System.out.print("8. 최대 사고 횟수: ");
-				input = scanner.next();
-				int accidentLimit = Integer.parseInt(input);
-				VehicleType vehicleType = null;
-				System.out.println("9. 차량 종류");
-				System.out.println("1. 소형 2. 중형 3. 대형");
-				input = scanner.next();
-				switch (Integer.parseInt(input)) {
+				index = Integer.parseInt(input);
+				switch (index) {
 				case 1:
-					vehicleType = VehicleType.Small;
+					System.out.println("1. 보험 종류 콤보박스");
+					System.out.println("1. 질병 2. 상해 3. 자동차");
+					try {
+						input = scanner.next();
+						index = Integer.parseInt(input);
+						switch (index) {
+						case 1:
+							induceDiseaseInsurance(sales);
+							break;
+						case 2:
+							induceInjuryInsurance(sales);
+							break;
+						case 3:
+							induceAutomobileInsurance(sales);
+							break;
+						default:
+							return;
+						}
+					} catch (Exception e) {
+						System.out.println("잘못된 정보를 입력하였습니다. 다시 입력해주세요.");
+					}
 					break;
 				case 2:
-					vehicleType = VehicleType.Medium;
+					getInsuranceSales(sales);
 					break;
 				case 3:
-					vehicleType = VehicleType.Large;
+					doubleClickInsuranceSales(sales);
 					break;
 				default:
 					return;
 				}
-
-				ServiceType serviceType = null;
-				ArrayList<ServiceType> serviceTypeList = new ArrayList<ServiceType>();
-				boolean finish2 = false;
-				while (!finish2) {
-					System.out.println("10. 서비스 종류");
-					System.out.println("1.긴급견인 2. 긴급시동 3. 비상급유 4. 배터리충전 5. 엔진과열 수리 6. 타이어펑크 수리 ");
-					input = scanner.next();
-					switch (Integer.parseInt(input)) {
-					case 1:
-						serviceType = ServiceType.EmergencyTowing;
-						serviceTypeList.add(serviceType);
-						break;
-					case 2:
-						serviceType = ServiceType.EmergencyStart;
-						serviceTypeList.add(serviceType);
-						break;
-					case 3:
-						serviceType = ServiceType.EmergencyRefueling;
-						serviceTypeList.add(serviceType);
-						break;
-					case 4:
-						serviceType = ServiceType.BatteryCharging;
-						serviceTypeList.add(serviceType);
-						break;
-					case 5:
-						serviceType = ServiceType.EngineOverheatingRepair;
-						serviceTypeList.add(serviceType);
-						break;
-					case 6:
-						serviceType = ServiceType.TirepunkRepair;
-						serviceTypeList.add(serviceType);
-						break;
-					default:
-						return;
-					}
-					do {
-						System.out.println("더 선택하시겠습니까?.");
-						System.out.println("1. 예 2. 아니오");
-						input = scanner.next();
-						switch (Integer.parseInt(input)) {
-						case 1:
-							break;
-						case 2:
-							finish2 = true;
-							break;
-						default:
-							System.out.println("명시된 번호 중에 클릭해주세요.");
-							break;
-						}
-					} while (!(1 <= Integer.parseInt(input) && Integer.parseInt(input) <= 2));
-				}
-
-				do {
-					System.out.println("1. 확인 2. 취소");
-					input = scanner.next();
-					index = Integer.parseInt(input);
-					switch (index) {
-					case 1:
-						productManagementModel.addInsuranceProduct(insuranceType, name, limit, ageRange, coverage,
-								monthlyPremium, contractPeriod, accidentLimit, vehicleType, serviceTypeList,
-								productList);
-						System.out.println("등록되었습니다.");
-						finish = true;
-						break;
-					case 2:
-						return;
-					default:
-						System.out.println("명시된 번호중에 클릭해주세요.");
-					}
-				} while (!(1 <= index && index <= 2));
-			} catch (DuplicateInsuranceException duplicateProductExeption) {
-				System.out.println(duplicateProductExeption.getMessage());
-				return;
-			} catch (NumberFormatException numberFormatException) {
+			} catch (Exception e) {
 				System.out.println("잘못된 정보를 입력하였습니다. 다시 입력해주세요.");
 				return;
 			}
 		}
-	}
 
-	// 2024-05-31 김대현
-	private void getInsurance(Employee employee) {
-		// ProductManagementModel employee
-		System.out.print("검색창: ");
-		input = scanner.next();
-		id = Integer.parseInt(input);
-		Insurance insurance;
-		try {
-			insurance = productManagementModel.getInsuranceProduct(productList, id);
-		} catch (NotExistException e) {
-			System.out.println(e.getMessage());
-			return;
-		}
-		System.out.println("\n=================");
-		System.out.print("보험 상품 번호: " + insurance.getId() + "\n");
-		System.out.print("보험 상품 이름: " + insurance.getName() + " | ");
-		System.out.print("보험 종류: " + insurance.getInsuranceType().getName() + " | ");
-		System.out.print("연령대: " + insurance.getAgeRange() + " | ");
-		System.out.println(" 월 보험료: " + insurance.getMonthlyPremium());
-		System.out.println("=================\n");
-	}
-
-	// 2024-05-31 김대현
-	private void doubleClickInsurance(Employee employee) {
-		// ProductManagementModel employee
-		System.out.println("보험 상품의 번호(더블클릭): ");
-		input = scanner.next();
-		id = Integer.parseInt(input);
-		
-		Insurance insurance;
-		try {
-			insurance = productManagementModel.getInsuranceProduct(productList, id);
-		} catch (NotExistException e) {
-			System.out.println(e.getMessage());
-			return;
-		}
-		System.out.println("1. 보험 상품 이름: " + insurance.getName());
-		System.out.println("2. 보험 종류: " + insurance.getInsuranceType().getName());
-		System.out.println("3. 연령대: " + insurance.getAgeRange());
-		System.out.println("4. 보장 내용: " + insurance.getCoverage());
-		System.out.println("5. 월 보험료: " + insurance.getMonthlyPremium());
-		System.out.println("6. 계약기간: " + insurance.getContractPeriod());
-		if (insurance instanceof Disease) {
-			Disease diseaseInsurance = (Disease) insurance;
-			System.out.println("7. 질병 최대 개수: " + diseaseInsurance.getDiseaseLimit());
-			System.out.println("8. 질병 이름: " + diseaseInsurance.getDiseaseName());
-			System.out.println("9. 수술 최대 횟수: " + diseaseInsurance.getSurgeriesLimit());
-		} else if (insurance instanceof Injury) {
-			Injury injuryInsurance = (Injury) insurance;
-			System.out.println("7. 상해 보험 종류: " + injuryInsurance.getInjuryType().getName());
-			System.out.println("8. 수술 최대 횟수: " + injuryInsurance.getSurgeriesLimit());
-		} else if (insurance instanceof Automobile) {
-			Automobile automobileInsurance = (Automobile) insurance;
-			System.out.println("7. 사고 최대 횟수: " + automobileInsurance.getAccidentLimit());
-			System.out.println("8. 차량 종류: " + automobileInsurance.getVehicleType().getName());
-			System.out.println("9. 서비스 종류: " + automobileInsurance.getServiceList());
-		}
-
-		System.out.println("1. 수정 2. 삭제");
-		input = scanner.next();
-		index = Integer.parseInt(input);
-		switch (index) {
-		case 1:
-			updateInsurance(employee, id);
-			break;
-		case 2:
-			deleteInsurance(employee, id);
-			break;
-		default:
-			return;
-		}
-	}
-
-	// 2024-05-31 김대현
-	private void updateInsurance(Employee employee, int id) {
-		// ProductManagementModel employee
-		Insurance insurance;
-		try {
-			insurance = productManagementModel.getInsuranceProduct(productList, id);
-		} catch (NotExistException e) {
-			System.out.println(e.getMessage());
-			return;
-		}
-		System.out.println("보험 상품 번호: " + insurance.getId());
-		System.out.println("보험 종류: " + insurance.getInsuranceType().getName());
-
-		System.out.println("1. 보험 상품 이름: " + insurance.getName());
-		System.out.println("2. 연령대: " + insurance.getAgeRange());
-		System.out.println("3. 보장 내용: " + insurance.getCoverage());
-		System.out.println("4. 월 보험료: " + insurance.getMonthlyPremium());
-		System.out.println("5. 계약기간: " + insurance.getContractPeriod());
-		if (insurance instanceof Disease) {
-			updateDiseaseInsurance(employee, insurance);
-		} else if (insurance instanceof Injury) {
-			updateInjuryInsurance(employee, insurance);
-		} else if (insurance instanceof Automobile) {
-			updateAutomobileInsurance(employee, insurance);
-		}
-	}
-
-	// 2024-05-31 김대현
-//  2024-06-04 김대현
-	private void updateDiseaseInsurance(Employee employee, Insurance insurance) {
-		// ProductManagementModel employee
-		Disease diseaseInsurance = (Disease) insurance;
-		System.out.println("6. 질병 최대 개수: " + diseaseInsurance.getDiseaseLimit());
-		System.out.println("7. 질병 이름: " + diseaseInsurance.getDiseaseName());
-		System.out.println("8. 수술 최대 횟수: " + diseaseInsurance.getSurgeriesLimit());
-
-		try {
-			int inputIndex = 0;
+		private void getInsuranceSales(Employee employee) {
+			System.out.print("검색창: ");
 			input = scanner.next();
-			inputIndex = Integer.parseInt(input);
-			if (!(1 <= inputIndex && inputIndex <= 8)) {
+			id = Integer.parseInt(input);
+			Insurance insurance;
+			try {
+				insurance = salesModel.getInsuranceProduct(productList, id);
+			} catch (NotExistException e) {
+				System.out.println("보험 상품 " + e.getMessage());
 				return;
 			}
-			System.out.println(inputIndex + "번에 해당하는 새로운 값: ");
-			String inputParameter = scanner.next();
-
-			do {
-				System.out.println("1. 수정 2. 취소");
-				input = scanner.next();
-				index = Integer.parseInt(input);
-				switch (index) {
-				case 1:
-					do {
-						System.out.println("정말로 수정하시겠습니까?");
-						System.out.println("1. 확인 2. 취소");
-						input = scanner.next();
-						index = Integer.parseInt(input);
-						switch (index) {
-						case 1:
-							productManagementModel.updateInsuranceProduct(inputIndex, 
-									inputParameter, diseaseInsurance, productList);
-							System.out.println("수정되었습니다.");
-							break;
-						case 2:
-							return;
-						default:
-							System.out.println("명시된 번호중에 클릭해주세요.");
-						}
-					} while (!(1 <= index && index <= 2));
-					return;
-				case 2:
-					return;
-				default:
-					System.out.println("명시된 번호중에 클릭해주세요.");
-				}
-			} while (!(1 <= index && index <= 2));
-		} catch (DuplicateInsuranceException | NotExistException e) {
-			System.out.println(e.getMessage());
-		} catch (NumberFormatException numberFormatException) {
-			System.out.println("잘못된 정보를 입력하였습니다. 다시 입력해주세요.");
+			System.out.print("보험 상품 번호: " + insurance.getId() + "\n");
+			System.out.print("보험 상품 이름: " + insurance.getName() + " | ");
+			System.out.print("보험 종류: " + insurance.getInsuranceType().getName() + " | ");
+			System.out.print("연령대: " + insurance.getAgeRange() + " | ");
+			System.out.println(" 월 보험료: " + insurance.getMonthlyPremium());
 		}
-	}
 
-	// 2024-05-31 김대현
-//  2024-06-04 김대현
-	private void updateInjuryInsurance(Employee employee, Insurance insurance) {
-		// ProductManagementModel employee
-		Injury injuryInsurance = (Injury) insurance;
-		System.out.println("6. 상해 보험 종류: " + injuryInsurance.getInjuryType().getName());
-		System.out.println("7. 수술 최대 횟수: " + injuryInsurance.getSurgeriesLimit());
-
-		try {
-			int inputIndex = 0;
-			do {
-				input = scanner.next();
-				inputIndex = Integer.parseInt(input);
-				if (!(1 <= inputIndex && inputIndex <= 7)) {
-					return;
-				} else if (inputIndex == 6) {
-					System.out.println("7. 상해 종류");
-					System.out.println("1.경상 2. 중상");
-				}
-			} while (!(1 <= inputIndex && inputIndex <= 7));
-
-			System.out.println(inputIndex + "번에 해당하는 새로운 값: ");
-			String inputParameter = scanner.next();
-
-			if (inputIndex == 6) {
-				if (!(1 <= Integer.parseInt(inputParameter) && Integer.parseInt(inputParameter) <= 2)) {
-					return;
-				}
-				;
+		private void doubleClickInsuranceSales(Sales sales) throws ParseException {
+			// Sales employee
+			System.out.println("보험 상품의 번호(더블클릭): ");
+			input = scanner.next();
+			id = Integer.parseInt(input);
+			Insurance insurance;
+			try {
+				insurance = salesModel.getInsuranceProduct(productList, id);
+			} catch (NotExistException e) {
+				System.out.println(e.getMessage());
+				return;
 			}
-
-			do {
-				System.out.println("1. 수정 2. 취소");
-				input = scanner.next();
-				index = Integer.parseInt(input);
-				switch (index) {
-				case 1:
-					do {
-						System.out.println("정말로 수정하시겠습니까?");
-						System.out.println("1. 확인 2. 취소");
+			System.out.println("1. 보험 상품 이름: " + insurance.getName());
+			System.out.println("2. 보험 종류: " + insurance.getInsuranceType().getName());
+			System.out.println("3. 연령대: " + insurance.getAgeRange());
+			System.out.println("4. 보장 내용: " + insurance.getCoverage());
+			System.out.println("5. 월 보험료: " + insurance.getMonthlyPremium());
+			System.out.println("6. 계약기간: " + insurance.getContractPeriod());
+			if (insurance instanceof Disease) {
+				Disease diseaseInsurance = (Disease) insurance;
+				System.out.println("7. 질병 최대 개수: " + diseaseInsurance.getDiseaseLimit());
+				System.out.println("8. 질병 이름: " + diseaseInsurance.getDiseaseName());
+				System.out.println("9. 수술 최대 횟수: " + diseaseInsurance.getSurgeriesLimit());
+			} else if (insurance instanceof Injury) {
+				Injury injuryInsurance = (Injury) insurance;
+				System.out.println("7. 상해 보험 종류: " + injuryInsurance.getInjuryType().getName());
+				System.out.println("8. 수술 최대 횟수: " + injuryInsurance.getSurgeriesLimit());
+			} else if (insurance instanceof Automobile) {
+				Automobile automobileInsurance = (Automobile) insurance;
+				System.out.println("7. 사고 최대 횟수: " + automobileInsurance.getAccidentLimit());
+				System.out.println("8. 차량 종류: " + automobileInsurance.getVehicleType().getName());
+				System.out.print("9. 서비스 종류:");
+				for (ServiceType serviceType : automobileInsurance.getServiceList()) {
+					System.out.print(" " + serviceType.getName() + " |");
+				}
+				System.out.println();
+			}
+			System.out.println("1. 안내장 발송 2. 보험 가입 요청");
+			input = scanner.next();
+			index = Integer.parseInt(input);
+			switch (index) {
+			case 1:
+				System.out.println("안내장 발송이 완료되었습니다.");
+				break;
+			case 2:
+				Customer customer = new Customer();
+				boolean finish = false;
+				while (!finish) {
+					try {
+						System.out.print("1. 고객 이름: ");
 						input = scanner.next();
-						index = Integer.parseInt(input);
-						switch (index) {
+						String name = input;
+						System.out.print("2. 전화번호: ");
+						input = scanner.next();
+						String phoneNumber = input;
+						System.out.print("3. 직업: ");
+						input = scanner.next();
+						String job = input;
+						System.out.print("4. 나이: ");
+						input = scanner.next();
+						int age = Integer.parseInt(input);
+
+						Gender gender = null;
+						System.out.println("5. 성별: ");
+						System.out.println("1. 남자 2. 여자");
+						input = scanner.next();
+						switch (Integer.parseInt(input)) {
 						case 1:
-							productManagementModel.updateInsuranceProduct(
-									inputIndex, inputParameter, injuryInsurance, productList);
-							System.out.println("수정되었습니다.");
+							gender = Gender.Male;
 							break;
 						case 2:
-							return;
+							gender = Gender.Female;
+							break;
 						default:
-							System.out.println("명시된 번호중에 클릭해주세요.");
+							return;
 						}
-					} while (!(1 <= index && index <= 2));
-					return;
-				case 2:
-					return;
-				default:
-					System.out.println("명시된 번호중에 클릭해주세요.");
-				}
-			} while (!(1 <= index && index <= 2));
-		} catch (DuplicateInsuranceException | NotExistException e) {
-			System.out.println(e.getMessage());
-		} catch (NumberFormatException numberFormatException) {
-			System.out.println("잘못된 정보를 입력하였습니다. 다시 입력해주세요.");
-		}
-	}
 
-	// 2024-05-31 김대현
-//  2024-06-04 김대현
-	private void updateAutomobileInsurance(Employee employee, Insurance insurance) {
-		// ProductManagementModel employee
-		Automobile automobileInsurance = (Automobile) insurance;
+						System.out.print("6. 주민등록번호: ");
+						input = scanner.next();
+						String residentRegistrationNumber = input;
+						System.out.print("7. 주소: ");
+						input = scanner.next();
+						String address = input;
+						System.out.print("8. 재산: ");
+						input = scanner.next();
+						long property = Integer.parseInt(input);
 
-		ServiceType serviceType = null;
-		ArrayList<ServiceType> serviceTypeList = new ArrayList<ServiceType>();
-
-		System.out.println("6. 사고 최대 횟수: " + automobileInsurance.getAccidentLimit());
-		System.out.println("7. 차량 종류: " + automobileInsurance.getVehicleType().getName());
-		System.out.println("8. 서비스 종류: " + automobileInsurance.getServiceList());
-
-		try {
-			int inputIndex = 0;
-			do {
-				input = scanner.next();
-				inputIndex = Integer.parseInt(input);
-				if (!(1 <= inputIndex && inputIndex <= 8)) {
-					return;
-				} else if (inputIndex == 7) {
-					System.out.println("7. 차량 종류");
-					System.out.println("1. 소형 2. 중형 3. 대형");
-				} else if (inputIndex == 8) {
-					boolean finish = false;
-					while (!finish) {
-						do {
-							System.out.println("8. 서비스 종류");
-							System.out.println("1.긴급견인 2. 긴급시동 3. 비상급유 4. 배터리충전 5. 엔진과열 수리 6. 타이어펑크 수리 ");
-							System.out.println(inputIndex + "번에 해당하는 새로운 값: ");
+						ArrayList<AccidentHistory> tempAccidentHistoryList = new ArrayList<AccidentHistory>();
+						boolean finishInputAccidentHistory = false;
+						while (!finishInputAccidentHistory) {
+							System.out.println("9. 사고 이력: ");
+							System.out.println("1. 입력 2. 취소");
 							input = scanner.next();
 							switch (Integer.parseInt(input)) {
 							case 1:
-								serviceType = ServiceType.EmergencyTowing;
-								serviceTypeList.add(serviceType);
+								System.out.print("사고 내용:");
+								String detailsOfAccident = scanner.next();
+								System.out.print("사고날짜(yyyy-MM-dd) :");
+								String dateOfAccident = scanner.next();
+								SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
+								Date date = formatter.parse(dateOfAccident);
+								AccidentHistory accidentHistory = new AccidentHistory(detailsOfAccident, date);
+								tempAccidentHistoryList.add(accidentHistory);
 								break;
 							case 2:
-								serviceType = ServiceType.EmergencyStart;
-								serviceTypeList.add(serviceType);
-								break;
-							case 3:
-								serviceType = ServiceType.EmergencyRefueling;
-								serviceTypeList.add(serviceType);
-								break;
-							case 4:
-								serviceType = ServiceType.BatteryCharging;
-								serviceTypeList.add(serviceType);
-								break;
-							case 5:
-								serviceType = ServiceType.EngineOverheatingRepair;
-								serviceTypeList.add(serviceType);
-								break;
-							case 6:
-								serviceType = ServiceType.TirepunkRepair;
-								serviceTypeList.add(serviceType);
+								finishInputAccidentHistory = true;
 								break;
 							default:
+								System.out.println("명시된 번호 중에 클릭해주세요.");
+								break;
+							}
+						}
+
+						ArrayList<SurgeryHistory> tempSurgeryHistoryList = new ArrayList<SurgeryHistory>();
+						boolean finishSurgeryHistory = false;
+						while (!finishSurgeryHistory) {
+							System.out.println("10. 수술 이력");
+							System.out.println("1. 입력 2. 취소");
+							input = scanner.next();
+							switch (Integer.parseInt(input)) {
+							case 1:
+								System.out.print("수술명:");
+								String surgeryName = scanner.next();
+								System.out.print("병원이름:");
+								String hospitalName = scanner.next();
+								System.out.print("수술날짜(yyyy-MM-dd) :");
+								String dateOfSurgery = scanner.next();
+								SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
+								Date date = formatter.parse(dateOfSurgery);
+								SurgeryHistory surgeryHistory = new SurgeryHistory(surgeryName, hospitalName, date);
+								tempSurgeryHistoryList.add(surgeryHistory);
+								break;
+							case 2:
+								finishSurgeryHistory = true;
+								break;
+							default:
+								System.out.println("명시된 번호 중에 클릭해주세요.");
+								break;
+							}
+						}
+
+						ArrayList<DiseaseHistory> tempDiseaseHistoryList = new ArrayList<DiseaseHistory>();
+						boolean finishInputDiseaseHistory = false;
+						while (!finishInputDiseaseHistory) {
+							System.out.println("11. 병력");
+							System.out.println("1. 입력 2. 취소");
+							input = scanner.next();
+							switch (Integer.parseInt(input)) {
+							case 1:
+								System.out.print("병명:");
+								String diseaseName = scanner.next();
+								System.out.print("진단일(yyyy-MM-dd) :");
+								String dateOfDiagnosis = scanner.next();
+								SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
+								Date date = formatter.parse(dateOfDiagnosis);
+								DiseaseHistory diseaseHistory = new DiseaseHistory(diseaseName, date);
+								salesModel.add(diseaseHistoryList, diseaseHistory);
+								diseaseHistoryList.add(diseaseHistory);
+								break;
+							case 2:
+								finishInputDiseaseHistory = true;
+								break;
+							default:
+								System.out.println("명시된 번호 중에 클릭해주세요.");
+								break;
+							}
+						}
+
+						System.out.print("12. 은행명: ");
+						input = scanner.next();
+						String bankName = input;
+						System.out.print("13. 계좌 번호: ");
+						input = scanner.next();
+						String bankAccount = input;
+
+						do {
+							System.out.println("1. 확인 2. 취소");
+							input = scanner.next();
+							index = Integer.parseInt(input);
+							switch (index) {
+							case 1:
+								customer.signUp(name, phoneNumber, job, age, gender, residentRegistrationNumber, address,
+										property, tempAccidentHistoryList, tempSurgeryHistoryList, tempDiseaseHistoryList,
+										bankName, bankAccount, customerList, accidentHistoryList, surgeryHistoryList,
+										diseaseHistoryList);
+								System.out.println("회원가입이 완료되었습니다.회원 아이디는 " + customer.getId() + "입니다.");
+								finish = true;
+								break;
+							case 2:
+								return;
+							default:
+								System.out.println("명시된 번호중에 클릭해주세요.");
+							}
+						} while (!(1 <= index && index <= 2));
+					} catch (DuplicateResidentRegistrationNumberException duplicateresidentRegistrationNumber) {
+						System.out.println(duplicateresidentRegistrationNumber.getMessage());
+						return;
+					} catch (NumberFormatException numberFormatException) {
+						System.out.println("잘못된 정보를 입력하였습니다. 다시 입력해주세요.");
+						return;
+					}
+					while (true) {
+						System.out.println("1. 보험 가입 요청 2. 취소");
+						int nextStep = scanner.nextInt();
+						if (nextStep == 1) {
+							customer.buyInsurance(insurance, contractList);
+							int contractCount = sales.getContractCount();
+							sales.setContractCount(++contractCount);
+							try {
+								salesModel.update(employeeList, sales);
+								System.out.println("요청되었습니다.");
+							} catch (NotExistException e) {
+								System.out.println(e.getMessage());
 								return;
 							}
-						} while (!(1 <= Integer.parseInt(input) && Integer.parseInt(input) <= 6));
+							break;
+						} else if (nextStep == 2) {
+							break;
+						} else {
+							System.out.println("명시된 번호중에 클릭해주세요.");
+						}
+					}
+				}
+				break;
+			default:
+				System.out.println("잘못된 정보를 입력하였습니다. 다시 입력해주세요.");
+			}
+		}
+
+		private void induceDiseaseInsurance(Employee employee) {
+			ArrayList<Insurance> insuranceList = salesModel.getAllDiseaseInsurance(productList);
+			// 여기
+			System.out.println("질병 보험 상품 정보 리스트");
+			System.out.println("\n=================");
+			for (Insurance insurance : insuranceList) {
+				System.out.print("보험 상품 번호: " + insurance.getId() + "\n");
+				System.out.print("보험 상품 이름: " + insurance.getName() + " | ");
+				System.out.print("보험 종류: " + insurance.getInsuranceType().getName() + " | ");
+				System.out.print("연령대: " + insurance.getAgeRange() + " | ");
+				System.out.println("월 보험료: " + insurance.getMonthlyPremium());
+				System.out.println("-----------------");
+			}
+			System.out.println("=================\n");
+		}
+
+		private void induceInjuryInsurance(Employee employee) {
+			ArrayList<Insurance> insuranceList = salesModel.getAllInjuryInsurance(productList);
+			// 여기
+			System.out.println("상해 보험 상품 정보 리스트");
+			System.out.println("\n=================");
+			for (Insurance insurance : insuranceList) {
+				System.out.print("보험 상품 번호: " + insurance.getId() + "\n");
+				System.out.print("보험 상품 이름: " + insurance.getName() + " | ");
+				System.out.print("보험 종류: " + insurance.getInsuranceType().getName() + " | ");
+				System.out.print("연령대: " + insurance.getAgeRange() + " | ");
+				System.out.println("월 보험료: " + insurance.getMonthlyPremium());
+				System.out.println("-----------------");
+			}
+			System.out.println("=================\n");
+		}
+
+		private void induceAutomobileInsurance(Employee employee) {
+			ArrayList<Insurance> insuranceList = salesModel.getAllAutomobileInsurance(productList);
+			// 여기
+			System.out.println("자동차 보험 상품 정보 리스트");
+			System.out.println("\n=================");
+			for (Insurance insurance : insuranceList) {
+				System.out.print("보험 상품 번호: " + insurance.getId() + "\n");
+				System.out.print("보험 상품 이름: " + insurance.getName() + " | ");
+				System.out.print("보험 종류: " + insurance.getInsuranceType().getName() + " | ");
+				System.out.print("연령대: " + insurance.getAgeRange() + " | ");
+				System.out.println("월 보험료: " + insurance.getMonthlyPremium());
+				System.out.println("-----------------");
+			}
+			System.out.println("=================\n");
+		}
+
+		/////////// 2024-06-04 모지환
+		private void induceLoanProduct(Employee employee) {
+			System.out.println("대출 상품 정보 리스트");
+			System.out.println("\n=================");
+			for (Product e : salesModel.getAll(productList)) {
+				// 여기
+				if (e instanceof Loan) {
+					System.out.print("대출 상품 번호: " + ((Loan) e).getId() + "\n");
+					System.out.print("대출 상품 이름: " + ((Loan) e).getName() + " | ");
+					System.out.print("대출 종류: " + ((Loan) e).getLoanType().getName() + " | ");
+					System.out.print("이자율: " + ((Loan) e).getInterestRate() + " | ");
+					System.out.println("대출 가능 최대 금액: " + ((Loan) e).getLimit() + " | ");
+					System.out.println("-----------------");
+				}
+			}
+			System.out.println("=================\n");
+
+			System.out.println("1. 대출 종류 콤보박스 2. 검색 3. 더블 클릭");
+			try {
+				input = scanner.next();
+				index = Integer.parseInt(input);
+				switch (index) {
+				case 1:
+					System.out.println("1. 대출 종류 콤보박스");
+					System.out.println("1. 담보 2. 정기 예금 3. 보험 계약");
+					try {
+						input = scanner.next();
+						index = Integer.parseInt(input);
+						switch (index) {
+						case 1:
+							induceCollateralLoan(employee);
+							break;
+						case 2:
+							induceFixedDepositLoan(employee);
+							break;
+						case 3:
+							induceInsuranceContractLoan(employee);
+							break;
+						default:
+							return;
+						}
+					} catch (Exception e) {
+						System.out.println("잘못된 정보를 입력하였습니다. 다시 입력해주세요.");
+					}
+					break;
+				case 2:
+					getLoanSales(employee);
+					break;
+				case 3:
+					doubleClickLoanSales(employee);
+					break;
+				default:
+					return;
+				}
+			} catch (Exception e) {
+				System.out.println("잘못된 정보를 입력하였습니다. 다시 입력해주세요.");
+			}
+		}
+
+		private void getLoanSales(Employee employee) {
+			System.out.print("검색창: ");
+			input = scanner.next();
+			id = Integer.parseInt(input);
+			Loan loan;
+			try {
+				loan = salesModel.getLoanProduct(productList, id);
+			} catch (NotExistException e) {
+				System.out.println("대출 상품 " + e.getMessage());
+				return;
+			}
+			
+			System.out.print("대출 상품 이름: " + loan.getName() + " ");
+			System.out.print("대출 종류: " + loan.getLoanType().getName() + " ");
+			System.out.print("대출 상품 번호: " + loan.getId() + " ");
+			System.out.print("이자율: " + loan.getInterestRate() + " ");
+			System.out.println("대출 가능 최대 금액: " + loan.getLimit() + " ");	
+		}
+
+		private void doubleClickLoanSales(Employee employee) throws ParseException {
+			System.out.println("대출 상품의 번호(더블클릭): ");
+			input = scanner.next();
+			id = Integer.parseInt(input);
+
+			try {
+				if (salesModel.getLoanProduct(productList, id) != null) {
+					System.out.println("1. 대출 상품 이름: " + salesModel.getLoanProduct(productList, id).getName() + " ");
+					System.out.println("2. 대출 종류: " + salesModel.getLoanProduct(productList, id).getLoanType().getName() + " ");
+					System.out.println("3. 대출 상품 번호: " + salesModel.getLoanProduct(productList, id).getId() + " ");
+					System.out.println("4. 이자율: " + salesModel.getLoanProduct(productList, id).getInterestRate() + " ");
+					System.out.println("5. 대출 가능 최대 금액: " + salesModel.getLoanProduct(productList, id).getLimit() + " ");
+					System.out.println("6. 최소 자산: " + salesModel.getLoanProduct(productList, id).getMinimumAsset());
+					if (salesModel.getLoanProduct(productList, id) instanceof Collateral) {
+						Collateral collateralLoan = (Collateral) salesModel.getLoanProduct(productList, id);
+						System.out.println("7. 담보 종류: " + collateralLoan.getCollateralType().getName());
+						System.out.println("8. 담보 최소 가치: " + collateralLoan.getMinimumValue());
+					} else if (salesModel.getLoanProduct(productList, id) instanceof FixedDeposit) {
+						FixedDeposit fixedDepositLoan = (FixedDeposit) salesModel.getLoanProduct(productList, id);
+						System.out.println("7. 최대 예치 금액: " + fixedDepositLoan.getMinimumAmount());
+					} else if (salesModel.getLoanProduct(productList, id) instanceof InsuranceContract) {
+						InsuranceContract insuranceContractLoan = (InsuranceContract) salesModel.getLoanProduct(productList, id);
+						System.out.println("7. 보험 상품 번호: " + insuranceContractLoan.getProductID());
+					}
+				} else {
+					throw new Exception();
+				}
+			} catch (Exception e) {
+				System.out.println("대출 상품 정보가 존재하지 않습니다.");
+				return;
+			}
+			System.out.println("1. 안내장 발송 2. 대출 요청");
+			input = scanner.next();
+			index = Integer.parseInt(input);
+			switch (index) {
+			case 1:
+				System.out.println("안내장 발송이 완료되었습니다.");
+				break;
+			case 2:
+				Customer customer = new Customer();
+				boolean finish = false;
+				while (!finish) {
+					try {
+						System.out.print("1. 고객 이름: ");
+						input = scanner.next();
+						String name = input;
+						System.out.print("2. 전화번호: ");
+						input = scanner.next();
+						String phoneNumber = input;
+						System.out.print("3. 직업: ");
+						input = scanner.next();
+						String job = input;
+						System.out.print("4. 나이: ");
+						input = scanner.next();
+						int age = Integer.parseInt(input);
+
+						Gender gender = null;
+						System.out.println("5. 성별: ");
+						System.out.println("1. 남자 2. 여자");
+						input = scanner.next();
+						switch (Integer.parseInt(input)) {
+						case 1:
+							gender = Gender.Male;
+							break;
+						case 2:
+							gender = Gender.Female;
+							break;
+						default:
+							return;
+						}
+
+						System.out.print("6. 주민등록번호: ");
+						input = scanner.next();
+						String residentRegistrationNumber = input;
+						System.out.print("7. 주소: ");
+						input = scanner.next();
+						String address = input;
+						System.out.print("8. 재산: ");
+						input = scanner.next();
+						long property = Integer.parseInt(input);
+
+						ArrayList<AccidentHistory> tempAccidentHistoryList = new ArrayList<AccidentHistory>();
+						System.out.println("9. 사고 이력: ");
+						System.out.println("1. 입력 2. 취소");
+						boolean finishInputAccidentHistory = false;
+						while (!finishInputAccidentHistory) {
+							input = scanner.next();
+							switch (Integer.parseInt(input)) {
+							case 1:
+								System.out.print("사고 내용:");
+								String detailsOfAccident = scanner.next();
+								System.out.print("사고날짜(yyyy-MM-dd) :");
+								String dateOfAccident = scanner.next();
+								SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
+								Date date = formatter.parse(dateOfAccident);
+								AccidentHistory accidentHistory = new AccidentHistory(detailsOfAccident, date);
+								tempAccidentHistoryList.add(accidentHistory);
+								break;
+							case 2:
+								finishInputAccidentHistory = true;
+								break;
+							default:
+								System.out.println("명시된 번호 중에 클릭해주세요.");
+								break;
+							}
+						}
+						
+						ArrayList<SurgeryHistory> tempSurgeryHistoryList = new ArrayList<SurgeryHistory>();
+						System.out.println("10. 수술 이력");
+						System.out.println("1. 입력 2. 취소");
+						boolean finishSurgeryHistory = false;
+						while (!finishSurgeryHistory) {
+							input = scanner.next();
+							switch (Integer.parseInt(input)) {
+							case 1:
+								System.out.print("수술명:");
+								String surgeryName = scanner.next();
+								System.out.print("병원이름:");
+								String hospitalName = scanner.next();
+								System.out.print("수술날짜(yyyy-MM-dd) :");
+								String dateOfSurgery = scanner.next();
+								SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
+								Date date = formatter.parse(dateOfSurgery);
+								SurgeryHistory surgeryHistory = new SurgeryHistory(surgeryName, hospitalName, date);
+								tempSurgeryHistoryList.add(surgeryHistory);
+								break;
+							case 2:
+								finishSurgeryHistory = true;
+								break;
+							default:
+								System.out.println("명시된 번호 중에 클릭해주세요.");
+								break;
+							}
+						}
+
+						ArrayList<DiseaseHistory> tempDiseaseHistoryList = new ArrayList<DiseaseHistory>();
+						System.out.println("11. 병력");
+						System.out.println("1. 입력 2. 취소");
+						boolean finishInputDiseaseHistory = false;
+						while (!finishInputDiseaseHistory) {
+
+							input = scanner.next();
+							switch (Integer.parseInt(input)) {
+							case 1:
+								System.out.print("병명:");
+								String diseaseName = scanner.next();
+								System.out.print("진단일(yyyy-MM-dd) :");
+								String dateOfDiagnosis = scanner.next();
+								SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
+								Date date = formatter.parse(dateOfDiagnosis);
+								DiseaseHistory diseaseHistory = new DiseaseHistory(diseaseName, date);
+								salesModel.add(diseaseHistoryList, diseaseHistory);
+								break;
+							case 2:
+								finishInputDiseaseHistory = true;
+								break;
+							default:
+								System.out.println("명시된 번호 중에 클릭해주세요.");
+								break;
+							}
+						}
+
+						System.out.print("12. 은행명: ");
+						input = scanner.next();
+						String bankName = input;
+						System.out.print("13. 계좌 번호: ");
+						input = scanner.next();
+						String bankAccount = input;
+
+						do {
+							System.out.println("1. 확인 2. 취소");
+							input = scanner.next();
+							index = Integer.parseInt(input);
+							switch (index) {
+							case 1:
+								customer.signUp(name, phoneNumber, job, age, gender, residentRegistrationNumber, address,
+										property, tempAccidentHistoryList, tempSurgeryHistoryList, tempDiseaseHistoryList,
+										bankName, bankAccount, customerList, accidentHistoryList, surgeryHistoryList,
+										diseaseHistoryList);
+								System.out.println("회원가입이 완료되었습니다. 회원 아이디는 " + customer.getId() + "입니다.");
+								finish = true;
+								break;
+							case 2:
+								return;
+							default:
+								System.out.println("명시된 번호중에 클릭해주세요.");
+							}
+						} while (!(1 <= index && index <= 2));
+					} catch (DuplicateResidentRegistrationNumberException duplicateresidentRegistrationNumber) {
+						System.out.println(duplicateresidentRegistrationNumber.getMessage());
+						return;
+					} catch (NumberFormatException numberFormatException) {
+						System.out.println("잘못된 정보를 입력하였습니다. 다시 입력해주세요.");
+						return;
+					}
+					while (true) {
+						System.out.println("1. 대출 요청 2. 취소");
+						int nextStep = scanner.nextInt();
+						if (nextStep == 1) {
+							System.out.println("요청되었습니다.");
+							break;
+						} else if (nextStep == 2) {
+							break;
+						} else {
+							System.out.println("명시된 번호중에 클릭해주세요.");
+						}
+					}
+					break;
+				}
+			default:
+				System.out.println("잘못된 정보를 입력하였습니다. 다시 입력해주세요.");
+			}
+		}
+
+		private void induceCollateralLoan(Employee employee) {
+			ArrayList<Loan> loanList = salesModel.getAllCollateralLoan(productList);
+			// 여기
+			System.out.println("담보 대출 상품 정보 리스트");
+			for (Loan loan : loanList) {
+				System.out.print("대출 상품 이름: " + loan.getName() + " ");
+				System.out.print("대출 종류: " + loan.getLoanType().getName() + " ");
+				System.out.print("대출 상품 번호: " + loan.getId() + " ");
+				System.out.print("이자율: " + loan.getInterestRate() + " ");
+				System.out.println("대출 가능 최대 금액: " + loan.getLimit());
+				// System.out.println("대출 상태: " + ((Loan) e).get() + " ");
+			}
+		}
+
+		private void induceFixedDepositLoan(Employee employee) {
+			ArrayList<Loan> loanList = salesModel.getAllFixedDepositLoan(productList);
+			System.out.println("정기 예금 대출 상품 정보 리스트");
+			for (Loan loan : loanList) {
+				System.out.print("대출 상품 이름: " + loan.getName() + " ");
+				System.out.print("대출 종류: " + loan.getLoanType().getName() + " ");
+				System.out.print("대출 상품 번호: " + loan.getId() + " ");
+				System.out.print("이자율: " + loan.getInterestRate() + " ");
+				System.out.println("대출 가능 최대 금액: " + loan.getLimit());
+				// System.out.println("대출 상태: " + ((Loan) e).get() + " ");
+			}
+		}
+
+		private void induceInsuranceContractLoan(Employee employee) {
+			ArrayList<Loan> loanList = salesModel.getAllInsuranceContractLoan(productList);
+			System.out.println("보험 계약 대출 상품 정보 리스트");
+			for (Loan loan : loanList) {
+				System.out.print("대출 상품 이름: " + loan.getName() + " ");
+				System.out.print("대출 종류: " + loan.getLoanType().getName() + " ");
+				System.out.print("대출 상품 번호: " + loan.getId() + " ");
+				System.out.print("이자율: " + loan.getInterestRate() + " ");
+				System.out.println("대출 가능 최대 금액: " + loan.getLimit());
+				// System.out.println("대출 상태: " + ((Loan) e).get() + " ");
+			}
+		}
+
+	///////////////////////////////////////////////////////////////////
+
+		// 2024-05-29 김대현
+		// 2024-05-31 김대현
+		// TODO ProductManagement
+		private void showProductManagementTask(Employee employee) {
+			// 600090
+			index = -1;
+			boolean finish = false;
+			while (!finish) {
+				System.out.println(employee.getName() + "님! 처리하려는 일을 클릭해주세요.");
+				System.out.println("1. 보험 상품 관리");
+				input = scanner.next();
+				index = Integer.parseInt(input);
+				switch (index) {
+				case 1:
+					manageInsuranceProduct(employee);
+					break;
+				default:
+					finish = true;
+					break;
+				}
+			}
+			index = -1;
+		}
+
+		// 2024-05-31 김대현
+		private void manageInsuranceProduct(Employee employee) {
+
+			System.out.println("보험 상품 정보 리스트");
+			System.out.println("\n=================");
+			for (Product e : productManagementModel.getAll(productList)) {
+				if (e instanceof Insurance) {
+					System.out.print("보험 상품 번호: " + ((Insurance) e).getId() + "\n");
+					System.out.print("보험 상품 이름: " + ((Insurance) e).getName() + " | ");
+					System.out.print("보험 종류: " + ((Insurance) e).getInsuranceType().getName() + " | ");
+					System.out.print("연령대: " + ((Insurance) e).getAgeRange() + " | ");
+					System.out.println("월 보험료: " + ((Insurance) e).getMonthlyPremium());
+					System.out.println("-----------------");
+				}
+			}
+			System.out.println("=================\n");
+
+			System.out.println("1. 등록 2. 검색 3. 더블클릭");
+			try {
+				input = scanner.next();
+				index = Integer.parseInt(input);
+				switch (index) {
+				case 1:
+					System.out.println("보험 종류 콤보박스");
+					System.out.println("1. 질병 2. 상해 3. 자동차");
+					try {
+						input = scanner.next();
+						index = Integer.parseInt(input);
+						switch (index) {
+						case 1:
+							createDiseaseInsurance(employee);
+							break;
+						case 2:
+							createInjuryInsurance(employee);
+							break;
+						case 3:
+							createAutomobileInsurance(employee);
+							break;
+						default:
+							return;
+						}
+					} catch (Exception e) {
+						System.out.println("잘못된 정보를 입력하였습니다. 다시 입력해주세요.");
+					}
+					break;
+				case 2:
+					getInsurance(employee);
+					break;
+				case 3:
+					doubleClickInsurance(employee);
+					break;
+				default:
+					return;
+				}
+			} catch (Exception e) {
+				System.out.println("잘못된 정보를 입력하였습니다. 다시 입력해주세요.");
+			}
+		}
+
+		// 2024-05-31 김대현
+	//  2024-06-04 김대현
+		private void createDiseaseInsurance(Employee employee) {
+			// ProductManagementModel employee
+			boolean finish = false;
+			while (!finish) {
+				try {
+					System.out.println("1. 보험 종류 : 질병");
+					InsuranceType insuranceType = InsuranceType.Disease;
+
+					System.out.print("2. 보험 상품 이름: ");
+					input = scanner.next();
+					String name = input;
+
+					System.out.print("3. 한도: ");
+					input = scanner.next();
+					int limit = Integer.parseInt(input);
+					System.out.print("4. 연령대: ");
+					input = scanner.next();
+					int ageRange = Integer.parseInt(input);
+					System.out.print("5. 보장 내용: ");
+					input = scanner.next();
+					String coverage = input;
+					System.out.print("6. 월 보험료: ");
+					input = scanner.next();
+					int monthlyPremium = Integer.parseInt(input);
+					System.out.print("7. 계약기간: ");
+					input = scanner.next();
+					int contractPeriod = Integer.parseInt(input);
+
+					System.out.print("8. 질병 이름: ");
+					input = scanner.next();
+					String diseaseName = input;
+					System.out.print("9. 최대 질병 수: ");
+					input = scanner.next();
+					int diseaseLimit = Integer.parseInt(input);
+					System.out.print("10. 최대 수술 횟수: ");
+					input = scanner.next();
+					int surgeriesLimit = Integer.parseInt(input);
+
+					do {
+						System.out.println("1. 확인 2. 취소");
+						input = scanner.next();
+						index = Integer.parseInt(input);
+						switch (index) {
+						case 1:
+							productManagementModel.addInsuranceProduct(insuranceType, name, limit, ageRange, coverage,
+									monthlyPremium, contractPeriod, diseaseName, diseaseLimit, surgeriesLimit, productList);
+							System.out.println("등록되었습니다.");
+							finish = true;
+							break;
+						case 2:
+							return;
+						default:
+							System.out.println("등록된 번호중에 클릭해주세요.");
+						}
+					} while (!(1 <= index && index <= 2));
+				} catch (DuplicateInsuranceException duplicateProductExeption) {
+					System.out.println(duplicateProductExeption.getMessage());
+					return;
+				} catch (NumberFormatException numberFormatException) {
+					System.out.println("잘못된 정보를 입력하였습니다. 다시 입력해주세요.");
+					return;
+				}
+			}
+		}
+
+		// 2024-05-31 김대현
+	//  2024-06-04 김대현
+		private void createInjuryInsurance(Employee employee) {
+			// ProductManagementModel employee
+			boolean finish = false;
+			while (!finish) {
+				try {
+					System.out.println("1. 보험 종류 : 상해");
+					InsuranceType insuranceType = InsuranceType.Injury;
+
+					System.out.print("2. 보험 상품 이름: ");
+					input = scanner.next();
+
+					String name = input;
+					System.out.print("3. 한도: ");
+					input = scanner.next();
+					int limit = Integer.parseInt(input);
+					System.out.print("4. 연령대: ");
+					input = scanner.next();
+					int ageRange = Integer.parseInt(input);
+					System.out.print("5. 보장 내용: ");
+					input = scanner.next();
+					String coverage = input;
+					System.out.print("6. 월 보험료: ");
+					input = scanner.next();
+					int monthlyPremium = Integer.parseInt(input);
+					System.out.print("7. 계약기간: ");
+					input = scanner.next();
+					int contractPeriod = Integer.parseInt(input);
+//					int years = Integer.parseInt(input);
+//					LocalDate currentDate = LocalDate.now();
+//					LocalDate contractDate = currentDate.plusYears(years);
+//					Date contractPeriod = Date.from(contractDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+					InjuryType injuryType = null;
+					System.out.println("8. 상해 종류");
+					System.out.println("1.경상 2. 중상");
+					input = scanner.next();
+					switch (Integer.parseInt(input)) {
+					case 1:
+						injuryType = InjuryType.Minor;
+						break;
+					case 2:
+						injuryType = InjuryType.Serious;
+						break;
+					default:
+						return;
+					}
+
+					System.out.print("9. 최대 수술횟수: ");
+					input = scanner.next();
+					int surgeriesLimit = Integer.parseInt(input);
+
+					do {
+						System.out.println("1. 확인 2. 취소");
+						input = scanner.next();
+						index = Integer.parseInt(input);
+						switch (index) {
+						case 1:
+							productManagementModel.addInsuranceProduct(insuranceType, name, limit, ageRange, coverage,
+									monthlyPremium, contractPeriod, injuryType, surgeriesLimit, productList);
+							System.out.println("등록되었습니다.");
+							finish = true;
+							break;
+						case 2:
+							return;
+						default:
+							System.out.println("명시된 번호중에 클릭해주세요.");
+						}
+					} while (!(1 <= index && index <= 2));
+				} catch (DuplicateInsuranceException duplicateProductExeption) {
+					System.out.println(duplicateProductExeption.getMessage());
+					return;
+				} catch (NumberFormatException numberFormatException) {
+					System.out.println("잘못된 정보를 입력하였습니다. 다시 입력해주세요.");
+					return;
+				}
+			}
+		}
+
+		// 2024-05-31 김대현
+	//  2024-06-04 김대현
+		private void createAutomobileInsurance(Employee employee) {
+			// ProductManagementModel employee
+			boolean finish = false;
+			while (!finish) {
+				try {
+					System.out.println("1. 보험 종류 : 자동차");
+					InsuranceType insuranceType = InsuranceType.Automobile;
+
+					System.out.print("2. 보험 상품 이름: ");
+					input = scanner.next();
+					String name = input;
+					System.out.print("3. 한도: ");
+					input = scanner.next();
+					int limit = Integer.parseInt(input);
+					System.out.print("4. 연령대: ");
+					input = scanner.next();
+					int ageRange = Integer.parseInt(input);
+					System.out.print("5. 보장 내용: ");
+					input = scanner.next();
+					String coverage = input;
+					System.out.print("6. 월 보험료: ");
+					input = scanner.next();
+					int monthlyPremium = Integer.parseInt(input);
+					System.out.print("7. 계약기간: ");
+					input = scanner.next();
+					int contractPeriod = Integer.parseInt(input);
+//					int years = Integer.parseInt(input);
+//					LocalDate currentDate = LocalDate.now();
+//					LocalDate contractDate = currentDate.plusYears(years);
+//					Date contractPeriod = Date.from(contractDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+					System.out.print("8. 최대 사고 횟수: ");
+					input = scanner.next();
+					int accidentLimit = Integer.parseInt(input);
+					VehicleType vehicleType = null;
+					System.out.println("9. 차량 종류");
+					System.out.println("1. 소형 2. 중형 3. 대형");
+					input = scanner.next();
+					switch (Integer.parseInt(input)) {
+					case 1:
+						vehicleType = VehicleType.Small;
+						break;
+					case 2:
+						vehicleType = VehicleType.Medium;
+						break;
+					case 3:
+						vehicleType = VehicleType.Large;
+						break;
+					default:
+						return;
+					}
+
+					ServiceType serviceType = null;
+					ArrayList<ServiceType> serviceTypeList = new ArrayList<ServiceType>();
+					boolean finish2 = false;
+					while (!finish2) {
+						System.out.println("10. 서비스 종류");
+						System.out.println("1.긴급견인 2. 긴급시동 3. 비상급유 4. 배터리충전 5. 엔진과열 수리 6. 타이어펑크 수리 ");
+						input = scanner.next();
+						switch (Integer.parseInt(input)) {
+						case 1:
+							serviceType = ServiceType.EmergencyTowing;
+							serviceTypeList.add(serviceType);
+							break;
+						case 2:
+							serviceType = ServiceType.EmergencyStart;
+							serviceTypeList.add(serviceType);
+							break;
+						case 3:
+							serviceType = ServiceType.EmergencyRefueling;
+							serviceTypeList.add(serviceType);
+							break;
+						case 4:
+							serviceType = ServiceType.BatteryCharging;
+							serviceTypeList.add(serviceType);
+							break;
+						case 5:
+							serviceType = ServiceType.EngineOverheatingRepair;
+							serviceTypeList.add(serviceType);
+							break;
+						case 6:
+							serviceType = ServiceType.TirepunkRepair;
+							serviceTypeList.add(serviceType);
+							break;
+						default:
+							return;
+						}
 						do {
 							System.out.println("더 선택하시겠습니까?.");
 							System.out.println("1. 예 2. 아니오");
@@ -5483,7 +5157,7 @@ public class Main {
 							case 1:
 								break;
 							case 2:
-								finish = true;
+								finish2 = true;
 								break;
 							default:
 								System.out.println("명시된 번호 중에 클릭해주세요.");
@@ -5493,64 +5167,16 @@ public class Main {
 					}
 
 					do {
-						System.out.println("1. 수정 2. 취소");
-						input = scanner.next();
-						index = Integer.parseInt(input);
-						switch (index) {
-						case 1:
-							do {
-								System.out.println("정말로 수정하시겠습니까?");
-								System.out.println("1. 확인 2. 취소");
-								input = scanner.next();
-								index = Integer.parseInt(input);
-								switch (index) {
-								case 1:
-									productManagementModel.updateInsuranceProduct(inputIndex, 
-											null, automobileInsurance,
-											serviceTypeList, productList);
-									System.out.println("수정되었습니다.");
-									break;
-								case 2:
-									return;
-								default:
-									System.out.println("명시된 번호중에 클릭해주세요.");
-								}
-							} while (!(1 <= index && index <= 2));
-							return;
-						case 2:
-							return;
-						default:
-							System.out.println("명시된 번호중에 클릭해주세요.");
-						}
-					} while (!(1 <= index && index <= 2));
-				}
-			} while (!(1 <= Integer.parseInt(input) && Integer.parseInt(input) <= 9));
-
-			System.out.println(inputIndex + "번에 해당하는 새로운 값: ");
-			String inputParameter = scanner.next();
-
-			if (inputIndex == 7) {
-				if (!(1 <= Integer.parseInt(inputParameter) && Integer.parseInt(inputParameter) <= 3)) {
-					return;
-				}
-				;
-			}
-			do {
-				System.out.println("1. 수정 2. 취소");
-				input = scanner.next();
-				index = Integer.parseInt(input);
-				switch (index) {
-				case 1:
-					do {
-						System.out.println("정말로 수정하시겠습니까?");
 						System.out.println("1. 확인 2. 취소");
 						input = scanner.next();
 						index = Integer.parseInt(input);
 						switch (index) {
 						case 1:
-							productManagementModel.updateInsuranceProduct(inputIndex, 
-									inputParameter, automobileInsurance, null, productList);
-							System.out.println("수정되었습니다.");
+							productManagementModel.addInsuranceProduct(insuranceType, name, limit, ageRange, coverage,
+									monthlyPremium, contractPeriod, accidentLimit, vehicleType, serviceTypeList,
+									productList);
+							System.out.println("등록되었습니다.");
+							finish = true;
 							break;
 						case 2:
 							return;
@@ -5558,215 +5184,591 @@ public class Main {
 							System.out.println("명시된 번호중에 클릭해주세요.");
 						}
 					} while (!(1 <= index && index <= 2));
+				} catch (DuplicateInsuranceException duplicateProductExeption) {
+					System.out.println(duplicateProductExeption.getMessage());
 					return;
-				case 2:
+				} catch (NumberFormatException numberFormatException) {
+					System.out.println("잘못된 정보를 입력하였습니다. 다시 입력해주세요.");
 					return;
-				default:
-					System.out.println("명시된 번호중에 클릭해주세요.");
 				}
-			} while (!(1 <= index && index <= 2));
-		} catch (DuplicateInsuranceException | NotExistException e) {
-			System.out.println(e.getMessage());
-		} catch (NumberFormatException numberFormatException) {
-			System.out.println("잘못된 정보를 입력하였습니다. 다시 입력해주세요.");
+			}
 		}
-	}
 
-	// 2024-05-31 김대현
-	private void deleteInsurance(Employee employee, int id) {
-		// ProductManagementModel employee
-		do {
-			System.out.println("정말로 삭제하시겠습니까?");
-			System.out.println("1. 확인 2. 취소");
+		// 2024-05-31 김대현
+		private void getInsurance(Employee employee) {
+			// ProductManagementModel employee
+			System.out.print("검색창: ");
+			input = scanner.next();
+			id = Integer.parseInt(input);
+			Insurance insurance;
+			try {
+				insurance = productManagementModel.getInsuranceProduct(productList, id);
+			} catch (NotExistException e) {
+				System.out.println(e.getMessage());
+				return;
+			}
+			System.out.println("\n=================");
+			System.out.print("보험 상품 번호: " + insurance.getId() + "\n");
+			System.out.print("보험 상품 이름: " + insurance.getName() + " | ");
+			System.out.print("보험 종류: " + insurance.getInsuranceType().getName() + " | ");
+			System.out.print("연령대: " + insurance.getAgeRange() + " | ");
+			System.out.println(" 월 보험료: " + insurance.getMonthlyPremium());
+			System.out.println("=================\n");
+		}
+
+		// 2024-05-31 김대현
+		private void doubleClickInsurance(Employee employee) {
+			// ProductManagementModel employee
+			System.out.println("보험 상품의 번호(더블클릭): ");
+			input = scanner.next();
+			id = Integer.parseInt(input);
+			
+			Insurance insurance;
+			try {
+				insurance = productManagementModel.getInsuranceProduct(productList, id);
+			} catch (NotExistException e) {
+				System.out.println(e.getMessage());
+				return;
+			}
+			System.out.println("1. 보험 상품 이름: " + insurance.getName());
+			System.out.println("2. 보험 종류: " + insurance.getInsuranceType().getName());
+			System.out.println("3. 연령대: " + insurance.getAgeRange());
+			System.out.println("4. 보장 내용: " + insurance.getCoverage());
+			System.out.println("5. 월 보험료: " + insurance.getMonthlyPremium());
+			System.out.println("6. 계약기간: " + insurance.getContractPeriod());
+			if (insurance instanceof Disease) {
+				Disease diseaseInsurance = (Disease) insurance;
+				System.out.println("7. 질병 최대 개수: " + diseaseInsurance.getDiseaseLimit());
+				System.out.println("8. 질병 이름: " + diseaseInsurance.getDiseaseName());
+				System.out.println("9. 수술 최대 횟수: " + diseaseInsurance.getSurgeriesLimit());
+			} else if (insurance instanceof Injury) {
+				Injury injuryInsurance = (Injury) insurance;
+				System.out.println("7. 상해 보험 종류: " + injuryInsurance.getInjuryType().getName());
+				System.out.println("8. 수술 최대 횟수: " + injuryInsurance.getSurgeriesLimit());
+			} else if (insurance instanceof Automobile) {
+				Automobile automobileInsurance = (Automobile) insurance;
+				System.out.println("7. 사고 최대 횟수: " + automobileInsurance.getAccidentLimit());
+				System.out.println("8. 차량 종류: " + automobileInsurance.getVehicleType().getName());
+				System.out.println("9. 서비스 종류: " + automobileInsurance.getServiceList());
+			}
+
+			System.out.println("1. 수정 2. 삭제");
 			input = scanner.next();
 			index = Integer.parseInt(input);
 			switch (index) {
 			case 1:
-				try {
-					productManagementModel.deleteInsuranceProduct(productList, id);
-					System.out.println("삭제되었습니다.");
-				} catch (NotExistException e) {
-					System.out.println(e.getMessage());
-				}
-			case 2:
-				return;
-			default:
-				System.out.println("명시된 번호중에 클릭해주세요.");
+				updateInsurance(employee, id);
 				break;
+			case 2:
+				deleteInsurance(employee, id);
+				break;
+			default:
+				return;
 			}
-		} while (!(1 <= index && index <= 2));
-	}
-	// TODO Underwriting
-	private void showUnderwritingTask(Employee employee) {
-		index = -1;
-		boolean finish = false;
-		while (!finish) {
-			System.out.println(employee.getName() + "님! 처리하려는 일을 클릭해주세요.");
-			System.out.println("1. 인수 심사");
+		}
+
+		// 2024-05-31 김대현
+		private void updateInsurance(Employee employee, int id) {
+			// ProductManagementModel employee
+			Insurance insurance;
 			try {
+				insurance = productManagementModel.getInsuranceProduct(productList, id);
+			} catch (NotExistException e) {
+				System.out.println(e.getMessage());
+				return;
+			}
+			System.out.println("보험 상품 번호: " + insurance.getId());
+			System.out.println("보험 종류: " + insurance.getInsuranceType().getName());
+
+			System.out.println("1. 보험 상품 이름: " + insurance.getName());
+			System.out.println("2. 연령대: " + insurance.getAgeRange());
+			System.out.println("3. 보장 내용: " + insurance.getCoverage());
+			System.out.println("4. 월 보험료: " + insurance.getMonthlyPremium());
+			System.out.println("5. 계약기간: " + insurance.getContractPeriod());
+			if (insurance instanceof Disease) {
+				updateDiseaseInsurance(employee, insurance);
+			} else if (insurance instanceof Injury) {
+				updateInjuryInsurance(employee, insurance);
+			} else if (insurance instanceof Automobile) {
+				updateAutomobileInsurance(employee, insurance);
+			}
+		}
+
+		// 2024-05-31 김대현
+	//  2024-06-04 김대현
+		private void updateDiseaseInsurance(Employee employee, Insurance insurance) {
+			// ProductManagementModel employee
+			Disease diseaseInsurance = (Disease) insurance;
+			System.out.println("6. 질병 최대 개수: " + diseaseInsurance.getDiseaseLimit());
+			System.out.println("7. 질병 이름: " + diseaseInsurance.getDiseaseName());
+			System.out.println("8. 수술 최대 횟수: " + diseaseInsurance.getSurgeriesLimit());
+
+			try {
+				int inputIndex = 0;
 				input = scanner.next();
-				index = Integer.parseInt(input);
-				switch (index) {
-				case 1:
-					viewRequestingContract(employee);
-					break;
-				default:
-					finish = true;
-					break;
+				inputIndex = Integer.parseInt(input);
+				if (!(1 <= inputIndex && inputIndex <= 8)) {
+					return;
 				}
-			} catch (NumberFormatException e) {
+				System.out.println(inputIndex + "번에 해당하는 새로운 값: ");
+				String inputParameter = scanner.next();
+
+				do {
+					System.out.println("1. 수정 2. 취소");
+					input = scanner.next();
+					index = Integer.parseInt(input);
+					switch (index) {
+					case 1:
+						do {
+							System.out.println("정말로 수정하시겠습니까?");
+							System.out.println("1. 확인 2. 취소");
+							input = scanner.next();
+							index = Integer.parseInt(input);
+							switch (index) {
+							case 1:
+								productManagementModel.updateInsuranceProduct(inputIndex, 
+										inputParameter, diseaseInsurance, productList);
+								System.out.println("수정되었습니다.");
+								break;
+							case 2:
+								return;
+							default:
+								System.out.println("명시된 번호중에 클릭해주세요.");
+							}
+						} while (!(1 <= index && index <= 2));
+						return;
+					case 2:
+						return;
+					default:
+						System.out.println("명시된 번호중에 클릭해주세요.");
+					}
+				} while (!(1 <= index && index <= 2));
+			} catch (DuplicateInsuranceException | NotExistException e) {
+				System.out.println(e.getMessage());
+			} catch (NumberFormatException numberFormatException) {
 				System.out.println("잘못된 정보를 입력하였습니다. 다시 입력해주세요.");
 			}
 		}
-		index = -1;
-	}
 
-	private void viewRequestingContract(Employee employee) {
-		// UnderwritingModel employee
-		ArrayList<Contract> contractList = this.contractList.getAllRequestingInsurance();
-		// 여기
-		do {
-			System.out.println("\n=================");
-			for (Contract contract : contractList) {
-				Customer customer;
-				try {
-					customer = this.customerList.get(contract.getCustomerID());
-				} catch (NotExistException e) {
-					System.out.println(contract.getCustomerID() + " " + e.getMessage());
-					continue;
-				}
-				String surgeryHistory = "";
-				for (SurgeryHistory surgery : customer.getSurgeryHistoryList()) {
-					surgeryHistory += "\n날짜 : " + surgery.getDate() + " 병원 이름 : " + surgery.getHospitalName();
-				}
-				String accidentHistory = "";
-				for (AccidentHistory accident : customer.getAccidentHistoryList()) {
-					accidentHistory += "\n날짜 : " + accident.getDate() + " 사고 내용 : " + accident.getAccidentDetail();
-				}
-				System.out.println("계약 번호 : " + contract.getId() + "\n심사 상태 : " + contract.getContractStatus().getText()
-						+ " | 상품 번호 : " + contract.getProduct().getId() + "\n고객 이름 : " + customer.getName() + " | 전화번호 : "
-						+ customer.getPhoneNumber() + " | 직업 : " + customer.getJob() + " | 나이 : " + customer.getAge()
-						+ " | 성별 : " + customer.getGender().getName() + "\n주민등록번호 : "
-						+ customer.getResidentRegistrationNumber() + " | 주소 : " + customer.getAddress() + " | 계좌 번호 : "
-						+ customer.getBankAccount() + "\n사고 이력 : " + surgeryHistory + "\n수술 이력 : " + accidentHistory);
-				System.out.println("-----------------");
-			}
-			System.out.println("=================\n");
-			System.out.println("1. 심사 상태 콤보박스 2. 검색 3. 더블 클릭");
+		// 2024-05-31 김대현
+	//  2024-06-04 김대현
+		private void updateInjuryInsurance(Employee employee, Insurance insurance) {
+			// ProductManagementModel employee
+			Injury injuryInsurance = (Injury) insurance;
+			System.out.println("6. 상해 보험 종류: " + injuryInsurance.getInjuryType().getName());
+			System.out.println("7. 수술 최대 횟수: " + injuryInsurance.getSurgeriesLimit());
+
 			try {
+				int inputIndex = 0;
+				do {
+					input = scanner.next();
+					inputIndex = Integer.parseInt(input);
+					if (!(1 <= inputIndex && inputIndex <= 7)) {
+						return;
+					} else if (inputIndex == 6) {
+						System.out.println("7. 상해 종류");
+						System.out.println("1.경상 2. 중상");
+					}
+				} while (!(1 <= inputIndex && inputIndex <= 7));
+
+				System.out.println(inputIndex + "번에 해당하는 새로운 값: ");
+				String inputParameter = scanner.next();
+
+				if (inputIndex == 6) {
+					if (!(1 <= Integer.parseInt(inputParameter) && Integer.parseInt(inputParameter) <= 2)) {
+						return;
+					};
+				}
+
+				do {
+					System.out.println("1. 수정 2. 취소");
+					input = scanner.next();
+					index = Integer.parseInt(input);
+					switch (index) {
+					case 1:
+						do {
+							System.out.println("정말로 수정하시겠습니까?");
+							System.out.println("1. 확인 2. 취소");
+							input = scanner.next();
+							index = Integer.parseInt(input);
+							switch (index) {
+							case 1:
+								productManagementModel.updateInsuranceProduct(
+										inputIndex, inputParameter, injuryInsurance, productList);
+								System.out.println("수정되었습니다.");
+								break;
+							case 2:
+								return;
+							default:
+								System.out.println("명시된 번호중에 클릭해주세요.");
+							}
+						} while (!(1 <= index && index <= 2));
+						return;
+					case 2:
+						return;
+					default:
+						System.out.println("명시된 번호중에 클릭해주세요.");
+					}
+				} while (!(1 <= index && index <= 2));
+			} catch (DuplicateInsuranceException | NotExistException e) {
+				System.out.println(e.getMessage());
+			} catch (NumberFormatException numberFormatException) {
+				System.out.println("잘못된 정보를 입력하였습니다. 다시 입력해주세요.");
+			}
+		}
+
+		// 2024-05-31 김대현
+	//  2024-06-04 김대현
+		private void updateAutomobileInsurance(Employee employee, Insurance insurance) {
+			// ProductManagementModel employee
+			Automobile automobileInsurance = (Automobile) insurance;
+
+			ServiceType serviceType = null;
+			ArrayList<ServiceType> serviceTypeList = new ArrayList<ServiceType>();
+
+			System.out.println("6. 사고 최대 횟수: " + automobileInsurance.getAccidentLimit());
+			System.out.println("7. 차량 종류: " + automobileInsurance.getVehicleType().getName());
+			System.out.println("8. 서비스 종류: " + automobileInsurance.getServiceList());
+
+			try {
+				int inputIndex = 0;
+				do {
+					input = scanner.next();
+					inputIndex = Integer.parseInt(input);
+					if (!(1 <= inputIndex && inputIndex <= 8)) {
+						return;
+					} else if (inputIndex == 7) {
+						System.out.println("7. 차량 종류");
+						System.out.println("1. 소형 2. 중형 3. 대형");
+					} else if (inputIndex == 8) {
+						boolean finish = false;
+						while (!finish) {
+							do {
+								System.out.println("8. 서비스 종류");
+								System.out.println("1.긴급견인 2. 긴급시동 3. 비상급유 4. 배터리충전 5. 엔진과열 수리 6. 타이어펑크 수리 ");
+								System.out.println(inputIndex + "번에 해당하는 새로운 값: ");
+								input = scanner.next();
+								switch (Integer.parseInt(input)) {
+								case 1:
+									serviceType = ServiceType.EmergencyTowing;
+									serviceTypeList.add(serviceType);
+									break;
+								case 2:
+									serviceType = ServiceType.EmergencyStart;
+									serviceTypeList.add(serviceType);
+									break;
+								case 3:
+									serviceType = ServiceType.EmergencyRefueling;
+									serviceTypeList.add(serviceType);
+									break;
+								case 4:
+									serviceType = ServiceType.BatteryCharging;
+									serviceTypeList.add(serviceType);
+									break;
+								case 5:
+									serviceType = ServiceType.EngineOverheatingRepair;
+									serviceTypeList.add(serviceType);
+									break;
+								case 6:
+									serviceType = ServiceType.TirepunkRepair;
+									serviceTypeList.add(serviceType);
+									break;
+								default:
+									return;
+								}
+							} while (!(1 <= Integer.parseInt(input) && Integer.parseInt(input) <= 6));
+							do {
+								System.out.println("더 선택하시겠습니까?.");
+								System.out.println("1. 예 2. 아니오");
+								input = scanner.next();
+								switch (Integer.parseInt(input)) {
+								case 1:
+									break;
+								case 2:
+									finish = true;
+									break;
+								default:
+									System.out.println("명시된 번호 중에 클릭해주세요.");
+									break;
+								}
+							} while (!(1 <= Integer.parseInt(input) && Integer.parseInt(input) <= 2));
+						}
+
+						do {
+							System.out.println("1. 수정 2. 취소");
+							input = scanner.next();
+							index = Integer.parseInt(input);
+							switch (index) {
+							case 1:
+								do {
+									System.out.println("정말로 수정하시겠습니까?");
+									System.out.println("1. 확인 2. 취소");
+									input = scanner.next();
+									index = Integer.parseInt(input);
+									switch (index) {
+									case 1:
+										productManagementModel.updateInsuranceProduct(inputIndex, 
+												null, automobileInsurance,
+												serviceTypeList, productList);
+										System.out.println("수정되었습니다.");
+										break;
+									case 2:
+										return;
+									default:
+										System.out.println("명시된 번호중에 클릭해주세요.");
+									}
+								} while (!(1 <= index && index <= 2));
+								return;
+							case 2:
+								return;
+							default:
+								System.out.println("명시된 번호중에 클릭해주세요.");
+							}
+						} while (!(1 <= index && index <= 2));
+					}
+				} while (!(1 <= Integer.parseInt(input) && Integer.parseInt(input) <= 9));
+
+				System.out.println(inputIndex + "번에 해당하는 새로운 값: ");
+				String inputParameter = scanner.next();
+
+				if (inputIndex == 7) {
+					if (!(1 <= Integer.parseInt(inputParameter) && Integer.parseInt(inputParameter) <= 3)) {
+						return;
+					}
+					;
+				}
+				do {
+					System.out.println("1. 수정 2. 취소");
+					input = scanner.next();
+					index = Integer.parseInt(input);
+					switch (index) {
+					case 1:
+						do {
+							System.out.println("정말로 수정하시겠습니까?");
+							System.out.println("1. 확인 2. 취소");
+							input = scanner.next();
+							index = Integer.parseInt(input);
+							switch (index) {
+							case 1:
+								productManagementModel.updateInsuranceProduct(inputIndex, 
+										inputParameter, automobileInsurance, null, productList);
+								System.out.println("수정되었습니다.");
+								break;
+							case 2:
+								return;
+							default:
+								System.out.println("명시된 번호중에 클릭해주세요.");
+							}
+						} while (!(1 <= index && index <= 2));
+						return;
+					case 2:
+						return;
+					default:
+						System.out.println("명시된 번호중에 클릭해주세요.");
+					}
+				} while (!(1 <= index && index <= 2));
+			} catch (DuplicateInsuranceException | NotExistException e) {
+				System.out.println(e.getMessage());
+			} catch (NumberFormatException numberFormatException) {
+				System.out.println("잘못된 정보를 입력하였습니다. 다시 입력해주세요.");
+			}
+		}
+
+		// 2024-05-31 김대현
+		private void deleteInsurance(Employee employee, int id) {
+			// ProductManagementModel employee
+			do {
+				System.out.println("정말로 삭제하시겠습니까?");
+				System.out.println("1. 확인 2. 취소");
 				input = scanner.next();
 				index = Integer.parseInt(input);
 				switch (index) {
 				case 1:
-					contractList = getRequestingStatusContract();
+					try {
+						productManagementModel.deleteInsuranceProduct(productList, id);
+						System.out.println("삭제되었습니다.");
+					} catch (NotExistException e) {
+						System.out.println(e.getMessage());
+					}
+				case 2:
+					return;
+				default:
+					System.out.println("명시된 번호중에 클릭해주세요.");
+					break;
+				}
+			} while (!(1 <= index && index <= 2));
+		}
+		// TODO Underwriting
+		private void showUnderwritingTask(Employee employee) {
+			index = -1;
+			boolean finish = false;
+			while (!finish) {
+				System.out.println(employee.getName() + "님! 처리하려는 일을 클릭해주세요.");
+				System.out.println("1. 인수 심사");
+				try {
+					input = scanner.next();
+					index = Integer.parseInt(input);
+					switch (index) {
+					case 1:
+						viewRequestingContract(employee);
+						break;
+					default:
+						finish = true;
+						break;
+					}
+				} catch (NumberFormatException e) {
+					System.out.println("잘못된 정보를 입력하였습니다. 다시 입력해주세요.");
+				}
+			}
+			index = -1;
+		}
+
+		private void viewRequestingContract(Employee employee) {
+			// UnderwritingModel employee
+			ArrayList<Contract> contractList = underwritingModel.getAllRequestingInsurance(this.contractList);
+			// 여기
+			do {
+				System.out.println("\n=================");
+				for (Contract contract : contractList) {
+					Customer customer;
+					try {
+						customer = underwritingModel.get(customerList, contract.getCustomerID());
+					} catch (NotExistException e) {
+						System.out.println(contract.getCustomerID() + " " + e.getMessage());
+						continue;
+					}
+					String surgeryHistory = "";
+					for (SurgeryHistory surgery : customer.getSurgeryHistoryList()) {
+						surgeryHistory += "\n날짜 : " + surgery.getDate() + " 병원 이름 : " + surgery.getHospitalName();
+					}
+					String accidentHistory = "";
+					for (AccidentHistory accident : customer.getAccidentHistoryList()) {
+						accidentHistory += "\n날짜 : " + accident.getDate() + " 사고 내용 : " + accident.getAccidentDetail();
+					}
+					System.out.println("계약 번호 : " + contract.getId() + "\n심사 상태 : " + contract.getContractStatus().getText()
+							+ " | 상품 번호 : " + contract.getProduct().getId() + "\n고객 이름 : " + customer.getName() + " | 전화번호 : "
+							+ customer.getPhoneNumber() + " | 직업 : " + customer.getJob() + " | 나이 : " + customer.getAge()
+							+ " | 성별 : " + customer.getGender().getName() + "\n주민등록번호 : "
+							+ customer.getResidentRegistrationNumber() + " | 주소 : " + customer.getAddress() + " | 계좌 번호 : "
+							+ customer.getBankAccount() + "\n사고 이력 : " + surgeryHistory + "\n수술 이력 : " + accidentHistory);
+					System.out.println("-----------------");
+				}
+				System.out.println("=================\n");
+				System.out.println("1. 심사 상태 콤보박스 2. 검색 3. 더블 클릭");
+				try {
+					input = scanner.next();
+					index = Integer.parseInt(input);
+					switch (index) {
+					case 1:
+						contractList = getRequestingStatusContract();
+						break;
+					case 2:
+						contractList = searchRequestingContract();
+						break;
+					case 3:
+						doubleClickRequestingContract(employee, contractList);
+						contractList = underwritingModel.getAllRequestingInsurance(this.contractList);
+						break;
+					}
+				} catch (NumberFormatException e) {
+					//
+				}
+			} while (1 <= index && index <= 3);
+		}
+
+		private void doubleClickRequestingContract(Employee employee, ArrayList<Contract> contractList) {
+			System.out.print("클릭한 계약 번호 : ");
+			try {
+				int id = Integer.parseInt(scanner.next());
+				for (Contract contract : contractList) {
+					if (contract.getId() == id) {
+						selectRequestingContract(employee, contract);
+						return;
+					}
+				}
+				System.out.println("잘못된 값입니다.");
+			} catch (NumberFormatException e) {
+				System.out.println("잘못된 값입니다.");
+			}
+		}
+
+		private void selectRequestingContract(Employee employee, Contract contract) {
+			// UnderwritingModel employee
+			Customer customer;
+			try {
+				customer = underwritingModel.get(customerList, contract.getCustomerID());
+				// 여기
+			} catch (NotExistException e) {
+				System.out.println(e.getMessage());
+				return;
+			}
+			String surgeryHistory = "";
+			for (SurgeryHistory surgery : customer.getSurgeryHistoryList()) {
+				surgeryHistory += "\n날짜 : " + surgery.getDate() + " 병원 이름 : " + surgery.getHospitalName();
+			}
+			String accidentHistory = "";
+			for (AccidentHistory accident : customer.getAccidentHistoryList()) {
+				accidentHistory += "\n날짜 : " + accident.getDate() + " 사고 내용 : " + accident.getAccidentDetail();
+			}
+			System.out.println("\n=================");
+			System.out.println("계약 번호 : " + contract.getId() + "\n계약 상태 : " + contract.getContractStatus().getText()
+					+ " | 상품 번호 : " + contract.getProduct().getId() + "\n고객 이름 : " + customer.getName() + " | 전화번호 : "
+					+ customer.getPhoneNumber() + " | 직업 : " + customer.getJob() + " | 나이 : " + customer.getAge() + " | 성별 : "
+					+ customer.getGender().getName() + "\n주민등록번호 : " + customer.getResidentRegistrationNumber() + " | 주소 : "
+					+ customer.getAddress() + " | 계좌 번호 : " + customer.getBankAccount() + " | 재산 : " + customer.getProperty()
+					+ "\n사고 이력 : " + surgeryHistory + "\n수술 이력 : " + accidentHistory);
+			System.out.println("=================\n");
+			try {
+				System.out.println("1. 승인 2. 거절");
+				int id = Integer.parseInt(scanner.next());
+				switch (id) {
+				case 1:
+					if (underwritingModel.reviewAcquisition(contract, true, this.contractList))
+						System.out.println("승인이 완료되었습니다.");
 					break;
 				case 2:
-					contractList = searchRequestingContract();
-					break;
-				case 3:
-					doubleClickRequestingContract(employee, contractList);
-					contractList = this.contractList.getAllRequestingInsurance();
+					if (underwritingModel.reviewAcquisition(contract, false, this.contractList))
+						System.out.println("거절이 완료되었습니다.");
 					break;
 				}
 			} catch (NumberFormatException e) {
 				//
+			} catch (NotExistContractException e) {
+				System.out.println(e.getMessage());
+			} catch (AlreadyProcessedException e) {
+				System.out.println("이미 심사가 완료되었습니다.");
 			}
-		} while (1 <= index && index <= 3);
-	}
+		}
+		private ArrayList<Contract> searchRequestingContract() {
+			ArrayList<Contract> result = new ArrayList<>();
+			System.out.print("ID 검색창 : ");
+			try {
+				int id = Integer.parseInt(scanner.next());
+				result.add(underwritingModel.get(this.contractList, id));
+			} catch (NumberFormatException e) {
+				//
+			} catch (NotExistContractException e) {
+				System.out.println(e.getMessage());
+			}
+			return result;
+		}
 
-	private void doubleClickRequestingContract(Employee employee, ArrayList<Contract> contractList) {
-		System.out.print("클릭한 계약 번호 : ");
-		try {
-			int id = Integer.parseInt(scanner.next());
-			for (Contract contract : contractList) {
-				if (contract.getId() == id) {
-					selectRequestingContract(employee, contract);
-					return;
+		private ArrayList<Contract> getRequestingStatusContract() {
+			ArrayList<Contract> result = underwritingModel.getAllRequestingInsurance(this.contractList);
+			System.out.println("1. 미처리 2. 처리완료");
+			try {
+				int index = Integer.parseInt(scanner.next());
+				switch (index) {
+				case 1:
+					result = underwritingModel.getAllRequestingInsurance(this.contractList);
+				case 2:
+					result = underwritingModel.getAllNotRequestingInsurance(this.contractList);
 				}
+			} catch (NumberFormatException e) {
+				//
 			}
-			System.out.println("잘못된 값입니다.");
-		} catch (NumberFormatException e) {
-			System.out.println("잘못된 값입니다.");
+			return result;
 		}
-	}
-
-	private void selectRequestingContract(Employee employee, Contract contract) {
-		// UnderwritingModel employee
-		Customer customer;
-		try {
-			customer = this.customerList.get(contract.getCustomerID());
-			// 여기
-		} catch (NotExistException e) {
-			System.out.println(e.getMessage());
-			return;
-		}
-		String surgeryHistory = "";
-		for (SurgeryHistory surgery : customer.getSurgeryHistoryList()) {
-			surgeryHistory += "\n날짜 : " + surgery.getDate() + " 병원 이름 : " + surgery.getHospitalName();
-		}
-		String accidentHistory = "";
-		for (AccidentHistory accident : customer.getAccidentHistoryList()) {
-			accidentHistory += "\n날짜 : " + accident.getDate() + " 사고 내용 : " + accident.getAccidentDetail();
-		}
-		System.out.println("\n=================");
-		System.out.println("계약 번호 : " + contract.getId() + "\n계약 상태 : " + contract.getContractStatus().getText()
-				+ " | 상품 번호 : " + contract.getProduct().getId() + "\n고객 이름 : " + customer.getName() + " | 전화번호 : "
-				+ customer.getPhoneNumber() + " | 직업 : " + customer.getJob() + " | 나이 : " + customer.getAge() + " | 성별 : "
-				+ customer.getGender().getName() + "\n주민등록번호 : " + customer.getResidentRegistrationNumber() + " | 주소 : "
-				+ customer.getAddress() + " | 계좌 번호 : " + customer.getBankAccount() + " | 재산 : " + customer.getProperty()
-				+ "\n사고 이력 : " + surgeryHistory + "\n수술 이력 : " + accidentHistory);
-		System.out.println("=================\n");
-		try {
-			System.out.println("1. 승인 2. 거절");
-			int id = Integer.parseInt(scanner.next());
-			switch (id) {
-			case 1:
-				if (underwritingModel.reviewAcquisition(contract, true, this.contractList))
-					System.out.println("승인이 완료되었습니다.");
-				break;
-			case 2:
-				if (underwritingModel.reviewAcquisition(contract, false, this.contractList))
-					System.out.println("거절이 완료되었습니다.");
-				break;
-			}
-		} catch (NumberFormatException e) {
-			//
-		} catch (NotExistContractException e) {
-			System.out.println(e.getMessage());
-		} catch (AlreadyProcessedException e) {
-			System.out.println("이미 심사가 완료되었습니다.");
-		}
-	}
-	private ArrayList<Contract> searchRequestingContract() {
-		ArrayList<Contract> result = new ArrayList<>();
-		System.out.print("ID 검색창 : ");
-		try {
-			int id = Integer.parseInt(scanner.next());
-			result.add(this.contractList.get(id));
-		} catch (NumberFormatException e) {
-			//
-		} catch (NotExistContractException e) {
-			System.out.println(e.getMessage());
-		}
-		return result;
-	}
-
-	private ArrayList<Contract> getRequestingStatusContract() {
-		ArrayList<Contract> result = this.contractList.getAllRequestingInsurance();
-		System.out.println("1. 미처리 2. 처리완료");
-		try {
-			int index = Integer.parseInt(scanner.next());
-			switch (index) {
-			case 1:
-				result = this.contractList.getAllRequestingInsurance();
-			case 2:
-				result = this.contractList.getAllNotRequestingInsurance();
-			}
-		} catch (NumberFormatException e) {
-			//
-		}
-		return result;
-	}
 
 //  2024-06-04 김대현
 	// TODO CompensationPlanning

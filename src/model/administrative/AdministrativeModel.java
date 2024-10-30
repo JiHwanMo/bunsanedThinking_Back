@@ -82,7 +82,6 @@ public class AdministrativeModel {
 		
 	}
 	// 메소드는 아래에 적어주셔유! (MVC 적용)
-
 	public ArrayList<OfficeSupply> getAll(OfficeSupplyList officeSupplyList) {
 		return officeSupplyList.getAll();
 	}
