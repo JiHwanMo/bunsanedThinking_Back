@@ -50,7 +50,6 @@ public class CustomerSupportModel {
 	public ArrayList<Complaint> getAll(ComplaintList complaintList) {
 		return complaintList.getAll();
 	}
-
 	public ArrayList<Complaint> getAllUnprocessedComplaint(ComplaintList complaintList) {
 		return complaintList.getAllUnprocessedComplaint();
 	}
