@@ -22,11 +22,6 @@ import exception.NotExistException;
  * @created 20-5-2024 占쏙옙占쏙옙 7:52:27
  */
 
-//2024-05-29 源    쁽
-//2024-05-31 源    쁽
-//2024-06-02 源    쁽
-//2024-06-04 源    쁽
-//2024-06-06 源    쁽
 public class ProductManagementModel {
 
 	public static String serialNumber = "090";
@@ -151,10 +146,6 @@ public class ProductManagementModel {
 			break;
 		case 5:
 			int contractPeriod = Integer.parseInt(input);
-//			int years = Integer.parseInt(input);
-//			LocalDate currentDate = LocalDate.now();
-//			LocalDate contractDate = currentDate.plusYears(years);
-//			Date contractPeriod = Date.from(contractDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 			injuryInsurance.setContractPeriod(contractPeriod);
 			productList.update(injuryInsurance);
 			break;
@@ -225,7 +216,6 @@ public class ProductManagementModel {
 			break;
 		}
 	}
-	// 메소드는 아래에 적어주셔유! (MVC 적용)
 	public ArrayList<Product> getAll(ProductList productList){
 		return productList.getAll();
 	}

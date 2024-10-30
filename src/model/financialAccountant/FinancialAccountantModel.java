@@ -38,7 +38,6 @@ public class FinancialAccountantModel {
 		paymentDetail.handle();
 		paymentDetailList.update(paymentDetail);
 	}
-	// 메소드는 아래에 적어주셔유! (MVC 적용)
 	public ArrayList<PaymentDetail> getAllPaymentDetail(PaymentDetailList paymentDetailList) {
 		return paymentDetailList.getAllPaymentDetail();
 	}

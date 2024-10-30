@@ -116,7 +116,6 @@ public class SalesModel {
 	public Loan getLoanProduct(ProductList productList, int id) throws NotExistException {
 		return (Loan) productList.get(id);
 	}
-	// 메소드는 아래에 적어주셔유! (MVC 적용)
 	public ArrayList<Employee> getAll(EmployeeList employeeList){
 		return employeeList.getAll();
 	}

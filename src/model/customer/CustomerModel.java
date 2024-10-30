@@ -101,7 +101,6 @@ public class CustomerModel {
 		}
 		throw new NotExistException();
 	}
-	// 메소드는 아래에 적어주셔유! (MVC 적용)
 	public Customer get(CustomerList customerList, int id) throws NotExistException {
 		return customerList.get(id);
 	}
@@ -153,7 +152,7 @@ public class CustomerModel {
 	public ArrayList<Contract> getAllDiseaseInsuranceContract(ContractList contractList) throws NotExistContractException {
 		return contractList.getAllDiseaseInsuranceContract();
 	}
-	public ArrayList<Contract> getContractByproductId(ContractList contractList, int id) {
+	public ArrayList<Contract> getContractByProductId(ContractList contractList, int id) {
 		return contractList.getContractByproductId(id);
 	}
 	public Contract get(ContractList contractList, int id) throws NotExistContractException {

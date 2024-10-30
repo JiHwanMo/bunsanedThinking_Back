@@ -9,7 +9,6 @@ import entity.report.ReportList;
 import exception.NotExistException;
 
 public class PartnerCompanyModel {
-	// 메소드는 아래에 적어주셔유! (MVC 적용)
 	public PartnerCompany get(PartnerCompanyList partnerCompanyList, int id) throws NotExistException {
 		return partnerCompanyList.get(id);
 	}
