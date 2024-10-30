@@ -19,7 +19,6 @@ import exception.NotExistException;
  * @version 1.0
  * @created 27-5-2024 占쏙옙占쏙옙 4:40:41
  */
-//2024-06-06 源����쁽
 public class CustomerInformationManagementModel {
 
 	public void addCustomerInformation(String name, String phoneNumber, String job, int age, Gender gender, String residentRegistrationNumber, String address, long property, ArrayList<AccidentHistory> tempAccidentHistoryList, ArrayList<SurgeryHistory> tempSurgeryHistoryList, ArrayList<DiseaseHistory> tempDiseaseHistoryList, String bankName, String bankAccount, CustomerList customerList, AccidentHistoryList accidentHistoryList, SurgeryHistoryList surgeryHistoryList, DiseaseHistoryList diseaseHistoryList) throws DuplicateResidentRegistrationNumberException{
@@ -111,7 +110,6 @@ public class CustomerInformationManagementModel {
 			break;
 		}
 	}
-	// 메소드는 아래에 적어주셔유! (MVC 적용)
 	public ArrayList<Customer> getAll(CustomerList customerList) {
 		return customerList.getAll();
 	}
