@@ -140,7 +140,6 @@ import model.sales.SalesModel;
 import model.underwriting.UnderwritingModel;
 
 public class Main {
-
 	Scanner scanner;
 	private String input;
 	private int id;
