@@ -9,21 +9,27 @@ import entity.contract.Contract;
 import entity.contract.ContractList;
 import entity.contract.ContractStatus;
 import entity.customer.Customer;
+import entity.customer.CustomerList;
 import entity.depositDetail.DepositDetail;
 import entity.endorsment.Endorsement;
+import entity.endorsment.EndorsementList;
 import entity.endorsment.EndorsementStatus;
 import entity.insurance.Insurance;
 import entity.paymentDetail.PaymentDetail;
 import entity.paymentDetail.PaymentDetailList;
 import entity.paymentDetail.PaymentType;
 import entity.recontract.Recontract;
+import entity.recontract.RecontractList;
 import entity.recontract.RecontractStatus;
 import entity.revival.Revival;
+import entity.revival.RevivalList;
 import entity.revival.RevivalStatus;
 import entity.temination.Termination;
+import entity.temination.TerminationList;
 import entity.temination.TerminationStatus;
 import exception.AlreadyProcessedException;
 import exception.NotExistContractException;
+import exception.NotExistException;
 
 /**
  * @author Administrator
@@ -101,4 +107,91 @@ public class ContractManagementModel {
 		return true;
 	}
 	// 메소드는 아래에 적어주셔유! (MVC 적용)
+	public ArrayList<Contract> getAllDefaultContract(ContractList contractList) {
+		return contractList.getAllDefaultContract();
+	}
+
+	public Customer get(CustomerList customerList, Contract contract) throws NotExistException {
+		return customerList.get(contract.getCustomerID());
+	}
+
+	public Contract get(ContractList contractList, int id) throws NotExistContractException {
+		return contractList.get(id);
+	}
+
+	public Termination get(TerminationList terminationList, int id) {
+		return terminationList.get(id);
+	}
+
+	public ArrayList<Termination> getAllTerminatingContract(TerminationList terminationList) {
+		return terminationList.getAllTerminatingContract();
+	}
+
+	public Termination getTerminatingContractById(TerminationList terminationList,int id) {
+		return terminationList.getTerminatingContractById(id);
+	}
+
+	public ArrayList<Termination> getAllUnprocessedTerminatingContract(TerminationList terminationList) {
+		return terminationList.getAllUnprocessedTerminatingContract();
+	}
+
+	public ArrayList<Termination> getAllProcessedTerminatingContract(TerminationList terminationList) {
+		return terminationList.getAllProcessedTerminatingContract();
+	}
+
+	public ArrayList<Endorsement> getAllEndorsementContract(EndorsementList endorsementList) {
+		return endorsementList.getAllEndorsementContract();
+	}
+
+	public ArrayList<Endorsement> getAllUnprocessedEndorsementContract(EndorsementList endorsementList) {
+		return endorsementList.getAllUnprocessedEndorsementContract();
+	}
+
+	public ArrayList<Endorsement> getAllProcessedEndorsementContract(EndorsementList endorsementList) {
+		return endorsementList.getAllProcessedEndorsementContract();
+	}
+
+	public Endorsement get(EndorsementList endorsementList, int id) {
+		return endorsementList.get(id);
+	}
+
+	public ArrayList<Recontract> getAllReContract(RecontractList recontractList) {
+		return recontractList.getAllReContract();
+	}
+
+	public ArrayList<Recontract> getAllUnprocessedReContract(RecontractList recontractList) {
+		return recontractList.getAllUnprocessedReContract();
+	}
+
+	public ArrayList<Recontract> getAllProcessedReContract(RecontractList recontractList) {
+		return recontractList.getAllProcessedReContract();
+	}
+
+	public Recontract getReContractById(RecontractList recontractList, int id) {
+		return recontractList.getReContractById(id);
+	}
+
+	public Recontract get(RecontractList recontractList, int id) {
+		return recontractList.get(id);
+	}
+
+	public ArrayList<Revival> getAllRevivalContract(RevivalList revivalList) {
+		return revivalList.getAllRevivalContract();
+	}
+
+	public Revival getRevivalById(RevivalList revivalList, int id) {
+		return revivalList.getRevivalById(id);
+	}
+
+	public ArrayList<Revival> getAllUnprocessedRevival(RevivalList revivalList) {
+		return revivalList.getAllUnprocessedRevival();
+	}
+
+	public ArrayList<Revival> getAllProcessedRevival(RevivalList revivalList) {
+		return revivalList.getAllProcessedRevival();
+	}
+
+	public Revival get(RevivalList revivalList, int id) {
+		return revivalList.get(id);
+	}
 }

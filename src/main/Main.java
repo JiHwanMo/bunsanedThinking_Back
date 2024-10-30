@@ -3465,7 +3465,7 @@ public class Main {
 //		고객 이름, 전화번호, 직업,나이, 성별, 주민등록번호, 주소, 계좌 번호, 고객 번호
 
 		System.out.println("고객 정보 리스트");
-		for (Customer e : customerList.getAll()) {
+		for (Customer e : customerInformationManagementModel.getAll(customerList)) {
 			// 여기
 			System.out.print("고객 번호: " + e.getId() + " ");
 			System.out.print("고객 이름: " + e.getName() + " ");
@@ -5796,7 +5796,7 @@ public class Main {
 
 	private void evaluatePartnerCompany(Employee employee) {
 //		협력업체 정보 리스트 (협력업체 번호, 협력업체 이름, 협력업체 종류, 협력업체 전화번호)
-		for (PartnerCompany e : partnerCompanyList.getAll()) {
+		for (PartnerCompany e : compensationPlanningModel.getAll(partnerCompanyList)) {
 			System.out.print("협력업체 번호: " + e.getId() + " ");
 			System.out.print("협력업체 이름: " + e.getName() + " ");
 			System.out.print("협력업체 종류: " + e.getPartnerCompanyType().getName() + " ");
@@ -5897,7 +5897,7 @@ public class Main {
 		System.out.println("협력업체 정보 리스트");
 //				협력업체 정보 리스트 (협력업체 번호, 협력업체 이름, 협력업체 종류, 협력업체 전화번호)
 
-		for (PartnerCompany e : partnerCompanyList.getAll()) {
+		for (PartnerCompany e : compensationPlanningModel.getAll(partnerCompanyList)) {
 			System.out.print("협력업체 번호: " + e.getId() + " ");
 			System.out.print("협력업체 이름: " + e.getName() + " ");
 			System.out.print("협력업체 종류: " + e.getPartnerCompanyType().getName() + " ");
@@ -6187,11 +6187,11 @@ public class Main {
 	private void viewDefaultContract(Employee employee) {
 		int index = 0;
 		do {
-			ArrayList<Contract> contractList = this.contractList.getAllDefaultContract();
+			ArrayList<Contract> contractList = contractManagementModel.getAllDefaultContract(this.contractList);
 			for (Contract contract : contractList) {
 				Customer customer;
 				try {
-					customer = this.customerList.get(contract.getCustomerID());
+					customer = contractManagementModel.get(customerList, contract);
 				} catch (NotExistException e) {
 					System.out.println(contract.getCustomerID() + " " + e.getMessage());
 					continue;
@@ -6224,7 +6224,7 @@ public class Main {
 			ArrayList<Contract> result = new ArrayList<>();
 			System.out.println("ID 검색창 : ");
 			int id = Integer.parseInt(scanner.next());
-			Contract contract = this.contractList.get(id);
+			Contract contract = contractManagementModel.get(contractList, id);
 			result.add(contract);
 			return result;
 		} catch (NumberFormatException e) {
@@ -6240,8 +6240,8 @@ public class Main {
 		try {
 			System.out.println("해지 계약 번호(더블클릭): ");
 			int id = Integer.parseInt(scanner.next());
-			Termination contract = this.terminationList.get(id);
-			Customer customer = this.customerList.get(contract.getCustomerID());
+			Termination contract = contractManagementModel.get(terminationList, id);
+			Customer customer = contractManagementModel.get(customerList, contract);
 			System.out.println("<고객 정보>");
 			System.out.println(" 고객 이름 : " + customer.getName() + " 전화번호 : " + customer.getPhoneNumber() + " 직업 : "
 					+ customer.getJob() + " 나이 : " + customer.getAge() + " 성별 : " + customer.getGender().getName()
@@ -6275,11 +6275,11 @@ public class Main {
 	private void viewTerminatingContract(Employee employee) {
 		int index = 0;
 		do {
-			ArrayList<Termination> terminationList = this.terminationList.getAllTerminatingContract();
+			ArrayList<Termination> terminationList = contractManagementModel.getAllTerminatingContract(this.terminationList);
 			for (Termination contract : terminationList) {
 				Customer customer;
 				try {
-					customer = this.customerList.get(contract.getCustomerID());
+					customer = contractManagementModel.get(customerList, contract);
 				} catch (NotExistException e) {
 					System.out.println(contract.getCustomerID() + " " + e.getMessage());
 					continue;
@@ -6315,11 +6315,11 @@ public class Main {
 			ArrayList<Termination> result = new ArrayList<>();
 			System.out.println("ID 검색창 : ");
 			int id = Integer.parseInt(scanner.next());
-			Termination contract = this.terminationList.getTerminatingContractById(id);
+			Termination contract = contractManagementModel.getTerminatingContractById(this.terminationList, id);
 			result.add(contract);
 			return result;
 		} catch (NumberFormatException e) {
-//
+
 		} catch (IllegalArgumentException e) {
 			System.out.println("해당 계약 정보가 존재하지 않습니다.");
 		}
@@ -6329,13 +6329,13 @@ public class Main {
 	private ArrayList<Termination> getStatusTerminatingContract() {
 		System.out.println("1. 미처리 2. 처리완료");
 		int index = Integer.parseInt(scanner.next());
-		ArrayList<Termination> result = this.terminationList.getAllTerminatingContract();
+		ArrayList<Termination> result = contractManagementModel.getAllTerminatingContract(this.terminationList);
 		switch (index) {
 		case 1:
-			result = this.terminationList.getAllUnprocessedTerminatingContract();
+			result = contractManagementModel.getAllUnprocessedTerminatingContract(this.terminationList);
 			break;
 		case 2:
-			result = this.terminationList.getAllProcessedTerminatingContract();
+			result = contractManagementModel.getAllProcessedTerminatingContract(this.terminationList);
 			break;
 		}
 		return result;
@@ -6346,8 +6346,8 @@ public class Main {
 		try {
 			System.out.println("해지 계약 번호(더블클릭): ");
 			int id = Integer.parseInt(scanner.next());
-			Termination contract = this.terminationList.get(id);
-			Customer customer = this.customerList.get(contract.getCustomerID());
+			Termination contract = contractManagementModel.get(terminationList, id);
+			Customer customer = contractManagementModel.get(customerList, contract);
 			System.out.println("<고객 정보>");
 			System.out.println(" 고객 이름 : " + customer.getName() + " 전화번호 : " + customer.getPhoneNumber() + " 직업 : "
 					+ customer.getJob() + " 나이 : " + customer.getAge() + " 성별 : " + customer.getGender().getName()
@@ -6391,11 +6391,11 @@ public class Main {
 	private void viewEndorsementContract(Employee employee) {
 		int index = 0;
 		do {
-			ArrayList<Endorsement> result = this.endorsementList.getAllEndorsementContract();
+			ArrayList<Endorsement> result = contractManagementModel.getAllEndorsementContract(endorsementList);
 			for (Endorsement contract : result) {
 				Customer customer;
 				try {
-					customer = this.customerList.get(contract.getCustomerID());
+					customer = contractManagementModel.get(customerList, contract);
 				} catch (NotExistException e) {
 					System.out.println(contract.getCustomerID() + " " + e.getMessage());
 					continue;
@@ -6430,13 +6430,13 @@ public class Main {
 	private ArrayList<Endorsement> getStatusEndorsementContract() {
 		System.out.println("1. 미처리 2. 처리완료");
 		int index = Integer.parseInt(scanner.next());
-		ArrayList<Endorsement> result = this.endorsementList.getAllEndorsementContract();
+		ArrayList<Endorsement> result = contractManagementModel.getAllEndorsementContract(endorsementList);
 		switch (index) {
 		case 1:
-			result = this.endorsementList.getAllUnprocessedEndorsementContract();
+			result = contractManagementModel.getAllUnprocessedEndorsementContract(endorsementList);
 			break;
 		case 2:
-			result = this.endorsementList.getAllProcessedEndorsementContract();
+			result = contractManagementModel.getAllProcessedEndorsementContract(endorsementList);
 			break;
 		}
 		return result;
@@ -6447,8 +6447,8 @@ public class Main {
 		try {
 			System.out.println("배서 계약 번호(더블클릭): ");
 			int id = Integer.parseInt(scanner.next());
-			Endorsement contract = this.endorsementList.get(id);
-			Customer customer = this.customerList.get(contract.getCustomerID());
+			Endorsement contract = contractManagementModel.get(endorsementList, id);
+			Customer customer = contractManagementModel.get(customerList, contract);
 			System.out.println("<고객 정보>");
 			System.out.println(" 고객 이름 : " + customer.getName() + " 전화번호 : " + customer.getPhoneNumber() + " 직업 : "
 					+ customer.getJob() + " 나이 : " + customer.getAge() + " 성별 : " + customer.getGender().getName()
@@ -6476,11 +6476,11 @@ public class Main {
 	private void viewReContract(Employee employee) {
 		int index = 0;
 		do {
-			ArrayList<Recontract> contractList = this.recontractList.getAllReContract();
+			ArrayList<Recontract> contractList = contractManagementModel.getAllReContract(recontractList);
 			for (Recontract contract : contractList) {
 				Customer customer;
 				try {
-					customer = this.customerList.get(contract.getCustomerID());
+					customer = contractManagementModel.get(customerList, contract);
 				} catch (NotExistException e) {
 					System.out.println(contract.getCustomerID() + " " + e.getMessage());
 					continue;
@@ -6515,13 +6515,13 @@ public class Main {
 	private ArrayList<Recontract> getStatusReContract() {
 		System.out.println("1. 미처리 2. 처리완료");
 		int index = Integer.parseInt(scanner.next());
-		ArrayList<Recontract> result = this.recontractList.getAllReContract();
+		ArrayList<Recontract> result = contractManagementModel.getAllReContract(recontractList);
 		switch (index) {
 		case 1:
-			result = this.recontractList.getAllUnprocessedReContract();
+			result = contractManagementModel.getAllUnprocessedReContract(recontractList);
 			break;
 		case 2:
-			result = this.recontractList.getAllProcessedReContract();
+			result = contractManagementModel.getAllProcessedReContract(recontractList);
 			break;
 		}
 		return result;
@@ -6532,7 +6532,7 @@ public class Main {
 			ArrayList<Recontract> result = new ArrayList<>();
 			System.out.println("ID 검색창 : ");
 			int id = Integer.parseInt(scanner.next());
-			Recontract contract = this.recontractList.getReContractById(id);
+			Recontract contract = contractManagementModel.getReContractById(recontractList, id);
 			result.add(contract);
 			return result;
 		} catch (NumberFormatException e) {
@@ -6548,8 +6548,8 @@ public class Main {
 		try {
 			System.out.println("재계약신청 계약 번호(더블클릭): ");
 			int id = Integer.parseInt(scanner.next());
-			Recontract contract = this.recontractList.get(id);
-			Customer customer = this.customerList.get(contract.getCustomerID());
+			Recontract contract = contractManagementModel.get(recontractList, id);
+			Customer customer = contractManagementModel.get(customerList, contract);
 			System.out.println("<고객 정보>");
 			System.out.println(" 고객 이름 : " + customer.getName() + " 전화번호 : " + customer.getPhoneNumber() + " 직업 : "
 					+ customer.getJob() + " 나이 : " + customer.getAge() + " 성별 : " + customer.getGender().getName()
@@ -6583,11 +6583,11 @@ public class Main {
 	private void viewRevival(Employee employee) {
 		int index = 0;
 		do {
-			ArrayList<Revival> contractList = this.revivalList.getAllRevivalContract();
+			ArrayList<Revival> contractList = contractManagementModel.getAllRevivalContract(revivalList);
 			for (Revival contract : contractList) {
 				Customer customer;
 				try {
-					customer = this.customerList.get(contract.getCustomerID());
+					customer = contractManagementModel.get(customerList, contract);
 				} catch (NotExistException e) {
 					System.out.println(contract.getCustomerID() + " " + e.getMessage());
 					continue;
@@ -6624,7 +6624,7 @@ public class Main {
 			ArrayList<Revival> result = new ArrayList<>();
 			System.out.println("ID 검색창 : ");
 			int id = Integer.parseInt(scanner.next());
-			Revival contract = this.revivalList.getRevivalById(id);
+			Revival contract = contractManagementModel.getRevivalById(revivalList, id);
 			result.add(contract);
 			return result;
 		} catch (NumberFormatException e) {
@@ -6638,13 +6638,13 @@ public class Main {
 	private ArrayList<Revival> getStatusRevival() {
 		System.out.println("1. 미처리 2. 처리완료");
 		int index = Integer.parseInt(scanner.next());
-		ArrayList<Revival> result = this.revivalList.getAllRevivalContract();
+		ArrayList<Revival> result = contractManagementModel.getAllRevivalContract(revivalList);
 		switch (index) {
 		case 1:
-			result = this.revivalList.getAllUnprocessedRevival();
+			result = contractManagementModel.getAllUnprocessedRevival(revivalList);
 			break;
 		case 2:
-			result = this.revivalList.getAllProcessedRevival();
+			result = contractManagementModel.getAllProcessedRevival(revivalList);
 			break;
 		}
 		return result;
@@ -6655,8 +6655,8 @@ public class Main {
 		try {
 			System.out.println("부활 계약 번호(더블클릭): ");
 			int id = Integer.parseInt(scanner.next());
-			Revival contract = this.revivalList.get(id);
-			Customer customer = this.customerList.get(contract.getCustomerID());
+			Revival contract = contractManagementModel.get(revivalList, id);
+			Customer customer = contractManagementModel.get(customerList, contract);
 			System.out.println("<고객 정보>");
 			System.out.println(" 고객 이름 : " + customer.getName() + " 전화번호 : " + customer.getPhoneNumber() + " 직업 : "
 					+ customer.getJob() + " 나이 : " + customer.getAge() + " 성별 : " + customer.getGender().getName()
@@ -7044,7 +7044,7 @@ public class Main {
 		// 600130
 		System.out.println("대출 상품 정보 리스트");
 //		대출 상품 이름, 대출 상품 종류, 대출 상품 번호, 이자율, 대출가능 최대 금액
-		for (Product e : productList.getAll()) {
+		for (Product e : loanManagementModel.getAll(productList)) {
 			if (e instanceof Loan) {
 				System.out.print("대출 상품 이름: " + ((Loan) e).getName() + " ");
 				System.out.print("대출 종류: " + ((Loan) e).getLoanType().getName() + " ");

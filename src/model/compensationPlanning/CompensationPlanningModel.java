@@ -1,5 +1,7 @@
 package model.compensationPlanning;
 
+import java.util.ArrayList;
+
 import entity.partnerCompany.PartnerCompany;
 import entity.partnerCompany.PartnerCompanyList;
 import entity.partnerCompany.PartnerCompanyType;
@@ -72,5 +74,9 @@ public class CompensationPlanningModel {
 	public void deletePartnerCompany(PartnerCompanyList partnerCompanyList, int id) throws NotExistException {
 		partnerCompanyList.delete(id);
 	}
+
 	// 메소드는 아래에 적어주셔유! (MVC 적용)
+	public ArrayList<PartnerCompany> getAll(PartnerCompanyList partnerCompanyList) {
+		return partnerCompanyList.getAll();
+	}
 }
