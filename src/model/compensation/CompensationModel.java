@@ -3,8 +3,6 @@ package model.compensation;
 import java.util.ArrayList;
 
 import entity.accident.AccidentList;
-import entity.complaint.Complaint;
-import entity.complaint.ComplaintList;
 import entity.contract.Contract;
 import entity.contract.ContractList;
 import entity.customer.Customer;

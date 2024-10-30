@@ -206,14 +206,10 @@ public class LoanManagementModel {
 		}
 
 	}
-
 	public void deleteLoanProduct(ProductList productList, int id) throws NotExistException {
 		productList.delete(id);
 	}
-
-	// 메소드는 아래에 적어주셔유! (MVC 적용)
 	public ArrayList<Product> getAll(ProductList productList) {
 		return productList.getAll();
 	}
-
 }

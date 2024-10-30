@@ -106,7 +106,6 @@ public class ContractManagementModel {
 		}
 		return true;
 	}
-	// 메소드는 아래에 적어주셔유! (MVC 적용)
 	public ArrayList<Contract> getAllDefaultContract(ContractList contractList) {
 		return contractList.getAllDefaultContract();
 	}

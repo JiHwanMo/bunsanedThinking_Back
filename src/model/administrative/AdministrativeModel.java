@@ -2,18 +2,9 @@ package model.administrative;
 
 import java.util.ArrayList;
 
-import entity.contract.Contract;
-import entity.contract.ContractList;
-import entity.customer.Customer;
-import entity.customer.CustomerList;
-import entity.insuranceMoney.InsuranceMoney;
-import entity.insuranceMoney.InsuranceMoneyList;
 import entity.officeSupply.OfficeSupply;
 import entity.officeSupply.OfficeSupplyList;
-import entity.report.Report;
-import entity.report.ReportList;
 import exception.DuplicateOfficeSupplyException;
-import exception.NotExistContractException;
 import exception.NotExistException;
 
 /**

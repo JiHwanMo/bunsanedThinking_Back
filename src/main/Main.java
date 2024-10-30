@@ -14,6 +14,21 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 import constants.EmployeeNums;
+import controller.AdministrativeController;
+import controller.CompensationController;
+import controller.CompensationPlanningController;
+import controller.ContractManagementController;
+import controller.CustomerController;
+import controller.CustomerInformationManagementController;
+import controller.CustomerSupportController;
+import controller.FinancialAccountantController;
+import controller.HumanResourceController;
+import controller.LoanManagementController;
+import controller.ManagementPlanningController;
+import controller.PartnerCompanyController;
+import controller.ProductManagementController;
+import controller.SalesController;
+import controller.UnderwritingController;
 import entity.accident.Accident;
 import entity.accident.AccidentList;
 import entity.accident.AccidentListImpl;
@@ -123,21 +138,6 @@ import exception.NotExistException;
 import exception.NotExistExpiredContract;
 import exception.NotExistMaintainedContract;
 import exception.NotExistTerminatedContract;
-import model.administrative.AdministrativeModel;
-import model.compensation.CompensationModel;
-import model.compensationPlanning.CompensationPlanningModel;
-import model.contractManagement.ContractManagementModel;
-import model.customer.CustomerModel;
-import model.customerInformationManagement.CustomerInformationManagementModel;
-import model.customerSupport.CustomerSupportModel;
-import model.financialAccountant.FinancialAccountantModel;
-import model.humanResource.HumanResourceModel;
-import model.loanManagement.LoanManagementModel;
-import model.managementPlanning.ManagementPlanningModel;
-import model.partnerCompany.PartnerCompanyModel;
-import model.productManagement.ProductManagementModel;
-import model.sales.SalesModel;
-import model.underwriting.UnderwritingModel;
 
 public class Main {
 
@@ -182,21 +182,21 @@ public class Main {
 	ProductList productList;
 	
 	// models(1029추가)
-	private CustomerModel customerModel;
-	private AdministrativeModel administrativeModel;
-	private CompensationModel compensationModel;
-	private CompensationPlanningModel compensationPlanningModel;
-	private ContractManagementModel contractManagementModel;
-	private CustomerInformationManagementModel customerInformationManagementModel;
-	private CustomerSupportModel customerSupportModel;
-	private FinancialAccountantModel financialAccountantModel;
-	private HumanResourceModel humanResourceModel;
-	private LoanManagementModel loanManagementModel;
-	private ManagementPlanningModel managementPlanningModel;
-	private ProductManagementModel  productManagementModel;
-	private SalesModel salesModel;
-	private UnderwritingModel underwritingModel;
-	private PartnerCompanyModel partnerCompanyModel; // 신규 추가!
+	private CustomerController customerController;
+	private AdministrativeController administrativeController;
+	private CompensationController compensationController;
+	private CompensationPlanningController compensationPlanningController;
+	private ContractManagementController contractManagementController;
+	private CustomerInformationManagementController customerInformationManagementController;
+	private CustomerSupportController customerSupportController;
+	private FinancialAccountantController financialAccountantController;
+	private HumanResourceController humanResourceController;
+	private LoanManagementController loanManagementController;
+	private ManagementPlanningController managementPlanningController;
+	private ProductManagementController  productManagementController;
+	private SalesController salesController;
+	private UnderwritingController underwritingController;
+	private PartnerCompanyController partnerCompanyController; // 신규 추가!
 
 	public static void main(String[] args) {
 		Main main = new Main();
@@ -243,21 +243,21 @@ public class Main {
 		productList = new ProductListImpl();
 
 		// models
-		customerModel = new CustomerModel();
-		administrativeModel = new AdministrativeModel();
-		compensationModel = new CompensationModel();
-		compensationPlanningModel = new CompensationPlanningModel();
-		contractManagementModel = new ContractManagementModel();
-		customerInformationManagementModel = new CustomerInformationManagementModel();
-		customerSupportModel = new CustomerSupportModel();
-		financialAccountantModel = new FinancialAccountantModel();
-		humanResourceModel = new HumanResourceModel();
-		loanManagementModel = new LoanManagementModel();
-		managementPlanningModel = new ManagementPlanningModel();
-		productManagementModel = new ProductManagementModel();
-		salesModel = new SalesModel();
-		underwritingModel = new UnderwritingModel();
-		partnerCompanyModel = new PartnerCompanyModel();
+		customerController = new CustomerController();
+		administrativeController = new AdministrativeController();
+		compensationController = new CompensationController();
+		compensationPlanningController = new CompensationPlanningController();
+		contractManagementController = new ContractManagementController();
+		customerInformationManagementController = new CustomerInformationManagementController();
+		customerSupportController = new CustomerSupportController();
+		financialAccountantController = new FinancialAccountantController();
+		humanResourceController = new HumanResourceController();
+		loanManagementController = new LoanManagementController();
+		managementPlanningController = new ManagementPlanningController();
+		productManagementController = new ProductManagementController();
+		salesController = new SalesController();
+		underwritingController = new UnderwritingController();
+		partnerCompanyController = new PartnerCompanyController();
 	}
 
 	public void initialize() {
@@ -339,7 +339,7 @@ public class Main {
 			try {
 				input = scanner.next();
 				id = Integer.parseInt(input);
-				partnerCompany = partnerCompanyModel.get(partnerCompanyList, id);
+				partnerCompany = partnerCompanyController.get(partnerCompanyList, id);
 				// 여기
 				showPartnerCompanyTask((PartnerCompany) partnerCompany);
 			} catch (NumberFormatException e) {
@@ -376,7 +376,7 @@ public class Main {
 	}
 
 	private void EstimatedDamageCost(PartnerCompany partnerCompany) {
-		for (Report report : partnerCompanyModel.getAllReportByDamageAssessmentCompanyID(reportList, partnerCompany.getId())) {
+		for (Report report : partnerCompanyController.getAllReportByDamageAssessmentCompanyID(reportList, partnerCompany.getId())) {
 			System.out.println("사고 번호: " + report.getId());
 		}
 
@@ -395,7 +395,7 @@ public class Main {
 			input = scanner.next();
 			int estimatedDamageCost = Integer.parseInt(input);
 			report.setDamageAssessmentMoney(estimatedDamageCost);
-			partnerCompanyModel.update(reportList, report);
+			partnerCompanyController.update(reportList, report);
 			System.out.println("입력되었습니다.");
 		} catch (NumberFormatException e) {
 			System.out.println("잘못된 정보를 입력하였습니다. 다시 입력해주세요.");
@@ -612,7 +612,7 @@ public class Main {
 				input = scanner.next();
 				if (input.matches("200\\d+")) {
 					id = Integer.parseInt(input);
-					customer = customerModel.get(customerList, id);
+					customer = customerController.get(customerList, id);
 					if (customer != null) {
 						showCustomerTask(customer);
 					} else {
@@ -661,7 +661,7 @@ public class Main {
 	}
 
 	private void customerViewComplaint(Customer customer) {
-		ArrayList<Complaint> complaintList = customerModel.getAllByCustomerId(this.complaintList, customer.getId());
+		ArrayList<Complaint> complaintList = customerController.getAllByCustomerId(this.complaintList, customer.getId());
 		// 여기
 		int index = 0;
 		do {
@@ -713,7 +713,7 @@ public class Main {
 		System.out.print("ID 검색창 : ");
 		try {
 			int id = Integer.parseInt(scanner.next());
-			result.add(customerModel.get(complaintList, id));
+			result.add(customerController.get(complaintList, id));
 		} catch (NumberFormatException e) {
 			//
 		} catch (NotExistException e) {
@@ -725,7 +725,7 @@ public class Main {
 		try {
 			System.out.println("민원의 번호(더블클릭): ");
 			int id = Integer.parseInt(scanner.next());
-			Complaint complaint = customerModel.get(complaintList, id);
+			Complaint complaint = customerController.get(complaintList, id);
 			System.out.println("민원 번호 : " + complaint.getId() + " 민원 종류 : " + complaint.getComplaintType().getName()
 					+ " 제목 : " + complaint.getTitle() + " 등록 날짜, 시간 : " + complaint.getPostDate() + " 내용 : "
 					+ complaint.getContent() + " 담당자 이름 : " + complaint.getEmployeeName() + " 처리 상태 : "
@@ -761,7 +761,7 @@ public class Main {
 
 	private void customerViewAccident(Customer customer) {
 		try {
-			if (customerModel.getAutomobileByMember(contractList, id).getContractStatus() == ContractStatus.ContractRequesting) {
+			if (customerController.getAutomobileByMember(contractList, id).getContractStatus() == ContractStatus.ContractRequesting) {
 				System.out.println("가입된 자동차 보험이 없습니다.");
 				return;
 			}
@@ -769,7 +769,7 @@ public class Main {
 			System.out.println("가입된 자동차 보험이 없습니다.");
 			return;
 		}
-		ArrayList<Accident> accidentList = customerModel.getAllByCustomer(this.accidentList, customer.getId());
+		ArrayList<Accident> accidentList = customerController.getAllByCustomer(this.accidentList, customer.getId());
 		int index = 0;
 		do {
 			System.out.println("\n=================");
@@ -784,7 +784,7 @@ public class Main {
 			switch (index) {
 			case 1:
 				reportAccident(customer);
-				accidentList = customerModel.getAllByCustomer(this.accidentList, customer.getId());
+				accidentList = customerController.getAllByCustomer(this.accidentList, customer.getId());
 				break;
 			case 2:
 				accidentList = customerSearchAccident(customer);
@@ -827,7 +827,7 @@ public class Main {
 		System.out.print("ID 검색창 : ");
 		try {
 			int id = Integer.parseInt(scanner.next());
-			result.add(customerModel.get(accidentList, id));
+			result.add(customerController.get(accidentList, id));
 		} catch (NumberFormatException e) {
 			System.out.println("잘못된 정보를 입력하였습니다. 다시 입력해주세요.");
 		} catch (NotExistException e) {
@@ -898,7 +898,7 @@ public class Main {
 
 	//////////////////////////////
 	private void viewInsuranceList(Customer customer) {
-		ArrayList<Insurance> insuranceList = customerModel.getAllInsurance(productList);
+		ArrayList<Insurance> insuranceList = customerController.getAllInsurance(productList);
 		int index = 0;
 		do {
 			System.out.println("\n=================");
@@ -931,19 +931,19 @@ public class Main {
 	}
 
 	private ArrayList<Insurance> getTypeInsuranceList() {
-		ArrayList<Insurance> result = customerModel.getAllInsurance(productList);
+		ArrayList<Insurance> result = customerController.getAllInsurance(productList);
 		System.out.println("1. 질병 2. 상해 3. 자동차");
 		try {
 			int index = Integer.parseInt(scanner.next());
 			switch (index) {
 			case 1:
-				result = customerModel.getAllDiseaseInsurance(productList);
+				result = customerController.getAllDiseaseInsurance(productList);
 				break;
 			case 2:
-				result = customerModel.getAllInjuryInsurance(productList);
+				result = customerController.getAllInjuryInsurance(productList);
 				break;
 			case 3:
-				result = customerModel.getAllAutomobileInsurance(productList);
+				result = customerController.getAllAutomobileInsurance(productList);
 				break;
 			}
 		} catch (NumberFormatException e) {
@@ -957,7 +957,7 @@ public class Main {
 		System.out.print("ID 검색창 : ");
 		try {
 			int id = Integer.parseInt(scanner.next());
-			result.add(customerModel.get(id, productList));
+			result.add(customerController.get(id, productList));
 		} catch (NumberFormatException e) {
 			//
 		} catch (NotExistException e) {
@@ -971,7 +971,7 @@ public class Main {
 			System.out.println("보험의 번호(더블클릭): ");
 			input = scanner.next();
 			id = Integer.parseInt(input);
-			Insurance insurance = customerModel.viewInsuranceProductList(this.productList, id);
+			Insurance insurance = customerController.viewInsuranceProductList(this.productList, id);
 			System.out.println("\n=================");
 			System.out.print("보험 번호 : " + insurance.getId() + "\n보험 상품 이름 : " + insurance.getName() + " | 보험 종류 : "
 					+ insurance.getInsuranceType().getName() + " | 연령대 : " + insurance.getAgeRange() + "\n보장 내용 : "
@@ -1074,7 +1074,7 @@ public class Main {
 	}
 
 	private void viewLoanList(Customer customer) {
-		ArrayList<Loan> loanList = customerModel.getAllLoan(productList);
+		ArrayList<Loan> loanList = customerController.getAllLoan(productList);
 		int index = 0;
 		do {
 			for (Loan loan : loanList) {
@@ -1104,19 +1104,19 @@ public class Main {
 	}
 
 	private ArrayList<Loan> getTypeLoanList() {
-		ArrayList<Loan> result = customerModel.getAllLoan(productList);
+		ArrayList<Loan> result = customerController.getAllLoan(productList);
 		System.out.println("1. 담보 2. 정기 예금 3. 보험 계약");
 		try {
 			int index = Integer.parseInt(scanner.next());
 			switch (index) {
 			case 1:
-				result = customerModel.getAllCollateralLoan(productList);
+				result = customerController.getAllCollateralLoan(productList);
 				break;
 			case 2:
-				result = customerModel.getAllFixedDepositLoan(productList);
+				result = customerController.getAllFixedDepositLoan(productList);
 				break;
 			case 3:
-				result = customerModel.getAllInsuranceContractLoan(productList);
+				result = customerController.getAllInsuranceContractLoan(productList);
 				break;
 			}
 		} catch (NumberFormatException e) {
@@ -1130,7 +1130,7 @@ public class Main {
 		System.out.print("ID 검색창 : ");
 		try {
 			int id = Integer.parseInt(scanner.next());
-			result.add(customerModel.getLoan(productList, id));
+			result.add(customerController.getLoan(productList, id));
 		} catch (NumberFormatException e) {
 			//
 		} catch (NotExistException e) {
@@ -1144,7 +1144,7 @@ public class Main {
 			System.out.println("대출의 번호(더블클릭): ");
 			input = scanner.next();
 			id = Integer.parseInt(input);
-			Loan loan = customerModel.viewLoanProductList(this.productList, id);
+			Loan loan = customerController.viewLoanProductList(this.productList, id);
 			System.out.println("");
 			selectLoan(customer, loan);
 		} catch (NumberFormatException e) {
@@ -1191,7 +1191,7 @@ public class Main {
 		int index = 0;
 		ArrayList<Contract> contractList;
 		try {
-			contractList = customerModel.getAllApprovedByCustomer(this.contractList, customer.getId());
+			contractList = customerController.getAllApprovedByCustomer(this.contractList, customer.getId());
 		} catch (NotExistContractException e) {
 			System.out.println("기가입 보험 상품 " + e.getMessage());
 			return;
@@ -1200,7 +1200,7 @@ public class Main {
 			try {
 				System.out.println("\n=================");
 				for (Contract contract : contractList) {
-					Insurance product = customerModel.getInsurance(productList, contract.getProduct().getId());
+					Insurance product = customerController.getInsurance(productList, contract.getProduct().getId());
 					System.out.println("<보험 상품 정보>");
 					System.out.println("계약 아이디 : " + contract.getId() + "\n보험 상품 이름 : " + product.getName() + " | 보험 종류 : "
 							+ product.getInsuranceType().getName() + " | 한도 : " + product.getLimit() + " | 연령대 : "
@@ -1236,16 +1236,16 @@ public class Main {
 	private ArrayList<Contract> getInsuranceType(Customer customer) throws NotExistContractException {
 		System.out.println("1. 자동차 보험 2. 상해 보험 3. 질병 보험");
 		int index = Integer.parseInt(scanner.next());
-		ArrayList<Contract> result = customerModel.getAllByCustomer(contractList, customer.getId());
+		ArrayList<Contract> result = customerController.getAllByCustomer(contractList, customer.getId());
 		switch (index) {
 		case 1:
-			result = customerModel.getAllAutomobileInsuranceContract(contractList);
+			result = customerController.getAllAutomobileInsuranceContract(contractList);
 			break;
 		case 2:
-			result = customerModel.getAllInjuryInsuranceContract(contractList);
+			result = customerController.getAllInjuryInsuranceContract(contractList);
 			break;
 		case 3:
-			result = customerModel.getAllDiseaseInsuranceContract(contractList);
+			result = customerController.getAllDiseaseInsuranceContract(contractList);
 			break;
 		}
 		return result;
@@ -1256,7 +1256,7 @@ public class Main {
 			ArrayList<Contract> result = new ArrayList<>();
 			System.out.println("ID 검색창 : ");
 			int id = Integer.parseInt(scanner.next());
-			ArrayList<Contract> contract = customerModel.getContractByproductId(contractList, id);
+			ArrayList<Contract> contract = customerController.getContractByProductId(contractList, id);
 			result.addAll(contract);
 			return result;
 		} catch (NumberFormatException e) {
@@ -1273,7 +1273,7 @@ public class Main {
 		id = Integer.parseInt(input);
 		try {
 			Contract contract;
-			contract = customerModel.get(contractList, id);
+			contract = customerController.get(contractList, id);
 			// 여기
 			Product product = contract.getProduct();
 			if (product instanceof Insurance) {
@@ -1288,15 +1288,15 @@ public class Main {
 			int index = Integer.parseInt(scanner.next());
 			switch (index) {
 			case 1:
-				customerModel.applyRecontract(this.contractList, this.recontractList, contract, customer);
+				customerController.applyRecontract(this.contractList, this.recontractList, contract, customer);
 				System.out.println("신청되었습니다.");
 				break;
 			case 2:
-				customerModel.applyInsuranceRevival(this.contractList, this.revivalList, contract, customer);
+				customerController.applyInsuranceRevival(this.contractList, this.revivalList, contract, customer);
 				System.out.println("신청되었습니다.");
 				break;
 			case 3:
-				customerModel.applyInsuranceTermination(this.contractList, this.terminationList, contract, customer);
+				customerController.applyInsuranceTermination(this.contractList, this.terminationList, contract, customer);
 				System.out.println("신청되었습니다.");
 				break;
 			case 4:
@@ -1304,7 +1304,7 @@ public class Main {
 				System.out.println("배서 신청할 납부일을 입력해주세요.");
 				input = scanner.next();
 				index = Integer.parseInt(input);
-				customerModel.applyEndorsement(this.contractList, this.endorsementList, index, contract);
+				customerController.applyEndorsement(this.contractList, this.endorsementList, index, contract);
 				System.out.println("신청되었습니다.");
 				break;
 			case 5:
@@ -1345,7 +1345,7 @@ public class Main {
 			index = Integer.parseInt(scanner.next());
 			switch (index) {
 			case 1:
-				customerModel.payInsurancefee(customer, contract, money, depositPath, this.depositDetailList);
+				customerController.payInsurancefee(customer, contract, money, depositPath, this.depositDetailList);
 				System.out.println("납부되었습니다.");
 			case 2:
 				return;
@@ -1411,7 +1411,7 @@ public class Main {
 				input = scanner.next();
 				id = Integer.parseInt(input);
 //				600110~600230
-				employee = humanResourceModel.getEmployee(employeeList, id);
+				employee = humanResourceController.getEmployee(employeeList, id);
 				// 여기
 				if (input.length() == 8) id /= 100;
 				else if (input.length() == 7) id /= 10;
@@ -1490,13 +1490,13 @@ public class Main {
 
 	private void viewPaymentDetail(Employee employee) {
 		int index = 0;
-		ArrayList<PaymentDetail> paymentDetailList = financialAccountantModel.getAllPaymentDetail(this.paymentDetailList);
+		ArrayList<PaymentDetail> paymentDetailList = financialAccountantController.getAllPaymentDetail(this.paymentDetailList);
 		do {
 			try {
 				System.out.println("\n=================");
 				for (PaymentDetail paymentDetail : paymentDetailList) {
-					Contract contract = financialAccountantModel.get(contractList, paymentDetail.getContractId());
-					Customer customer = financialAccountantModel.get(customerList, contract.getCustomerID());
+					Contract contract = financialAccountantController.get(contractList, paymentDetail.getContractId());
+					Customer customer = financialAccountantController.get(customerList, contract.getCustomerID());
 					System.out.println("ID : " + paymentDetail.getId() + "\n지급 금액 : " + paymentDetail.getMoney()
 							+ " | 지급 대상 ID : " + customer.getId() + " | 은행 이름 : " + paymentDetail.getBank() + " | 예금주 : "
 							+ paymentDetail.getAccountHolder() + " | 지급 계좌 번호 : " + paymentDetail.getBankAccount()
@@ -1517,7 +1517,7 @@ public class Main {
 					break;
 				case 3:
 					doubleClickPaymentDetail(employee);
-					paymentDetailList = financialAccountantModel.getAllPaymentDetail(this.paymentDetailList);
+					paymentDetailList = financialAccountantController.getAllPaymentDetail(this.paymentDetailList);
 					break;
 				default:
 					return;
@@ -1532,15 +1532,15 @@ public class Main {
 	}
 	private ArrayList<PaymentDetail> getStatusPaymentDetail(Employee employee) {
 		System.out.println("1. 미지급 2. 지급 완료");
-		ArrayList<PaymentDetail> paymentDetailList = financialAccountantModel.getAllPaymentDetail(this.paymentDetailList);
+		ArrayList<PaymentDetail> paymentDetailList = financialAccountantController.getAllPaymentDetail(this.paymentDetailList);
 		// 여기
 		int index = Integer.parseInt(scanner.next());
 		switch (index) {
 		case 1:
-			paymentDetailList = financialAccountantModel.getAllUnprocessedPaymentDetail(this.paymentDetailList);
+			paymentDetailList = financialAccountantController.getAllUnprocessedPaymentDetail(this.paymentDetailList);
 			break;
 		case 2:
-			paymentDetailList = financialAccountantModel.getAllCompletedPaymentDetail(this.paymentDetailList);
+			paymentDetailList = financialAccountantController.getAllCompletedPaymentDetail(this.paymentDetailList);
 			break;
 		}
 		return paymentDetailList;
@@ -1550,7 +1550,7 @@ public class Main {
 		ArrayList<PaymentDetail> result = new ArrayList<>();
 		try {
 			int index = Integer.parseInt(scanner.next());
-			PaymentDetail paymentDetail = financialAccountantModel.get(paymentDetailList, index);
+			PaymentDetail paymentDetail = financialAccountantController.get(paymentDetailList, index);
 			result.add(paymentDetail);
 		} catch (NotExistException e) {
 			System.out.println(e.getMessage());
@@ -1561,7 +1561,7 @@ public class Main {
 		try {
 			System.out.print("더블 클릭한 지급 사항의 번호 : ");
 			int index = Integer.parseInt(scanner.next());
-			PaymentDetail paymentDetail = financialAccountantModel.get(paymentDetailList, index);
+			PaymentDetail paymentDetail = financialAccountantController.get(paymentDetailList, index);
 			selectPaymentDetail(employee, paymentDetail);
 		} catch (NotExistException e) {
 			System.out.println(e.getMessage());
@@ -1574,8 +1574,8 @@ public class Main {
 			throws NotExistException, NotExistContractException {
 		// FinancialAccountantModel employee - 모델
 		int index = 0;
-		Contract contract = financialAccountantModel.get(contractList, paymentDetail.getContractId());
-		Customer customer = financialAccountantModel.get(customerList, contract.getCustomerID());
+		Contract contract = financialAccountantController.get(contractList, paymentDetail.getContractId());
+		Customer customer = financialAccountantController.get(customerList, contract.getCustomerID());
 		System.out.println("\n=================");
 		System.out.println("ID : " + paymentDetail.getId() + "\n지급 금액 : " + paymentDetail.getMoney() + " | 지급 대상 ID : "
 				+ customer.getId() + " | 은행 이름 : " + paymentDetail.getBank() + " | 예금주 : "
@@ -1591,7 +1591,7 @@ public class Main {
 				index = Integer.parseInt(input);
 				switch (index) {
 				case 1:
-					financialAccountantModel.handlePayment(paymentDetail, paymentDetailList);
+					financialAccountantController.handlePayment(paymentDetail, paymentDetailList);
 					System.out.println("지급되었습니다.");
 					return;
 				case 2:
@@ -1609,12 +1609,12 @@ public class Main {
 	}
 	private void viewDepositDetail(Employee employee) {
 		int index = 0;
-		ArrayList<DepositDetail> depositDetailList = financialAccountantModel.getAllDepositDetail(this.depositDetailList);
+		ArrayList<DepositDetail> depositDetailList = financialAccountantController.getAllDepositDetail(this.depositDetailList);
 		do {
 			try {
 				for (DepositDetail depositDetail : depositDetailList) {
-					Contract contract = financialAccountantModel.get(contractList, depositDetail.getContractId());
-					Customer customer = financialAccountantModel.get(customerList, contract.getCustomerID());
+					Contract contract = financialAccountantController.get(contractList, depositDetail.getContractId());
+					Customer customer = financialAccountantController.get(customerList, contract.getCustomerID());
 					System.out.println("입금 사항 번호 : " + depositDetail.getId() + " 은행 이름 : " + customer.getBankName()
 							+ " 계좌 번호 : " + customer.getBankAccount() + " 입금자 이름 :" + depositDetail.getDepositorName()
 							+ " 입금 날짜 : " + depositDetail.getDate() + " 입금 금액 : " + depositDetail.getMoney()
@@ -1645,7 +1645,7 @@ public class Main {
 		try {
 			System.out.print("ID 검색창 : ");
 			int id = Integer.parseInt(scanner.next());
-			DepositDetail depositDetail = financialAccountantModel.getDepositDetail(this.depositDetailList, id);
+			DepositDetail depositDetail = financialAccountantController.getDepositDetail(this.depositDetailList, id);
 			result.add(depositDetail);
 		} catch (NotExistException e) {
 			System.out.println("해당하는 입금 " + e.getMessage());
@@ -1677,7 +1677,7 @@ public class Main {
 	private void manageAdministrative(Employee employee) {
 		System.out.println("집기 비품 정보 리스트");
 
-		for (OfficeSupply officeSupply : administrativeModel.getAll(this.officeSupplyList)) {
+		for (OfficeSupply officeSupply : administrativeController.getAll(this.officeSupplyList)) {
 			// 여기
 			System.out.print("비품 번호: " + officeSupply.getId() + " ");
 			System.out.print("비품 이름: " + officeSupply.getName() + " ");
@@ -1731,7 +1731,7 @@ public class Main {
 					index = Integer.parseInt(input);
 					switch (index) {
 					case 1:
-						administrativeModel.addOfficeSupply(name, explain, inventory, officeSupplyList);
+						administrativeController.addOfficeSupply(name, explain, inventory, officeSupplyList);
 						System.out.println("집기 비품 정보가 등록되었습니다.");
 						finish = true;
 						break;
@@ -1761,7 +1761,7 @@ public class Main {
 		
 		OfficeSupply officeSupply;
 		try {
-			officeSupply = administrativeModel.getOfficeSupply(officeSupplyList, id);
+			officeSupply = administrativeController.getOfficeSupply(officeSupplyList, id);
 		} catch (NotExistException e) {
 			System.out.println(e.getMessage());
 			return;
@@ -1769,7 +1769,7 @@ public class Main {
 		System.out.print("비품 번호: " + officeSupply.getId() + " ");
 		System.out.print("비품 이름: " + officeSupply.getName() + " ");
 		System.out.print("재고 수량: " + officeSupply.getInventory() + " ");
-		System.out.println("총 재고 수량: " + administrativeModel.getTotalInventory(this.officeSupplyList) + " ");
+		System.out.println("총 재고 수량: " + administrativeController.getTotalInventory(this.officeSupplyList) + " ");
 	}
 
 //	2024-06-02 김대현
@@ -1782,7 +1782,7 @@ public class Main {
 		OfficeSupply officeSupply;
 		
 		try {
-			officeSupply = administrativeModel.getOfficeSupply(officeSupplyList, id);
+			officeSupply = administrativeController.getOfficeSupply(officeSupplyList, id);
 		} catch (NotExistException e) {
 			System.out.println(e.getMessage());
 			return;
@@ -1791,7 +1791,7 @@ public class Main {
 		System.out.print("2. 비품 이름: " + officeSupply.getName() + " ");
 		System.out.print(
 				"3. 재고 수량: " + officeSupply.getInventory() + " ");
-		System.out.print("4. 총 재고 수량: " + administrativeModel.getTotalInventory(this.officeSupplyList) + " ");
+		System.out.print("4. 총 재고 수량: " + administrativeController.getTotalInventory(this.officeSupplyList) + " ");
 		System.out.println("5. 비품 설명: " + officeSupply.getExplain());
 
 		System.out.println("1. 수정 2. 삭제");
@@ -1814,7 +1814,7 @@ public class Main {
 		// AdministrativeModel employee
 		OfficeSupply officeSupply;
 		try {
-			officeSupply = (OfficeSupply) administrativeModel.getOfficeSupply(officeSupplyList, id);
+			officeSupply = (OfficeSupply) administrativeController.getOfficeSupply(officeSupplyList, id);
 		} catch (NotExistException e) {
 			System.out.println(e.getMessage());
 			return;
@@ -1848,7 +1848,7 @@ public class Main {
 						index = Integer.parseInt(input);
 						switch (index) {
 						case 1:
-							administrativeModel.updateDepartment(inputIndex, inputParameter, officeSupply, officeSupplyList);
+							administrativeController.updateDepartment(inputIndex, inputParameter, officeSupply, officeSupplyList);
 							System.out.println("수정이 완료되었습니다.");
 							break;
 						case 2:
@@ -1888,7 +1888,7 @@ public class Main {
 			switch (index) {
 			case 1:
 				try {
-					administrativeModel.deleteOfficeSupply(officeSupplyList, id);
+					administrativeController.deleteOfficeSupply(officeSupplyList, id);
 				} catch (NotExistException e) {
 					System.out.println(e.getMessage());
 					return;
@@ -1932,7 +1932,7 @@ public class Main {
 	}
 
 	private void viewInsuranceMoney(Employee employee) {
-		ArrayList<InsuranceMoney> insuranceMoneyList = compensationModel.getAll(this.insuranceMoneyList);
+		ArrayList<InsuranceMoney> insuranceMoneyList = compensationController.getAll(this.insuranceMoneyList);
 		// 여기
 		int index = 0;
 		do {
@@ -1968,23 +1968,23 @@ public class Main {
 				break;
 			case 3:
 				doubleClickInsuranceMoney(employee);
-				insuranceMoneyList = compensationModel.getAll(this.insuranceMoneyList);
+				insuranceMoneyList = compensationController.getAll(this.insuranceMoneyList);
 				break;
 			}
 		} while (1 <= index && index <= 3);
 	}
 
 	private ArrayList<InsuranceMoney> getStatusInsuranceMoneyList() {
-		ArrayList<InsuranceMoney> result = compensationModel.getAll(this.insuranceMoneyList);
+		ArrayList<InsuranceMoney> result = compensationController.getAll(this.insuranceMoneyList);
 		// 여기
 		System.out.println("1. 미처리 2. 처리 완료");
 		int index = Integer.parseInt(scanner.next());
 		switch (index) {
 		case 1:
-			result = compensationModel.getAllUnprocessed(this.insuranceMoneyList);
+			result = compensationController.getAllUnprocessed(this.insuranceMoneyList);
 			break;
 		case 2:
-			result = compensationModel.getAllProcessed(this.insuranceMoneyList);
+			result = compensationController.getAllProcessed(this.insuranceMoneyList);
 			break;
 		}
 		return result;
@@ -1995,7 +1995,7 @@ public class Main {
 		try {
 			System.out.println("ID 검색창 : ");
 			int index = Integer.parseInt(scanner.next());
-			InsuranceMoney insuranceMoney = compensationModel.get(this.insuranceMoneyList, index);
+			InsuranceMoney insuranceMoney = compensationController.get(this.insuranceMoneyList, index);
 			// 여기
 			result.add(insuranceMoney);
 		} catch (NotExistException e) {
@@ -2008,7 +2008,7 @@ public class Main {
 		try {
 			System.out.println("클릭한 보험금 신청 정보의 번호 : ");
 			int index = Integer.parseInt(scanner.next());
-			InsuranceMoney insuranceMoney = compensationModel.get(this.insuranceMoneyList, index);
+			InsuranceMoney insuranceMoney = compensationController.get(this.insuranceMoneyList, index);
 			// 여기
 			selectInsuranceMoney(employee, insuranceMoney);
 		} catch (NotExistException e) {
@@ -2021,9 +2021,9 @@ public class Main {
 		Contract contract;
 		Customer customer;
 		try {
-			contract = compensationModel.get(this.contractList, insuranceMoney.getContractId());
+			contract = compensationController.get(this.contractList, insuranceMoney.getContractId());
 			// 여기
-			customer = compensationModel.get(this.customerList, contract.getCustomerID());
+			customer = compensationController.get(this.customerList, contract.getCustomerID());
 			// 여기
 		} catch (NotExistException e) {
 			System.out.println("고객 " + e.getMessage());
@@ -2076,7 +2076,7 @@ public class Main {
 					index = Integer.parseInt(scanner.next());
 					switch(index) {
 					case 1:
-						compensationModel.requestInsuranceMoney(customer, money, insuranceMoney, this.insuranceMoneyList,
+						compensationController.requestInsuranceMoney(customer, money, insuranceMoney, this.insuranceMoneyList,
 								paymentType, contract.getId(), this.paymentDetailList);
 						return;
 					case 2:
@@ -2100,7 +2100,7 @@ public class Main {
 	}
 
 	private void viewReport(Employee employee) {
-		ArrayList<Report> reportList = compensationModel.getAll(this.reportList);
+		ArrayList<Report> reportList = compensationController.getAll(this.reportList);
 		// 여기
 		int index = 0;
 		do {
@@ -2143,7 +2143,7 @@ public class Main {
 		try {
 			System.out.println("클릭한 신고 정보의 번호 : ");
 			int index = Integer.parseInt(scanner.next());
-			Report report = compensationModel.get(this.reportList, index);
+			Report report = compensationController.get(this.reportList, index);
 			// 여기
 			selectReport(employee, report);
 		} catch (NotExistException e) {
@@ -2157,7 +2157,7 @@ public class Main {
 			System.out.println("ID 검색창 : ");
 			int index = Integer.parseInt(scanner.next());
 			Report report;
-			report = compensationModel.get(this.reportList, index);
+			report = compensationController.get(this.reportList, index);
 			// 여기
 			result.add(report);
 		} catch (NotExistException e) {
@@ -2167,16 +2167,16 @@ public class Main {
 	}
 
 	private ArrayList<Report> getStatusCompensation() {
-		ArrayList<Report> result = compensationModel.getAll(this.reportList);
+		ArrayList<Report> result = compensationController.getAll(this.reportList);
 		// 여기
 		System.out.println("1. 미처리 2. 처리 완료");
 		int index = Integer.parseInt(scanner.next());
 		switch (index) {
 		case 1:
-			result = compensationModel.getAllUnprocessedReport(this.reportList);
+			result = compensationController.getAllUnprocessedReport(this.reportList);
 			break;
 		case 2:
-			result = compensationModel.getAllCompletedReport(this.reportList);
+			result = compensationController.getAllCompletedReport(this.reportList);
 			break;
 		}
 		return result;
@@ -2221,9 +2221,9 @@ public class Main {
 		Contract contract;
 		Customer customer;
 		try {
-			contract = compensationModel.getAutomobileByMember(this.contractList, report.getAccident().getCustomerID());
+			contract = compensationController.getAutomobileByMember(this.contractList, report.getAccident().getCustomerID());
 			// 여기
-			customer = compensationModel.get(this.customerList, report.getAccident().getCustomerID());
+			customer = compensationController.get(this.customerList, report.getAccident().getCustomerID());
 		} catch (NotExistContractException | NotExistException e) {
 			System.out.println(e.getMessage());
 			return;
@@ -2233,7 +2233,7 @@ public class Main {
 			input = scanner.next();
 			int money = Integer.parseInt(input);
 			PaymentType paymentType = getPaymentType();
-			compensationModel.requestCompensation(customer.getName(), customer.getBankName(), customer.getBankAccount(), money,
+			compensationController.requestCompensation(customer.getName(), customer.getBankName(), customer.getBankAccount(), money,
 					paymentType, contract.getId(), paymentDetailList, report, reportList, accidentList);
 			System.out.println("요청이 완료되었습니다.");
 		} catch (NotExistException e) {
@@ -2292,12 +2292,12 @@ public class Main {
 
 	private void viewComplaint(Employee employee) {
 		int index = 0;
-		ArrayList<Complaint> complaintList = customerSupportModel.getAll(this.complaintList);
+		ArrayList<Complaint> complaintList = customerSupportController.getAll(this.complaintList);
 		// 여기
 		do {
 			try {
 				for (Complaint complaint : complaintList) {
-					Customer customer = customerSupportModel.get(this.customerList, complaint.getCustomerID());
+					Customer customer = customerSupportController.get(this.customerList, complaint.getCustomerID());
 					System.out.println("민원 번호 : " + complaint.getId() + " 민원 종류 : "
 							+ complaint.getComplaintType().getName() + " 제목 : " + complaint.getTitle() + " 등록 날짜, 시간 : "
 							+ complaint.getPostDate() + " 담당자 이름 : " + complaint.getEmployeeName() + " 처리된 날짜 : "
@@ -2326,16 +2326,16 @@ public class Main {
 	}
 
 	private ArrayList<Complaint> getStatusComplaint() {
-		ArrayList<Complaint> result = customerSupportModel.getAll(this.complaintList);
+		ArrayList<Complaint> result = customerSupportController.getAll(this.complaintList);
 		// 여기
 		System.out.println("1. 미처리 2. 처리 완료");
 		int index = Integer.parseInt(scanner.next());
 		switch (index) {
 		case 1:
-			result = customerSupportModel.getAllUnprocessedComplaint(this.complaintList);
+			result = customerSupportController.getAllUnprocessedComplaint(this.complaintList);
 			break;
 		case 2:
-			result = customerSupportModel.getAllProcessedComplant(this.complaintList);
+			result = customerSupportController.getAllProcessedComplant(this.complaintList);
 			break;
 		}
 		return result;
@@ -2346,7 +2346,7 @@ public class Main {
 		try {
 			System.out.print("ID 검색창 : ");
 			int index = Integer.parseInt(scanner.next());
-			Complaint complaint = customerSupportModel.get(this.complaintList, index);
+			Complaint complaint = customerSupportController.get(this.complaintList, index);
 			// 여기
 			result.add(complaint);
 		} catch (NotExistException e) {
@@ -2359,7 +2359,7 @@ public class Main {
 		try {
 			System.out.print("클릭한 민원 정보의 번호 : ");
 			int index = Integer.parseInt(scanner.next());
-			Complaint complaint = customerSupportModel.get(this.complaintList, index);
+			Complaint complaint = customerSupportController.get(this.complaintList, index);
 			// 여기
 			selectComplaint(employee, complaint);
 		} catch (NotExistException e) {
@@ -2371,7 +2371,7 @@ public class Main {
 		// CustomerSupportModel employee
 		Customer customer;
 		try {
-			customer = customerSupportModel.get(this.customerList, complaint.getCustomerID());
+			customer = customerSupportController.get(this.customerList, complaint.getCustomerID());
 			// 여기
 		} catch (NotExistException e) {
 			System.out.println(e.getMessage());
@@ -2390,7 +2390,7 @@ public class Main {
 					System.out.println("처리 결과 : ");
 					String input = scanner.nextLine();
 					input = scanner.nextLine();
-					customerSupportModel.handleComplaint(employee.getName(), complaint, input, this.complaintList);
+					customerSupportController.handleComplaint(employee.getName(), complaint, input, this.complaintList);
 					return;
 				case 2:
 					break;
@@ -2442,16 +2442,16 @@ public class Main {
 	}
 
 	private ArrayList<Accident> getStatusAccident() {
-		ArrayList<Accident> result = customerSupportModel.getAll(this.accidentList);
+		ArrayList<Accident> result = customerSupportController.getAll(this.accidentList);
 		// 여기
 		System.out.println("1. 미처리 2. 처리 완료");
 		int index = Integer.parseInt(scanner.next());
 		switch (index) {
 		case 1:
-			result = customerSupportModel.getAllUnprocessedReport(this.accidentList);
+			result = customerSupportController.getAllUnprocessedReport(this.accidentList);
 			break;
 		case 2:
-			result = customerSupportModel.getAllCompletedReport(this.accidentList);
+			result = customerSupportController.getAllCompletedReport(this.accidentList);
 			break;
 		}
 		return result;
@@ -2463,7 +2463,7 @@ public class Main {
 			System.out.print("ID 검색창 : ");
 			int index = Integer.parseInt(scanner.next());
 			Accident accident;
-			accident = customerSupportModel.get(this.accidentList, index);
+			accident = customerSupportController.get(this.accidentList, index);
 			// 여기
 			result.add(accident);
 		} catch (NotExistException e) {
@@ -2476,7 +2476,7 @@ public class Main {
 		try {
 			System.out.print("클릭한 사고 정보의 번호 : ");
 			int index = Integer.parseInt(scanner.next());
-			Accident accident = customerSupportModel.get(this.accidentList, index);
+			Accident accident = customerSupportController.get(this.accidentList, index);
 			// 여기
 			selectAccident(employee, accident);
 		} catch (NotExistException e) {
@@ -2508,7 +2508,7 @@ public class Main {
 					if (roadsideAssistanceCompany == null) {
 						break;
 					}
-					customerSupportModel.handleAccident(accident, damageAssessmentCompany, roadsideAssistanceCompany,
+					customerSupportController.handleAccident(accident, damageAssessmentCompany, roadsideAssistanceCompany,
 							this.reportList);
 					System.out.println("접수가 완료되었습니다.");
 					return;
@@ -2527,7 +2527,7 @@ public class Main {
 	}
 
 	private PartnerCompany getRoadAssistanceCompany() throws NotExistException {
-		ArrayList<PartnerCompany> roadAssistanceCompanyList = customerSupportModel.getAllRoadAssistanceCompany(this.partnerCompanyList);
+		ArrayList<PartnerCompany> roadAssistanceCompanyList = customerSupportController.getAllRoadAssistanceCompany(this.partnerCompanyList);
 		// 여기
 		System.out.println("\n=================");
 		for (PartnerCompany partnerCompany : roadAssistanceCompanyList) {
@@ -2538,11 +2538,11 @@ public class Main {
 		System.out.println("=================\n");
 		System.out.println("긴급서비스를 요청할 협력업체의 ID를 입력해주세요.");
 		int id = Integer.parseInt(scanner.next());
-		return customerSupportModel.getRoadAssistanceCompany(this.partnerCompanyList, id);
+		return customerSupportController.getRoadAssistanceCompany(this.partnerCompanyList, id);
 	}
 
 	private PartnerCompany getDamageAssessmentCompany() throws NotExistException {
-		ArrayList<PartnerCompany> damageAssessmentCompanyList = customerSupportModel.getAllDamageAssessmentCompany(this.partnerCompanyList);
+		ArrayList<PartnerCompany> damageAssessmentCompanyList = customerSupportController.getAllDamageAssessmentCompany(this.partnerCompanyList);
 		// 여기
 		System.out.println("\n=================");
 		for (PartnerCompany partnerCompany : damageAssessmentCompanyList) {
@@ -2553,7 +2553,7 @@ public class Main {
 		System.out.println("=================\n");
 		System.out.println("손해 사정을 요청할 협력업체의 ID를 입력해주세요.");
 		int id = Integer.parseInt(scanner.next());
-		return customerSupportModel.getDamageAssessmentCompany(this.partnerCompanyList, id);
+		return customerSupportController.getDamageAssessmentCompany(this.partnerCompanyList, id);
 	}
 	// TODO ManagementPlanning
 	private void showManagementPlanningTask(Employee employee) {
@@ -2636,7 +2636,7 @@ public class Main {
 					index = Integer.parseInt(input);
 					switch (index) {
 					case 1:
-						managementPlanningModel.addDepartment(name, task, purpose, headName, departmentList);
+						managementPlanningController.addDepartment(name, task, purpose, headName, departmentList);
 						System.out.println("부서가 등록되었습니다.");
 						finish = true;
 						break;
@@ -2665,7 +2665,7 @@ public class Main {
 		Department department;
 		
 		try {
-			department = managementPlanningModel.getDepartment(departmentList, id);
+			department = managementPlanningController.getDepartment(departmentList, id);
 		} catch (NotExistException e) {
 			System.out.println(e.getMessage());
 			return;
@@ -2687,7 +2687,7 @@ public class Main {
 		Department department;
 		
 		try {
-			department = managementPlanningModel.getDepartment(departmentList, id);
+			department = managementPlanningController.getDepartment(departmentList, id);
 		} catch (NotExistException e) {
 			System.out.println(e.getMessage());
 			return;
@@ -2720,7 +2720,7 @@ public class Main {
 		// ManagementPlanningModel employee
 		Department department;
 		try {
-			department = (Department) managementPlanningModel.getDepartment(departmentList, id);
+			department = (Department) managementPlanningController.getDepartment(departmentList, id);
 		} catch (NotExistException e) {
 			System.out.println(e.getMessage());
 			return;
@@ -2756,7 +2756,7 @@ public class Main {
 						index = Integer.parseInt(input);
 						switch (index) {
 						case 1:
-							managementPlanningModel.updateDepartment(inputIndex, 
+							managementPlanningController.updateDepartment(inputIndex, 
 									inputParameter, department, departmentList);
 							System.out.println("수정이 완료되었습니다.");
 							break;
@@ -2801,7 +2801,7 @@ public class Main {
 			switch (index) {
 			case 1:
 				try {
-					managementPlanningModel.deleteDepartment(departmentList, id);
+					managementPlanningController.deleteDepartment(departmentList, id);
 				} catch (NotExistException e) {
 					System.out.println(e.getMessage());
 					return;
@@ -2831,10 +2831,10 @@ public class Main {
 			index = Integer.parseInt(input);
 			switch (index) {
 			case 1:
-				humanResourceModel.requestAdditionalAllowance();
+				humanResourceController.requestAdditionalAllowance();
 				break;
 			case 2:
-				humanResourceModel.requestBenefit();
+				humanResourceController.requestBenefit();
 				break;
 			case 3:
 				manageHumanResource(employee);
@@ -2852,7 +2852,7 @@ public class Main {
 	private void manageHumanResource(Employee employee) {
 		System.out.println("직원 정보 리스트");
 //		직원 번호, 직원 이름, 직급, 부서 정보(부서 번호), 급여
-		for (Employee e : humanResourceModel.getAll(this.employeeList)) {
+		for (Employee e : humanResourceController.getAll(this.employeeList)) {
 			// 여기
 			System.out.print("직원 번호: " + e.getId() + " ");
 			System.out.print("직원 이름: " + e.getName() + " ");
@@ -3066,7 +3066,7 @@ public class Main {
 				int departmentID;
 				do {
 					System.out.println("9. 부서 번호");
-					for (Department department : humanResourceModel.getAll(this.departmentList)) {
+					for (Department department : humanResourceController.getAll(this.departmentList)) {
 						// 여기
 						System.out.print(department.getId() + " ");
 						System.out.println(department.getName());
@@ -3074,7 +3074,7 @@ public class Main {
 					input = scanner.next();
 					departmentID = Integer.parseInt(input);
 					try {
-						if (humanResourceModel.get(this.departmentList, departmentID) != null) {
+						if (humanResourceController.get(this.departmentList, departmentID) != null) {
 							break;
 						}
 					} catch (NotExistException e) {
@@ -3095,7 +3095,7 @@ public class Main {
 					index = Integer.parseInt(input);
 					switch (index) {
 					case 1:
-						humanResourceModel.addEmployee(teamId, name, employeePosition, address, phoneNumber, bankName,
+						humanResourceController.addEmployee(teamId, name, employeePosition, address, phoneNumber, bankName,
 								bankAccount, residentRegistrationNumber, departmentID, salary, dateOfEmployment,
 								employeeList, tempFamilyList, familyList);
 						System.out.println("등록되었습니다.");
@@ -3126,7 +3126,7 @@ public class Main {
 		id = Integer.parseInt(input);
 		Employee rEmployee;
 		try {
-			rEmployee = humanResourceModel.getEmployee(employeeList, id);
+			rEmployee = humanResourceController.getEmployee(employeeList, id);
 		} catch (NotExistException e) {
 			System.out.println(e.getMessage());
 			return;
@@ -3147,7 +3147,7 @@ public class Main {
 //		직원 번호 , 직원 이름, 직급, 주소, 전화번호, 은행명, 계좌번호, 주민등록번호, 가족관계, 부서 정보(부서 번호), 급여, 입사 날짜
 		Employee rEmployee;
 		try {
-			rEmployee = humanResourceModel.getEmployee(employeeList, id);
+			rEmployee = humanResourceController.getEmployee(employeeList, id);
 		} catch (NotExistException e) {
 			System.out.println("직원 " + e.getMessage());
 			return;
@@ -3240,7 +3240,7 @@ public class Main {
 					switch (index) {
 					case 1:
 						try {
-							humanResourceModel.updateEmployee(inputIndex, inputParameter, rEmployee, employeeList);
+							humanResourceController.updateEmployee(inputIndex, inputParameter, rEmployee, employeeList);
 							System.out.println("수정되었습니다.");
 						} catch (NotExistException e) {
 							System.out.println(e.getMessage());
@@ -3421,7 +3421,7 @@ public class Main {
 			switch (index) {
 			case 1:
 				try {
-					humanResourceModel.deleteEmployee(employeeList, rEmployee.getId());
+					humanResourceController.deleteEmployee(employeeList, rEmployee.getId());
 					System.out.println("삭제되었습니다.");
 				} catch (NotExistException e) {
 					System.out.println(e.getMessage());
@@ -3465,7 +3465,7 @@ public class Main {
 //		고객 이름, 전화번호, 직업,나이, 성별, 주민등록번호, 주소, 계좌 번호, 고객 번호
 
 		System.out.println("고객 정보 리스트");
-		for (Customer e : customerInformationManagementModel.getAll(customerList)) {
+		for (Customer e : customerInformationManagementController.getAll(customerList)) {
 			// 여기
 			System.out.print("고객 번호: " + e.getId() + " ");
 			System.out.print("고객 이름: " + e.getName() + " ");
@@ -3641,7 +3641,7 @@ public class Main {
 					index = Integer.parseInt(input);
 					switch (index) {
 					case 1:
-						customerInformationManagementModel.addCustomerInformation(name, phoneNumber, job, age, gender,
+						customerInformationManagementController.addCustomerInformation(name, phoneNumber, job, age, gender,
 								residentRegistrationNumber, address, property, tempAccidentHistoryList,
 								tempSurgeryHistoryList, tempDiseaseHistoryList, bankName, bankAccount, customerList,
 								accidentHistoryList, surgeryHistoryList, diseaseHistoryList);
@@ -3673,7 +3673,7 @@ public class Main {
 		id = Integer.parseInt(input);
 		Customer customer;
 		try {
-			customer = customerInformationManagementModel.getCustomerInformation(customerList, id);
+			customer = customerInformationManagementController.getCustomerInformation(customerList, id);
 		} catch (NotExistException e) {
 			System.out.println(e.getMessage());
 			return;
@@ -3698,7 +3698,7 @@ public class Main {
 		id = Integer.parseInt(input);
 		Customer customer;
 		try {
-			customer = customerInformationManagementModel.getCustomerInformation(customerList, id);
+			customer = customerInformationManagementController.getCustomerInformation(customerList, id);
 		} catch (NotExistException e) {
 			System.out.println(e.getMessage());
 			return;
@@ -3738,7 +3738,7 @@ public class Main {
 		// CustomerInformationManagementModel employee
 		Customer customer;
 		try {
-			customer = customerInformationManagementModel.getCustomerInformation(customerList, id);
+			customer = customerInformationManagementController.getCustomerInformation(customerList, id);
 		} catch (NotExistException e) {
 			System.out.println(e.getMessage());
 			return;
@@ -3800,7 +3800,7 @@ public class Main {
 						index = Integer.parseInt(input);
 						switch (index) {
 						case 1:
-							customerInformationManagementModel.updateCustomerInformation(inputIndex, inputParameter,
+							customerInformationManagementController.updateCustomerInformation(inputIndex, inputParameter,
 									customer, customerList);
 							System.out.println("수정되었습니다.");
 							break;
@@ -3847,7 +3847,7 @@ public class Main {
 			switch (index) {
 			case 1:
 				try {
-					customerInformationManagementModel.deleteCustomerInformation(customerList, id);
+					customerInformationManagementController.deleteCustomerInformation(customerList, id);
 				} catch (NotExistException e) {
 					System.out.println(e.getMessage());
 					return;
@@ -3897,7 +3897,7 @@ public class Main {
 
 		private void evaluateSalesPerformance(Employee employee) {
 //			영업 직원 정보 리스트(직원 정보(직원 번호, 직원 이름, 직급), 계약건수)
-			for (Employee rEmployee : salesModel.getAll(employeeList)) {
+			for (Employee rEmployee : salesController.getAll(employeeList)) {
 				// 여기
 				if (rEmployee instanceof Sales) {
 					System.out.print("직원 번호: " + ((Sales) rEmployee).getId() + " ");
@@ -3931,13 +3931,13 @@ public class Main {
 			id = Integer.parseInt(input);
 
 			try {
-				Employee rEmployee = salesModel.get(employeeList, id);
+				Employee rEmployee = salesController.get(employeeList, id);
 				// 여기
 				if (rEmployee instanceof Sales) {
-					System.out.print("직원 번호: " + salesModel.get(employeeList, id).getId() + " ");
-					System.out.print("직원 이름: " + salesModel.get(employeeList, id).getName() + " ");
-					System.out.print("직급: " + salesModel.get(employeeList, id).getPosition() + " ");
-					System.out.println("계약건수: " + salesModel.getSalesContractCount(employeeList, id).getContractCount());
+					System.out.print("직원 번호: " + salesController.get(employeeList, id).getId() + " ");
+					System.out.print("직원 이름: " + salesController.get(employeeList, id).getName() + " ");
+					System.out.print("직급: " + salesController.get(employeeList, id).getPosition() + " ");
+					System.out.println("계약건수: " + salesController.getSalesContractCount(employeeList, id).getContractCount());
 				} else {
 					System.out.println("해당하는 직원 정보가 존재하지 않습니다.");
 				}
@@ -3953,7 +3953,7 @@ public class Main {
 //			영업 직원 상세 정보(직원 상세 정보 (직원 번호, 직원 이름, 직급, 급여), )
 			Sales sales;
 			try {
-				sales = salesModel.getSales(employeeList, id);
+				sales = salesController.getSales(employeeList, id);
 //						employeeList.getSales(id);
 				
 				// 여기
@@ -3997,7 +3997,7 @@ public class Main {
 						return;
 					}
 					try {
-						salesModel.evaluateSalesPerformance(evaluate, sales, employeeList);
+						salesController.evaluateSalesPerformance(evaluate, sales, employeeList);
 						System.out.println("평가되었습니다.");
 					} catch (NotExistException e) {
 						System.out.println(e.getMessage());
@@ -4014,7 +4014,7 @@ public class Main {
 		private void handleInsuranceConsultation(Employee employee) {
 //			보험 상담 처리 정보 리스트(상담 고객 정보(고객 이름, 전화번호, 날짜, 성별), 상담 번호, 처리 상태)
 
-			for (Counsel counsel : salesModel.getAll(counselList)) {
+			for (Counsel counsel : salesController.getAll(counselList)) {
 				// 여기
 				System.out.print("상담 번호: " + counsel.getId() + " ");
 				System.out.print("고객 이름: " + counsel.getName() + " ");
@@ -4051,7 +4051,7 @@ public class Main {
 			System.out.println("1.미처리 2.처리완료");
 			input = scanner.next();
 			index = Integer.parseInt(input);
-			for (Counsel counsel : salesModel.getAll(counselList)) {
+			for (Counsel counsel : salesController.getAll(counselList)) {
 				// 여기
 				if (index == 1 && counsel.getProcessStatus() == CounselProcessStatus.Unprocessed) {
 					System.out.print("상담 번호: " + counsel.getId() + " ");
@@ -4079,7 +4079,7 @@ public class Main {
 			id = Integer.parseInt(input);
 			Counsel counsel;
 			try {
-				counsel = salesModel.get(counselList, id);
+				counsel = salesController.get(counselList, id);
 				// 여기
 			} catch (NotExistException e) {
 				System.out.println("상담 " + e.getMessage());
@@ -4100,7 +4100,7 @@ public class Main {
 			id = Integer.parseInt(input);
 			Counsel counsel;
 			try {
-				counsel = salesModel.get(counselList, id);
+				counsel = salesController.get(counselList, id);
 				// 여기
 			} catch (NotExistException e) {
 				System.out.println("상담 " + e.getMessage());
@@ -4123,7 +4123,7 @@ public class Main {
 				switch (index) {
 				case 1:
 					try {
-						salesModel.handleInsuranceConsultation(counsel, counselList);
+						salesController.handleInsuranceConsultation(counsel, counselList);
 						System.out.println("예약되었습니다");
 					} catch (NotExistException e) {
 						System.out.println(e.getMessage());
@@ -4145,7 +4145,7 @@ public class Main {
 		private void induceInsuranceProduct(Sales sales) {
 			System.out.println("보험 상품 정보 리스트");
 			System.out.println("\n=================");
-			for (Product e : salesModel.getAll(productList)) {
+			for (Product e : salesController.getAll(productList)) {
 				// 여기
 				if (e instanceof Insurance) {
 					System.out.print("보험 상품 번호: " + ((Insurance) e).getId() + "\n");
@@ -4207,7 +4207,7 @@ public class Main {
 			id = Integer.parseInt(input);
 			Insurance insurance;
 			try {
-				insurance = salesModel.getInsuranceProduct(productList, id);
+				insurance = salesController.getInsuranceProduct(productList, id);
 			} catch (NotExistException e) {
 				System.out.println("보험 상품 " + e.getMessage());
 				return;
@@ -4226,7 +4226,7 @@ public class Main {
 			id = Integer.parseInt(input);
 			Insurance insurance;
 			try {
-				insurance = salesModel.getInsuranceProduct(productList, id);
+				insurance = salesController.getInsuranceProduct(productList, id);
 			} catch (NotExistException e) {
 				System.out.println(e.getMessage());
 				return;
@@ -4375,7 +4375,7 @@ public class Main {
 								SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
 								Date date = formatter.parse(dateOfDiagnosis);
 								DiseaseHistory diseaseHistory = new DiseaseHistory(diseaseName, date);
-								salesModel.add(diseaseHistoryList, diseaseHistory);
+								salesController.add(diseaseHistoryList, diseaseHistory);
 								diseaseHistoryList.add(diseaseHistory);
 								break;
 							case 2:
@@ -4428,7 +4428,7 @@ public class Main {
 							int contractCount = sales.getContractCount();
 							sales.setContractCount(++contractCount);
 							try {
-								salesModel.update(employeeList, sales);
+								salesController.update(employeeList, sales);
 								System.out.println("요청되었습니다.");
 							} catch (NotExistException e) {
 								System.out.println(e.getMessage());
@@ -4449,7 +4449,7 @@ public class Main {
 		}
 
 		private void induceDiseaseInsurance(Employee employee) {
-			ArrayList<Insurance> insuranceList = salesModel.getAllDiseaseInsurance(productList);
+			ArrayList<Insurance> insuranceList = salesController.getAllDiseaseInsurance(productList);
 			// 여기
 			System.out.println("질병 보험 상품 정보 리스트");
 			System.out.println("\n=================");
@@ -4465,7 +4465,7 @@ public class Main {
 		}
 
 		private void induceInjuryInsurance(Employee employee) {
-			ArrayList<Insurance> insuranceList = salesModel.getAllInjuryInsurance(productList);
+			ArrayList<Insurance> insuranceList = salesController.getAllInjuryInsurance(productList);
 			// 여기
 			System.out.println("상해 보험 상품 정보 리스트");
 			System.out.println("\n=================");
@@ -4481,7 +4481,7 @@ public class Main {
 		}
 
 		private void induceAutomobileInsurance(Employee employee) {
-			ArrayList<Insurance> insuranceList = salesModel.getAllAutomobileInsurance(productList);
+			ArrayList<Insurance> insuranceList = salesController.getAllAutomobileInsurance(productList);
 			// 여기
 			System.out.println("자동차 보험 상품 정보 리스트");
 			System.out.println("\n=================");
@@ -4500,7 +4500,7 @@ public class Main {
 		private void induceLoanProduct(Employee employee) {
 			System.out.println("대출 상품 정보 리스트");
 			System.out.println("\n=================");
-			for (Product e : salesModel.getAll(productList)) {
+			for (Product e : salesController.getAll(productList)) {
 				// 여기
 				if (e instanceof Loan) {
 					System.out.print("대출 상품 번호: " + ((Loan) e).getId() + "\n");
@@ -4561,7 +4561,7 @@ public class Main {
 			id = Integer.parseInt(input);
 			Loan loan;
 			try {
-				loan = salesModel.getLoanProduct(productList, id);
+				loan = salesController.getLoanProduct(productList, id);
 			} catch (NotExistException e) {
 				System.out.println("대출 상품 " + e.getMessage());
 				return;
@@ -4580,22 +4580,22 @@ public class Main {
 			id = Integer.parseInt(input);
 
 			try {
-				if (salesModel.getLoanProduct(productList, id) != null) {
-					System.out.println("1. 대출 상품 이름: " + salesModel.getLoanProduct(productList, id).getName() + " ");
-					System.out.println("2. 대출 종류: " + salesModel.getLoanProduct(productList, id).getLoanType().getName() + " ");
-					System.out.println("3. 대출 상품 번호: " + salesModel.getLoanProduct(productList, id).getId() + " ");
-					System.out.println("4. 이자율: " + salesModel.getLoanProduct(productList, id).getInterestRate() + " ");
-					System.out.println("5. 대출 가능 최대 금액: " + salesModel.getLoanProduct(productList, id).getLimit() + " ");
-					System.out.println("6. 최소 자산: " + salesModel.getLoanProduct(productList, id).getMinimumAsset());
-					if (salesModel.getLoanProduct(productList, id) instanceof Collateral) {
-						Collateral collateralLoan = (Collateral) salesModel.getLoanProduct(productList, id);
+				if (salesController.getLoanProduct(productList, id) != null) {
+					System.out.println("1. 대출 상품 이름: " + salesController.getLoanProduct(productList, id).getName() + " ");
+					System.out.println("2. 대출 종류: " + salesController.getLoanProduct(productList, id).getLoanType().getName() + " ");
+					System.out.println("3. 대출 상품 번호: " + salesController.getLoanProduct(productList, id).getId() + " ");
+					System.out.println("4. 이자율: " + salesController.getLoanProduct(productList, id).getInterestRate() + " ");
+					System.out.println("5. 대출 가능 최대 금액: " + salesController.getLoanProduct(productList, id).getLimit() + " ");
+					System.out.println("6. 최소 자산: " + salesController.getLoanProduct(productList, id).getMinimumAsset());
+					if (salesController.getLoanProduct(productList, id) instanceof Collateral) {
+						Collateral collateralLoan = (Collateral) salesController.getLoanProduct(productList, id);
 						System.out.println("7. 담보 종류: " + collateralLoan.getCollateralType().getName());
 						System.out.println("8. 담보 최소 가치: " + collateralLoan.getMinimumValue());
-					} else if (salesModel.getLoanProduct(productList, id) instanceof FixedDeposit) {
-						FixedDeposit fixedDepositLoan = (FixedDeposit) salesModel.getLoanProduct(productList, id);
+					} else if (salesController.getLoanProduct(productList, id) instanceof FixedDeposit) {
+						FixedDeposit fixedDepositLoan = (FixedDeposit) salesController.getLoanProduct(productList, id);
 						System.out.println("7. 최대 예치 금액: " + fixedDepositLoan.getMinimumAmount());
-					} else if (salesModel.getLoanProduct(productList, id) instanceof InsuranceContract) {
-						InsuranceContract insuranceContractLoan = (InsuranceContract) salesModel.getLoanProduct(productList, id);
+					} else if (salesController.getLoanProduct(productList, id) instanceof InsuranceContract) {
+						InsuranceContract insuranceContractLoan = (InsuranceContract) salesController.getLoanProduct(productList, id);
 						System.out.println("7. 보험 상품 번호: " + insuranceContractLoan.getProductID());
 					}
 				} else {
@@ -4725,7 +4725,7 @@ public class Main {
 								SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
 								Date date = formatter.parse(dateOfDiagnosis);
 								DiseaseHistory diseaseHistory = new DiseaseHistory(diseaseName, date);
-								salesModel.add(diseaseHistoryList, diseaseHistory);
+								salesController.add(diseaseHistoryList, diseaseHistory);
 								break;
 							case 2:
 								finishInputDiseaseHistory = true;
@@ -4789,7 +4789,7 @@ public class Main {
 		}
 
 		private void induceCollateralLoan(Employee employee) {
-			ArrayList<Loan> loanList = salesModel.getAllCollateralLoan(productList);
+			ArrayList<Loan> loanList = salesController.getAllCollateralLoan(productList);
 			// 여기
 			System.out.println("담보 대출 상품 정보 리스트");
 			for (Loan loan : loanList) {
@@ -4803,7 +4803,7 @@ public class Main {
 		}
 
 		private void induceFixedDepositLoan(Employee employee) {
-			ArrayList<Loan> loanList = salesModel.getAllFixedDepositLoan(productList);
+			ArrayList<Loan> loanList = salesController.getAllFixedDepositLoan(productList);
 			System.out.println("정기 예금 대출 상품 정보 리스트");
 			for (Loan loan : loanList) {
 				System.out.print("대출 상품 이름: " + loan.getName() + " ");
@@ -4816,7 +4816,7 @@ public class Main {
 		}
 
 		private void induceInsuranceContractLoan(Employee employee) {
-			ArrayList<Loan> loanList = salesModel.getAllInsuranceContractLoan(productList);
+			ArrayList<Loan> loanList = salesController.getAllInsuranceContractLoan(productList);
 			System.out.println("보험 계약 대출 상품 정보 리스트");
 			for (Loan loan : loanList) {
 				System.out.print("대출 상품 이름: " + loan.getName() + " ");
@@ -4859,7 +4859,7 @@ public class Main {
 
 			System.out.println("보험 상품 정보 리스트");
 			System.out.println("\n=================");
-			for (Product e : productManagementModel.getAll(productList)) {
+			for (Product e : productManagementController.getAll(productList)) {
 				if (e instanceof Insurance) {
 					System.out.print("보험 상품 번호: " + ((Insurance) e).getId() + "\n");
 					System.out.print("보험 상품 이름: " + ((Insurance) e).getName() + " | ");
@@ -4959,7 +4959,7 @@ public class Main {
 						index = Integer.parseInt(input);
 						switch (index) {
 						case 1:
-							productManagementModel.addInsuranceProduct(insuranceType, name, limit, ageRange, coverage,
+							productManagementController.addInsuranceProduct(insuranceType, name, limit, ageRange, coverage,
 									monthlyPremium, contractPeriod, diseaseName, diseaseLimit, surgeriesLimit, productList);
 							System.out.println("등록되었습니다.");
 							finish = true;
@@ -5039,7 +5039,7 @@ public class Main {
 						index = Integer.parseInt(input);
 						switch (index) {
 						case 1:
-							productManagementModel.addInsuranceProduct(insuranceType, name, limit, ageRange, coverage,
+							productManagementController.addInsuranceProduct(insuranceType, name, limit, ageRange, coverage,
 									monthlyPremium, contractPeriod, injuryType, surgeriesLimit, productList);
 							System.out.println("등록되었습니다.");
 							finish = true;
@@ -5172,7 +5172,7 @@ public class Main {
 						index = Integer.parseInt(input);
 						switch (index) {
 						case 1:
-							productManagementModel.addInsuranceProduct(insuranceType, name, limit, ageRange, coverage,
+							productManagementController.addInsuranceProduct(insuranceType, name, limit, ageRange, coverage,
 									monthlyPremium, contractPeriod, accidentLimit, vehicleType, serviceTypeList,
 									productList);
 							System.out.println("등록되었습니다.");
@@ -5202,7 +5202,7 @@ public class Main {
 			id = Integer.parseInt(input);
 			Insurance insurance;
 			try {
-				insurance = productManagementModel.getInsuranceProduct(productList, id);
+				insurance = productManagementController.getInsuranceProduct(productList, id);
 			} catch (NotExistException e) {
 				System.out.println(e.getMessage());
 				return;
@@ -5225,7 +5225,7 @@ public class Main {
 			
 			Insurance insurance;
 			try {
-				insurance = productManagementModel.getInsuranceProduct(productList, id);
+				insurance = productManagementController.getInsuranceProduct(productList, id);
 			} catch (NotExistException e) {
 				System.out.println(e.getMessage());
 				return;
@@ -5272,7 +5272,7 @@ public class Main {
 			// ProductManagementModel employee
 			Insurance insurance;
 			try {
-				insurance = productManagementModel.getInsuranceProduct(productList, id);
+				insurance = productManagementController.getInsuranceProduct(productList, id);
 			} catch (NotExistException e) {
 				System.out.println(e.getMessage());
 				return;
@@ -5326,7 +5326,7 @@ public class Main {
 							index = Integer.parseInt(input);
 							switch (index) {
 							case 1:
-								productManagementModel.updateInsuranceProduct(inputIndex, 
+								productManagementController.updateInsuranceProduct(inputIndex, 
 										inputParameter, diseaseInsurance, productList);
 								System.out.println("수정되었습니다.");
 								break;
@@ -5393,7 +5393,7 @@ public class Main {
 							index = Integer.parseInt(input);
 							switch (index) {
 							case 1:
-								productManagementModel.updateInsuranceProduct(
+								productManagementController.updateInsuranceProduct(
 										inputIndex, inputParameter, injuryInsurance, productList);
 								System.out.println("수정되었습니다.");
 								break;
@@ -5507,7 +5507,7 @@ public class Main {
 									index = Integer.parseInt(input);
 									switch (index) {
 									case 1:
-										productManagementModel.updateInsuranceProduct(inputIndex, 
+										productManagementController.updateInsuranceProduct(inputIndex, 
 												null, automobileInsurance,
 												serviceTypeList, productList);
 										System.out.println("수정되었습니다.");
@@ -5550,7 +5550,7 @@ public class Main {
 							index = Integer.parseInt(input);
 							switch (index) {
 							case 1:
-								productManagementModel.updateInsuranceProduct(inputIndex, 
+								productManagementController.updateInsuranceProduct(inputIndex, 
 										inputParameter, automobileInsurance, null, productList);
 								System.out.println("수정되었습니다.");
 								break;
@@ -5585,7 +5585,7 @@ public class Main {
 				switch (index) {
 				case 1:
 					try {
-						productManagementModel.deleteInsuranceProduct(productList, id);
+						productManagementController.deleteInsuranceProduct(productList, id);
 						System.out.println("삭제되었습니다.");
 					} catch (NotExistException e) {
 						System.out.println(e.getMessage());
@@ -5625,14 +5625,14 @@ public class Main {
 
 		private void viewRequestingContract(Employee employee) {
 			// UnderwritingModel employee
-			ArrayList<Contract> contractList = underwritingModel.getAllRequestingInsurance(this.contractList);
+			ArrayList<Contract> contractList = underwritingController.getAllRequestingInsurance(this.contractList);
 			// 여기
 			do {
 				System.out.println("\n=================");
 				for (Contract contract : contractList) {
 					Customer customer;
 					try {
-						customer = underwritingModel.get(customerList, contract.getCustomerID());
+						customer = underwritingController.get(customerList, contract.getCustomerID());
 					} catch (NotExistException e) {
 						System.out.println(contract.getCustomerID() + " " + e.getMessage());
 						continue;
@@ -5667,7 +5667,7 @@ public class Main {
 						break;
 					case 3:
 						doubleClickRequestingContract(employee, contractList);
-						contractList = underwritingModel.getAllRequestingInsurance(this.contractList);
+						contractList = underwritingController.getAllRequestingInsurance(this.contractList);
 						break;
 					}
 				} catch (NumberFormatException e) {
@@ -5696,7 +5696,7 @@ public class Main {
 			// UnderwritingModel employee
 			Customer customer;
 			try {
-				customer = underwritingModel.get(customerList, contract.getCustomerID());
+				customer = underwritingController.get(customerList, contract.getCustomerID());
 				// 여기
 			} catch (NotExistException e) {
 				System.out.println(e.getMessage());
@@ -5723,11 +5723,11 @@ public class Main {
 				int id = Integer.parseInt(scanner.next());
 				switch (id) {
 				case 1:
-					if (underwritingModel.reviewAcquisition(contract, true, this.contractList))
+					if (underwritingController.reviewAcquisition(contract, true, this.contractList))
 						System.out.println("승인이 완료되었습니다.");
 					break;
 				case 2:
-					if (underwritingModel.reviewAcquisition(contract, false, this.contractList))
+					if (underwritingController.reviewAcquisition(contract, false, this.contractList))
 						System.out.println("거절이 완료되었습니다.");
 					break;
 				}
@@ -5744,7 +5744,7 @@ public class Main {
 			System.out.print("ID 검색창 : ");
 			try {
 				int id = Integer.parseInt(scanner.next());
-				result.add(underwritingModel.get(this.contractList, id));
+				result.add(underwritingController.get(this.contractList, id));
 			} catch (NumberFormatException e) {
 				//
 			} catch (NotExistContractException e) {
@@ -5754,15 +5754,15 @@ public class Main {
 		}
 
 		private ArrayList<Contract> getRequestingStatusContract() {
-			ArrayList<Contract> result = underwritingModel.getAllRequestingInsurance(this.contractList);
+			ArrayList<Contract> result = underwritingController.getAllRequestingInsurance(this.contractList);
 			System.out.println("1. 미처리 2. 처리완료");
 			try {
 				int index = Integer.parseInt(scanner.next());
 				switch (index) {
 				case 1:
-					result = underwritingModel.getAllRequestingInsurance(this.contractList);
+					result = underwritingController.getAllRequestingInsurance(this.contractList);
 				case 2:
-					result = underwritingModel.getAllNotRequestingInsurance(this.contractList);
+					result = underwritingController.getAllNotRequestingInsurance(this.contractList);
 				}
 			} catch (NumberFormatException e) {
 				//
@@ -5798,7 +5798,7 @@ public class Main {
 
 	private void evaluatePartnerCompany(Employee employee) {
 //		협력업체 정보 리스트 (협력업체 번호, 협력업체 이름, 협력업체 종류, 협력업체 전화번호)
-		for (PartnerCompany e : compensationPlanningModel.getAll(partnerCompanyList)) {
+		for (PartnerCompany e : compensationPlanningController.getAll(partnerCompanyList)) {
 			System.out.print("협력업체 번호: " + e.getId() + " ");
 			System.out.print("협력업체 이름: " + e.getName() + " ");
 			System.out.print("협력업체 종류: " + e.getPartnerCompanyType().getName() + " ");
@@ -5832,7 +5832,7 @@ public class Main {
 		id = Integer.parseInt(input);
 		PartnerCompany partnerCompany;
 		try {
-			partnerCompany = compensationPlanningModel.getPartnerCompany(partnerCompanyList, id);
+			partnerCompany = compensationPlanningController.getPartnerCompany(partnerCompanyList, id);
 		} catch (NotExistException e) {
 			System.out.println(e.getMessage());
 			return;
@@ -5886,7 +5886,7 @@ public class Main {
 			return;
 		}
 		try {
-			compensationPlanningModel.evaluatePartnerCompany(evaluate, partnerCompany, this.partnerCompanyList);
+			compensationPlanningController.evaluatePartnerCompany(evaluate, partnerCompany, this.partnerCompanyList);
 			System.out.println("평가되었습니다.");
 		} catch (NotExistException e) {
 			System.out.println(e.getMessage());
@@ -5899,7 +5899,7 @@ public class Main {
 		System.out.println("협력업체 정보 리스트");
 //				협력업체 정보 리스트 (협력업체 번호, 협력업체 이름, 협력업체 종류, 협력업체 전화번호)
 
-		for (PartnerCompany e : compensationPlanningModel.getAll(partnerCompanyList)) {
+		for (PartnerCompany e : compensationPlanningController.getAll(partnerCompanyList)) {
 			System.out.print("협력업체 번호: " + e.getId() + " ");
 			System.out.print("협력업체 이름: " + e.getName() + " ");
 			System.out.print("협력업체 종류: " + e.getPartnerCompanyType().getName() + " ");
@@ -5981,7 +5981,7 @@ public class Main {
 					index = Integer.parseInt(input);
 					switch (index) {
 					case 1:
-						compensationPlanningModel.addPartnerCompany(
+						compensationPlanningController.addPartnerCompany(
 								name, phoneNumber, partnerCompanyType, headName,
 								headPhoneNumber, partnerCompanyList);
 						System.out.println("등록되었습니다.");
@@ -6012,7 +6012,7 @@ public class Main {
 		id = Integer.parseInt(input);
 		PartnerCompany partnerCompany;
 		try {
-			partnerCompany = compensationPlanningModel.getPartnerCompany(partnerCompanyList, id);
+			partnerCompany = compensationPlanningController.getPartnerCompany(partnerCompanyList, id);
 		} catch (NotExistException e) {
 			System.out.println(e.getMessage());
 			return;
@@ -6030,7 +6030,7 @@ public class Main {
 		id = Integer.parseInt(input);
 		PartnerCompany partnerCompany;
 		try {
-			partnerCompany = compensationPlanningModel.getPartnerCompany(partnerCompanyList, id);
+			partnerCompany = compensationPlanningController.getPartnerCompany(partnerCompanyList, id);
 		} catch (NotExistException e) {
 			System.out.println(e.getMessage());
 			return;
@@ -6062,7 +6062,7 @@ public class Main {
 		// CompensationPlanningModel employee
 		PartnerCompany partnerCompany;
 		try {
-			partnerCompany = compensationPlanningModel.getPartnerCompany(partnerCompanyList, id);
+			partnerCompany = compensationPlanningController.getPartnerCompany(partnerCompanyList, id);
 		} catch (NotExistException e) {
 			System.out.println(e.getMessage());
 			return;
@@ -6099,7 +6099,7 @@ public class Main {
 						index = Integer.parseInt(input);
 						switch (index) {
 						case 1:
-							compensationPlanningModel.updatePartnerCompany(
+							compensationPlanningController.updatePartnerCompany(
 									inputIndex, inputParameter, partnerCompany,
 									partnerCompanyList);
 							System.out.println("수정되었습니다.");
@@ -6133,7 +6133,7 @@ public class Main {
 			switch (index) {
 			case 1:
 				try {
-					compensationPlanningModel.deletePartnerCompany(partnerCompanyList, id);
+					compensationPlanningController.deletePartnerCompany(partnerCompanyList, id);
 					System.out.println("삭제되었습니다.");
 				} catch (NotExistException e) {
 					System.out.println(e.getMessage());
@@ -6189,11 +6189,11 @@ public class Main {
 	private void viewDefaultContract(Employee employee) {
 		int index = 0;
 		do {
-			ArrayList<Contract> contractList = contractManagementModel.getAllDefaultContract(this.contractList);
+			ArrayList<Contract> contractList = contractManagementController.getAllDefaultContract(this.contractList);
 			for (Contract contract : contractList) {
 				Customer customer;
 				try {
-					customer = contractManagementModel.get(customerList, contract);
+					customer = contractManagementController.get(customerList, contract);
 				} catch (NotExistException e) {
 					System.out.println(contract.getCustomerID() + " " + e.getMessage());
 					continue;
@@ -6226,7 +6226,7 @@ public class Main {
 			ArrayList<Contract> result = new ArrayList<>();
 			System.out.println("ID 검색창 : ");
 			int id = Integer.parseInt(scanner.next());
-			Contract contract = contractManagementModel.get(contractList, id);
+			Contract contract = contractManagementController.get(contractList, id);
 			result.add(contract);
 			return result;
 		} catch (NumberFormatException e) {
@@ -6242,8 +6242,8 @@ public class Main {
 		try {
 			System.out.println("해지 계약 번호(더블클릭): ");
 			int id = Integer.parseInt(scanner.next());
-			Termination contract = contractManagementModel.get(terminationList, id);
-			Customer customer = contractManagementModel.get(customerList, contract);
+			Termination contract = contractManagementController.get(terminationList, id);
+			Customer customer = contractManagementController.get(customerList, contract);
 			System.out.println("<고객 정보>");
 			System.out.println(" 고객 이름 : " + customer.getName() + " 전화번호 : " + customer.getPhoneNumber() + " 직업 : "
 					+ customer.getJob() + " 나이 : " + customer.getAge() + " 성별 : " + customer.getGender().getName()
@@ -6277,11 +6277,11 @@ public class Main {
 	private void viewTerminatingContract(Employee employee) {
 		int index = 0;
 		do {
-			ArrayList<Termination> terminationList = contractManagementModel.getAllTerminatingContract(this.terminationList);
+			ArrayList<Termination> terminationList = contractManagementController.getAllTerminatingContract(this.terminationList);
 			for (Termination contract : terminationList) {
 				Customer customer;
 				try {
-					customer = contractManagementModel.get(customerList, contract);
+					customer = contractManagementController.get(customerList, contract);
 				} catch (NotExistException e) {
 					System.out.println(contract.getCustomerID() + " " + e.getMessage());
 					continue;
@@ -6317,7 +6317,7 @@ public class Main {
 			ArrayList<Termination> result = new ArrayList<>();
 			System.out.println("ID 검색창 : ");
 			int id = Integer.parseInt(scanner.next());
-			Termination contract = contractManagementModel.getTerminatingContractById(this.terminationList, id);
+			Termination contract = contractManagementController.getTerminatingContractById(this.terminationList, id);
 			result.add(contract);
 			return result;
 		} catch (NumberFormatException e) {
@@ -6331,13 +6331,13 @@ public class Main {
 	private ArrayList<Termination> getStatusTerminatingContract() {
 		System.out.println("1. 미처리 2. 처리완료");
 		int index = Integer.parseInt(scanner.next());
-		ArrayList<Termination> result = contractManagementModel.getAllTerminatingContract(this.terminationList);
+		ArrayList<Termination> result = contractManagementController.getAllTerminatingContract(this.terminationList);
 		switch (index) {
 		case 1:
-			result = contractManagementModel.getAllUnprocessedTerminatingContract(this.terminationList);
+			result = contractManagementController.getAllUnprocessedTerminatingContract(this.terminationList);
 			break;
 		case 2:
-			result = contractManagementModel.getAllProcessedTerminatingContract(this.terminationList);
+			result = contractManagementController.getAllProcessedTerminatingContract(this.terminationList);
 			break;
 		}
 		return result;
@@ -6348,8 +6348,8 @@ public class Main {
 		try {
 			System.out.println("해지 계약 번호(더블클릭): ");
 			int id = Integer.parseInt(scanner.next());
-			Termination contract = contractManagementModel.get(terminationList, id);
-			Customer customer = contractManagementModel.get(customerList, contract);
+			Termination contract = contractManagementController.get(terminationList, id);
+			Customer customer = contractManagementController.get(customerList, contract);
 			System.out.println("<고객 정보>");
 			System.out.println(" 고객 이름 : " + customer.getName() + " 전화번호 : " + customer.getPhoneNumber() + " 직업 : "
 					+ customer.getJob() + " 나이 : " + customer.getAge() + " 성별 : " + customer.getGender().getName()
@@ -6366,7 +6366,7 @@ public class Main {
 				index = Integer.parseInt(scanner.next());
 				switch (index) {
 				case 1:
-					if (contractManagementModel.requestTerminationFee(contract, customer, 
+					if (contractManagementController.requestTerminationFee(contract, customer, 
 							this.paymentDetailList, this.contractList))
 						System.out.println("<계약 정보>");
 					System.out.println("계약 번호 : " + contract.getId() + " 상품 번호 : " + contract.getProduct().getId()
@@ -6393,11 +6393,11 @@ public class Main {
 	private void viewEndorsementContract(Employee employee) {
 		int index = 0;
 		do {
-			ArrayList<Endorsement> result = contractManagementModel.getAllEndorsementContract(endorsementList);
+			ArrayList<Endorsement> result = contractManagementController.getAllEndorsementContract(endorsementList);
 			for (Endorsement contract : result) {
 				Customer customer;
 				try {
-					customer = contractManagementModel.get(customerList, contract);
+					customer = contractManagementController.get(customerList, contract);
 				} catch (NotExistException e) {
 					System.out.println(contract.getCustomerID() + " " + e.getMessage());
 					continue;
@@ -6432,13 +6432,13 @@ public class Main {
 	private ArrayList<Endorsement> getStatusEndorsementContract() {
 		System.out.println("1. 미처리 2. 처리완료");
 		int index = Integer.parseInt(scanner.next());
-		ArrayList<Endorsement> result = contractManagementModel.getAllEndorsementContract(endorsementList);
+		ArrayList<Endorsement> result = contractManagementController.getAllEndorsementContract(endorsementList);
 		switch (index) {
 		case 1:
-			result = contractManagementModel.getAllUnprocessedEndorsementContract(endorsementList);
+			result = contractManagementController.getAllUnprocessedEndorsementContract(endorsementList);
 			break;
 		case 2:
-			result = contractManagementModel.getAllProcessedEndorsementContract(endorsementList);
+			result = contractManagementController.getAllProcessedEndorsementContract(endorsementList);
 			break;
 		}
 		return result;
@@ -6449,8 +6449,8 @@ public class Main {
 		try {
 			System.out.println("배서 계약 번호(더블클릭): ");
 			int id = Integer.parseInt(scanner.next());
-			Endorsement contract = contractManagementModel.get(endorsementList, id);
-			Customer customer = contractManagementModel.get(customerList, contract);
+			Endorsement contract = contractManagementController.get(endorsementList, id);
+			Customer customer = contractManagementController.get(customerList, contract);
 			System.out.println("<고객 정보>");
 			System.out.println(" 고객 이름 : " + customer.getName() + " 전화번호 : " + customer.getPhoneNumber() + " 직업 : "
 					+ customer.getJob() + " 나이 : " + customer.getAge() + " 성별 : " + customer.getGender().getName()
@@ -6464,7 +6464,7 @@ public class Main {
 			System.out.println(contract.getPaymentDate());
 			System.out.println("1. 승인   2. 거절");
 			int index = Integer.parseInt(scanner.next());
-			if (contractManagementModel.reviewEndorsement(contract, customer, index)) {
+			if (contractManagementController.reviewEndorsement(contract, customer, index)) {
 				System.out.println("요청이 완료되었습니다.");
 			}
 		} catch (NumberFormatException e) {
@@ -6478,11 +6478,11 @@ public class Main {
 	private void viewReContract(Employee employee) {
 		int index = 0;
 		do {
-			ArrayList<Recontract> contractList = contractManagementModel.getAllReContract(recontractList);
+			ArrayList<Recontract> contractList = contractManagementController.getAllReContract(recontractList);
 			for (Recontract contract : contractList) {
 				Customer customer;
 				try {
-					customer = contractManagementModel.get(customerList, contract);
+					customer = contractManagementController.get(customerList, contract);
 				} catch (NotExistException e) {
 					System.out.println(contract.getCustomerID() + " " + e.getMessage());
 					continue;
@@ -6517,13 +6517,13 @@ public class Main {
 	private ArrayList<Recontract> getStatusReContract() {
 		System.out.println("1. 미처리 2. 처리완료");
 		int index = Integer.parseInt(scanner.next());
-		ArrayList<Recontract> result = contractManagementModel.getAllReContract(recontractList);
+		ArrayList<Recontract> result = contractManagementController.getAllReContract(recontractList);
 		switch (index) {
 		case 1:
-			result = contractManagementModel.getAllUnprocessedReContract(recontractList);
+			result = contractManagementController.getAllUnprocessedReContract(recontractList);
 			break;
 		case 2:
-			result = contractManagementModel.getAllProcessedReContract(recontractList);
+			result = contractManagementController.getAllProcessedReContract(recontractList);
 			break;
 		}
 		return result;
@@ -6534,7 +6534,7 @@ public class Main {
 			ArrayList<Recontract> result = new ArrayList<>();
 			System.out.println("ID 검색창 : ");
 			int id = Integer.parseInt(scanner.next());
-			Recontract contract = contractManagementModel.getReContractById(recontractList, id);
+			Recontract contract = contractManagementController.getReContractById(recontractList, id);
 			result.add(contract);
 			return result;
 		} catch (NumberFormatException e) {
@@ -6550,8 +6550,8 @@ public class Main {
 		try {
 			System.out.println("재계약신청 계약 번호(더블클릭): ");
 			int id = Integer.parseInt(scanner.next());
-			Recontract contract = contractManagementModel.get(recontractList, id);
-			Customer customer = contractManagementModel.get(customerList, contract);
+			Recontract contract = contractManagementController.get(recontractList, id);
+			Customer customer = contractManagementController.get(customerList, contract);
 			System.out.println("<고객 정보>");
 			System.out.println(" 고객 이름 : " + customer.getName() + " 전화번호 : " + customer.getPhoneNumber() + " 직업 : "
 					+ customer.getJob() + " 나이 : " + customer.getAge() + " 성별 : " + customer.getGender().getName()
@@ -6565,11 +6565,11 @@ public class Main {
 			int index = Integer.parseInt(scanner.next());
 			switch (index) {
 			case 1:
-				if (contractManagementModel.reviewRecontract(this.contractList, contract, customer, 1))
+				if (contractManagementController.reviewRecontract(this.contractList, contract, customer, 1))
 					System.out.println("승인이 완료되었습니다.");
 				break;
 			case 2:
-				if (contractManagementModel.reviewRecontract(this.contractList, contract, customer, 2))
+				if (contractManagementController.reviewRecontract(this.contractList, contract, customer, 2))
 					System.out.println("거절이 완료되었습니다.");
 				break;
 			}
@@ -6585,11 +6585,11 @@ public class Main {
 	private void viewRevival(Employee employee) {
 		int index = 0;
 		do {
-			ArrayList<Revival> contractList = contractManagementModel.getAllRevivalContract(revivalList);
+			ArrayList<Revival> contractList = contractManagementController.getAllRevivalContract(revivalList);
 			for (Revival contract : contractList) {
 				Customer customer;
 				try {
-					customer = contractManagementModel.get(customerList, contract);
+					customer = contractManagementController.get(customerList, contract);
 				} catch (NotExistException e) {
 					System.out.println(contract.getCustomerID() + " " + e.getMessage());
 					continue;
@@ -6626,7 +6626,7 @@ public class Main {
 			ArrayList<Revival> result = new ArrayList<>();
 			System.out.println("ID 검색창 : ");
 			int id = Integer.parseInt(scanner.next());
-			Revival contract = contractManagementModel.getRevivalById(revivalList, id);
+			Revival contract = contractManagementController.getRevivalById(revivalList, id);
 			result.add(contract);
 			return result;
 		} catch (NumberFormatException e) {
@@ -6640,13 +6640,13 @@ public class Main {
 	private ArrayList<Revival> getStatusRevival() {
 		System.out.println("1. 미처리 2. 처리완료");
 		int index = Integer.parseInt(scanner.next());
-		ArrayList<Revival> result = contractManagementModel.getAllRevivalContract(revivalList);
+		ArrayList<Revival> result = contractManagementController.getAllRevivalContract(revivalList);
 		switch (index) {
 		case 1:
-			result = contractManagementModel.getAllUnprocessedRevival(revivalList);
+			result = contractManagementController.getAllUnprocessedRevival(revivalList);
 			break;
 		case 2:
-			result = contractManagementModel.getAllProcessedRevival(revivalList);
+			result = contractManagementController.getAllProcessedRevival(revivalList);
 			break;
 		}
 		return result;
@@ -6657,8 +6657,8 @@ public class Main {
 		try {
 			System.out.println("부활 계약 번호(더블클릭): ");
 			int id = Integer.parseInt(scanner.next());
-			Revival contract = contractManagementModel.get(revivalList, id);
-			Customer customer = contractManagementModel.get(customerList, contract);
+			Revival contract = contractManagementController.get(revivalList, id);
+			Customer customer = contractManagementController.get(customerList, contract);
 			System.out.println("<고객 정보>");
 			System.out.println(" 고객 이름 : " + customer.getName() + " 전화번호 : " + customer.getPhoneNumber() + " 직업 : "
 					+ customer.getJob() + " 나이 : " + customer.getAge() + " 성별 : " + customer.getGender().getName()
@@ -6672,11 +6672,11 @@ public class Main {
 			int index = Integer.parseInt(scanner.next());
 			switch (index) {
 			case 1:
-				if (contractManagementModel.reviewRevival(this.contractList, contract, customer, 1))
+				if (contractManagementController.reviewRevival(this.contractList, contract, customer, 1))
 					System.out.println("신청되었습니다.");
 				break;
 			case 2:
-				if (contractManagementModel.reviewRevival(this.contractList, contract, customer, 2))
+				if (contractManagementController.reviewRevival(this.contractList, contract, customer, 2))
 					System.out.println("신청되었습니다.");
 				break;
 			}
@@ -6816,7 +6816,7 @@ public class Main {
 			do {
 				switch (index) {
 				case 1:
-					loanManagementModel.collectLoanPrincipalInterest();
+					loanManagementController.collectLoanPrincipalInterest();
 					System.out.println("안내장이 발송되었습니다.");
 					break;
 				case 2:
@@ -6940,11 +6940,11 @@ public class Main {
 					System.out.print("지급 금액 : ");
 					int money = Integer.parseInt(scanner.next());
 					PaymentType paymentType = getPaymentType();
-					loanManagementModel.requestLoan(selectedContract, customer, money, paymentType, true, this.contractList,
+					loanManagementController.requestLoan(selectedContract, customer, money, paymentType, true, this.contractList,
 							this.paymentDetailList, this.compensationDetailList);
 					break;
 				case 2:
-					loanManagementModel.requestLoan(selectedContract, customer, 0, null, false, this.contractList,
+					loanManagementController.requestLoan(selectedContract, customer, 0, null, false, this.contractList,
 							this.paymentDetailList, this.compensationDetailList);
 					break;
 				case 3:
@@ -7020,11 +7020,11 @@ public class Main {
 					System.out.print("지급 금액 : ");
 					int money = Integer.parseInt(scanner.next());
 					PaymentType paymentType = getPaymentType();
-					loanManagementModel.requestLoan(contract, customer, money, paymentType, true, this.contractList,
+					loanManagementController.requestLoan(contract, customer, money, paymentType, true, this.contractList,
 							this.paymentDetailList, this.compensationDetailList);
 					break;
 				case 2:
-					loanManagementModel.requestLoan(contract, customer, 0, null, false, this.contractList, 
+					loanManagementController.requestLoan(contract, customer, 0, null, false, this.contractList, 
 							this.paymentDetailList, this.compensationDetailList);
 					break;
 				case 3:
@@ -7046,7 +7046,7 @@ public class Main {
 		// 600130
 		System.out.println("대출 상품 정보 리스트");
 //		대출 상품 이름, 대출 상품 종류, 대출 상품 번호, 이자율, 대출가능 최대 금액
-		for (Product e : loanManagementModel.getAll(productList)) {
+		for (Product e : loanManagementController.getAll(productList)) {
 			if (e instanceof Loan) {
 				System.out.print("대출 상품 이름: " + ((Loan) e).getName() + " ");
 				System.out.print("대출 종류: " + ((Loan) e).getLoanType().getName() + " ");
@@ -7148,7 +7148,7 @@ public class Main {
 					index = Integer.parseInt(input);
 					switch (index) {
 					case 1:
-						loanManagementModel.addLoanProduct(loanType, name, interestRate, 
+						loanManagementController.addLoanProduct(loanType, name, interestRate, 
 								limit, minimumAsset, collateralType,
 								minimumValue, productList);
 						System.out.println("등록되었습니다.");
@@ -7202,7 +7202,7 @@ public class Main {
 					index = Integer.parseInt(input);
 					switch (index) {
 					case 1:
-						loanManagementModel.addLoanProduct(loanType, name, interestRate, 
+						loanManagementController.addLoanProduct(loanType, name, interestRate, 
 								limit, minimumAsset, minimumAmount,
 								productList);
 						System.out.println("등록되었습니다.");
@@ -7255,7 +7255,7 @@ public class Main {
 					index = Integer.parseInt(input);
 					switch (index) {
 					case 1:
-						loanManagementModel.addLoanProduct(loanType, name, 
+						loanManagementController.addLoanProduct(loanType, name, 
 								interestRate, limit, minimumAsset, productID,
 								productList);
 						System.out.println("등록되었습니다.");
@@ -7285,7 +7285,7 @@ public class Main {
 		id = Integer.parseInt(input);
 		Loan loan;
 		try {
-			loan = loanManagementModel.getLoanProduct(productList, id);
+			loan = loanManagementController.getLoanProduct(productList, id);
 		} catch (NotExistException e) {
 			System.out.println(e.getMessage());
 			return;
@@ -7306,7 +7306,7 @@ public class Main {
 
 		Loan loan;
 		try {
-			loan = loanManagementModel.getLoanProduct(productList, id);
+			loan = loanManagementController.getLoanProduct(productList, id);
 		} catch (NotExistException e) {
 			System.out.println(e.getMessage());
 			return;
@@ -7349,7 +7349,7 @@ public class Main {
 	private void updateLoan(Employee employee, int id) {
 		// LoanManagementModel employee
 		try {
-			Loan loan = loanManagementModel.getLoanProduct(productList, id);
+			Loan loan = loanManagementController.getLoanProduct(productList, id);
 			System.out.println("대출 상품 번호: " + loan.getId());
 			System.out.println("대출 종류: " + loan.getLoanType().getName());
 
@@ -7411,7 +7411,7 @@ public class Main {
 						index = Integer.parseInt(input);
 						switch (index) {
 						case 1:
-							loanManagementModel.updateLoanProduct(inputIndex, inputParameter, collateralLoan, productList);
+							loanManagementController.updateLoanProduct(inputIndex, inputParameter, collateralLoan, productList);
 							System.out.println("수정되었습니다.");
 							break;
 						case 2:
@@ -7463,7 +7463,7 @@ public class Main {
 						index = Integer.parseInt(input);
 						switch (index) {
 						case 1:
-							loanManagementModel.updateLoanProduct(inputIndex, 
+							loanManagementController.updateLoanProduct(inputIndex, 
 									inputParameter, fixedDepositLoan, productList);
 							System.out.println("수정되었습니다.");
 							break;
@@ -7517,7 +7517,7 @@ public class Main {
 						index = Integer.parseInt(input);
 						switch (index) {
 						case 1:
-							loanManagementModel.updateLoanProduct(inputIndex, 
+							loanManagementController.updateLoanProduct(inputIndex, 
 									inputParameter, lnsuranceContractLoan, productList);
 							System.out.println("수정되었습니다.");
 							break;
@@ -7551,7 +7551,7 @@ public class Main {
 				index = Integer.parseInt(input);
 				switch (index) {
 				case 1:
-					loanManagementModel.deleteLoanProduct(productList, id);
+					loanManagementController.deleteLoanProduct(productList, id);
 					System.out.println("삭제되었습니다.");
 					return;
 				case 2:

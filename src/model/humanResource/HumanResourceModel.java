@@ -34,50 +34,9 @@ public class HumanResourceModel {
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
 			date = formatter.parse(dateOfemployment);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		Employee employee = null;
-//		if(teamId ==110) {
-//			employee = new FinancialAccountantModel(name, employeePosition,address, phoneNumber, bankName, bankAccount,residentRegistrationNumber, departmentID, salary,date);
-//			employeeList.add(employee);
-//		}else if(teamId ==120) {
-//			employee = new AdministrativeModel(name, employeePosition,address, phoneNumber, bankName, bankAccount,residentRegistrationNumber, departmentID, salary,date);
-//			employeeList.add(employee);
-//		}else if(teamId ==130) {
-//			employee = new CompensationModel(name, employeePosition,address, phoneNumber, bankName, bankAccount,residentRegistrationNumber, departmentID, salary,date);
-//			employeeList.add(employee);
-//		}else if(teamId ==140) {
-//			employee = new CustomerSupportModel(name, employeePosition,address, phoneNumber, bankName, bankAccount,residentRegistrationNumber, departmentID, salary,date);
-//			employeeList.add(employee);
-//		}else if(teamId ==150) {
-//			employee = new ManagementPlanningModel(name, employeePosition,address, phoneNumber, bankName, bankAccount,residentRegistrationNumber, departmentID, salary,date);
-//			employeeList.add(employee);
-//		}else if(teamId ==160) {
-//			employee = new HumanResourceModel(name, employeePosition,address, phoneNumber, bankName, bankAccount,residentRegistrationNumber, departmentID, salary,date);
-//			employeeList.add(employee);
-//		}else if(teamId ==170) {
-//			employee = new CustomerInformationManagementModel(name, employeePosition,address, phoneNumber, bankName, bankAccount,residentRegistrationNumber, departmentID, salary,date);
-//			employeeList.add(employee);
-//		}else if(teamId ==180) {
-//			employee = new Sales(name, employeePosition,address, phoneNumber, bankName, bankAccount,residentRegistrationNumber, departmentID, salary,date);
-//			employeeList.add(employee);
-//		}else if(teamId ==190) {
-//			employee = new ProductManagementModel(name, employeePosition,address, phoneNumber, bankName, bankAccount,residentRegistrationNumber, departmentID, salary,date);
-//			employeeList.add(employee);
-//		}else if(teamId ==200) {
-//			employee = new UnderwritingModel(name, employeePosition,address, phoneNumber, bankName, bankAccount,residentRegistrationNumber, departmentID, salary,date);
-//			employeeList.add(employee);
-//		}else if(teamId ==210) {
-//			employee = new CompensationPlanningModel(name, employeePosition,address, phoneNumber, bankName, bankAccount,residentRegistrationNumber, departmentID, salary,date);
-//			employeeList.add(employee);
-//		}else if(teamId ==220) {
-//			employee = new ContractManagementModel(name, employeePosition,address, phoneNumber, bankName, bankAccount,residentRegistrationNumber, departmentID, salary,date);
-//			employeeList.add(employee);
-//		}else if(teamId ==230) {
-//			employee = new LoanManagementModel(name, employeePosition,address, phoneNumber, bankName, bankAccount,residentRegistrationNumber, departmentID, salary,date);
-//			employeeList.add(employee);
-//		}
 		int[] teamIds = {110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230};
 		for (int id : teamIds) {
 			if (teamId == id) {
@@ -163,8 +122,6 @@ public class HumanResourceModel {
 			break;
 		}
 	}
-	// 메소드는 아래에 적어주셔유! (MVC 적용)
-
 	public ArrayList<Employee> getAll(EmployeeList employeeList) {
 		return employeeList.getAll();
 	}

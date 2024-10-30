@@ -35,7 +35,6 @@ public class UnderwritingModel {
 		contract.review(result, contractList);
 		return result;
 	}
-	// 메소드는 아래에 적어주셔유! (MVC 적용)
 	public ArrayList<Contract> getAllRequestingInsurance(ContractList contractList){
 		return contractList.getAllRequestingInsurance();
 	}

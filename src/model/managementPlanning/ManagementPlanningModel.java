@@ -71,5 +71,4 @@ public class ManagementPlanningModel {
 			throw new NotExistException("해당하는 부서 정보가 존재하지 않습니다.");
 		}
 	}
-	// 메소드는 아래에 적어주셔유! (MVC 적용)
 }
